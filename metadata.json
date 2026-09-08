@@ -1,0 +1,6 @@
+{
+  "name": "M365 Tenant Migration Tool",
+  "description": "Full-stack enterprise M365 tenant-to-tenant migration tool with Microsoft Graph Discovery module, Prisma SQLite, MSAL multi-tenant auth, CSV user mapping, live WebSocket progress cockpit, error management, and security audit dashboard.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

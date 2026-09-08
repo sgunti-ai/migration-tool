@@ -1,0 +1,208 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model MigrationJob {
+  id                 String                @id @default(cuid())
+  sourceTenantDomain String
+  targetTenantDomain String
+  status             String                @default("PENDING") // PENDING, PROCESSING, PAUSED, COMPLETED, FAILED
+  totalUsers         Int                   @default(0)
+  completedUsers     Int                   @default(0)
+  failedUsers        Int                   @default(0)
+  createdAt          DateTime              @default(now())
+  updatedAt          DateTime              @updatedAt
+  userStatuses       UserMigrationStatus[]
+}
+
+model UserMigrationStatus {
+  id              String       @id @default(cuid())
+  jobId           String
+  job             MigrationJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  sourceUPN       String
+  targetUPN       String
+  status          String       @default("PENDING") // PENDING, PROCESSING, COMPLETED, FAILED, PAUSED
+  mailboxProgress Int          @default(0)
+  driveProgress   Int          @default(0)
+  migrateMailbox  Boolean      @default(true)
+  migrateOneDrive Boolean      @default(true)
+  activeStep      String?
+  errorMessage    String?
+  retryCount      Int          @default(0)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  timestamp  DateTime @default(now())
+  actorEmail String
+  actorRole  String
+  action     String
+  resource   String
+  status     String
+  details    String?
+  ipAddress  String?
+}
+
+model AdminUser {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  name      String
+  role      String    @default("GLOBAL_ADMIN") // GLOBAL_ADMIN, MIGRATION_OPERATOR, AUDITOR
+  lastLogin DateTime?
+  createdAt DateTime  @default(now())
+}
+
+model TenantConnection {
+  id                    String    @id @default(cuid())
+  tenantType            String    @unique // "SOURCE" or "TARGET"
+  tenantId              String?
+  domain                String
+  displayName           String?
+  encryptedAccessToken  String?
+  encryptedRefreshToken String?
+  expiresAt             DateTime?
+  adminConsentGranted   Boolean   @default(true)
+  connectedAt           DateTime  @default(now())
+}
+
+model DiscoveryScan {
+  id                    String    @id @default(cuid())
+  scanType              String    @default("FULL") // FULL or INCREMENTAL
+  status                String    @default("NOT_STARTED") // NOT_STARTED, RUNNING, COMPLETED, FAILED, CANCELLED
+  workloads             String    @default("[]") // JSON string of workloads
+  currentStage          String?
+  progress              Int       @default(0)
+  totalItemsDiscovered  Int       @default(0)
+  usersDiscovered       Int       @default(0)
+  groupsDiscovered      Int       @default(0)
+  oneDrivesDiscovered   Int       @default(0)
+  mailboxesDiscovered   Int       @default(0)
+  sharePointSitesDiscovered Int   @default(0)
+  teamsDiscovered       Int       @default(0)
+  dlDiscovered          Int       @default(0)
+  totalStorageGB        Float     @default(0)
+  errorMessage          String?
+  startedAt             DateTime  @default(now())
+  completedAt           DateTime?
+}
+
+model DiscoveryUser {
+  id               String    @id @default(cuid())
+  upn              String    @unique
+  displayName      String
+  department       String?
+  jobTitle         String?
+  manager          String?
+  licenses         String    @default("[]") // JSON array of licenses
+  groups           String    @default("[]") // JSON array of group names
+  mfaStatus        String    @default("DISABLED") // ENFORCED, ENABLED, DISABLED
+  accountEnabled   Boolean   @default(true)
+  assignedRoles    String?   @default("[]")
+  usageLocation    String?   @default("US")
+  mailboxSizeMB    Float     @default(0)
+  oneDriveUsedGB   Float     @default(0)
+  lastActivityDate DateTime?
+  etag             String?
+  lastScannedAt    DateTime  @default(now())
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+}
+
+model DiscoveryGroup {
+  id                String    @id @default(cuid())
+  groupId           String    @unique
+  name              String
+  email             String?
+  groupType         String    @default("Security") // Security, Microsoft 365, Mail-Enabled Security, Distribution
+  memberCount       Int       @default(0)
+  owners            String    @default("[]") // JSON array of owner UPNs
+  members           String    @default("[]") // JSON array of sample members
+  isMailEnabled     Boolean   @default(false)
+  isSecurityEnabled Boolean   @default(true)
+  lastScannedAt     DateTime  @default(now())
+}
+
+model DiscoveryOneDrive {
+  id                 String    @id @default(cuid())
+  userPrincipalName  String    @unique
+  displayName        String
+  siteUrl            String
+  storageUsedBytes   Float     @default(0)
+  storageQuotaBytes  Float     @default(1099511627776)
+  fileCount          Int       @default(0)
+  lastModified       DateTime?
+  externalSharing    String    @default("Disabled") // Disabled, ExistingGuests, Anyone, NewAndExistingGuests
+  sharingLinksCount  Int       @default(0)
+  lastScannedAt      DateTime  @default(now())
+}
+
+model DiscoveryMailbox {
+  id                String    @id @default(cuid())
+  userPrincipalName String    @unique
+  displayName       String
+  mailboxType       String    @default("UserMailbox") // UserMailbox, SharedMailbox, RoomMailbox, EquipmentMailbox
+  totalItemSizeMB   Float     @default(0)
+  itemCount         Int       @default(0)
+  archiveStatus     String    @default("Disabled") // Active, Disabled, None
+  archiveSizeMB     Float     @default(0)
+  delegates         String    @default("[]") // JSON array
+  forwardingRules   String    @default("[]") // JSON array
+  retentionPolicy   String?
+  lastScannedAt     DateTime  @default(now())
+}
+
+model DiscoverySharePointSite {
+  id                 String    @id @default(cuid())
+  siteTitle          String
+  siteUrl            String    @unique
+  template           String    @default("SITEPAGEPUBLISHING#0")
+  storageUsedMB      Float     @default(0)
+  subsiteCount       Int       @default(0)
+  listCount          Int       @default(0)
+  libraryCount       Int       @default(0)
+  permissionsSummary String    @default("{}") // JSON object
+  primaryOwner       String?
+  lastModified       DateTime?
+  lastScannedAt      DateTime  @default(now())
+}
+
+model DiscoveryTeam {
+  id               String    @id @default(cuid())
+  teamId           String    @unique
+  teamName         String
+  description      String?
+  visibility       String    @default("Private") // Public, Private, HiddenMembership
+  channelsCount    Int       @default(0)
+  channels         String    @default("[]") // JSON array
+  membersCount     Int       @default(0)
+  ownersCount      Int       @default(0)
+  owners           String    @default("[]") // JSON array
+  tabsCount        Int       @default(0)
+  filesCount       Int       @default(0)
+  installedApps    String    @default("[]") // JSON array
+  chatHistoryDays  Int       @default(365)
+  lastActivityDate DateTime?
+  lastScannedAt    DateTime  @default(now())
+}
+
+model DiscoveryDistributionList {
+  id                          String    @id @default(cuid())
+  displayName                 String
+  primarySmtpAddress          String    @unique
+  aliases                     String    @default("[]") // JSON array
+  memberCount                 Int       @default(0)
+  members                     String    @default("[]") // JSON array
+  owners                      String    @default("[]") // JSON array
+  deliveryManagement          String    @default("Only senders inside organization")
+  requireSenderAuthentication Boolean   @default(true)
+  moderationEnabled           Boolean   @default(false)
+  lastScannedAt               DateTime  @default(now())
+}
+
