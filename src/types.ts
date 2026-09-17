@@ -234,3 +234,95 @@ export interface DiscoveredUserDetail extends DiscoveredUser {
   } | null;
 }
 
+export interface MailboxMigrationTemplate {
+  id: string;
+  name: string;
+  description?: string | null;
+  sourceScenario: string;
+  targetScenario: string;
+  
+  // Step 3: Migration Options
+  migrateMail: boolean;
+  migrateCalendar: boolean;
+  migrateContacts: boolean;
+  migrateTasksNotes: boolean;
+  migrateRecoverableItems: boolean;
+  migrateSafeSenderList: boolean;
+  resetMigration: boolean;
+
+  // Step 4: Migration Settings
+  migrateMailboxRules: boolean;
+  migrateMailboxDelegation: boolean;
+  enableAutomapping: boolean;
+  migrateFolderPermissions: boolean;
+  migrateAutoReply: boolean;
+  migrateLitigationHold: boolean;
+
+  // Step 5: Mail Flow
+  manageMailForwarding: boolean;
+  mailForwardingAction: string;
+  forwardingDirection: string;
+  customForwardingDomain?: string | null;
+
+  // Step 6: Mail Folders
+  folderSelection: string;
+  excludedFolders: string[];
+  specificFolders: string[];
+  migrateToCustomFolder: boolean;
+  customFolderName?: string | null;
+  migrateToFolderMap: boolean;
+  inboxTargetFolder?: string | null;
+  deletedItemsTargetFolder?: string | null;
+  archiveTargetFolder?: string | null;
+  sentItemsTargetFolder?: string | null;
+
+  // Step 2: Licensing Plan
+  targetLicensingPlan: string;
+  autoAssignLicense: boolean;
+
+  // Step 7: Date Range
+  dateRangeFilter: string;
+  startDate?: string | null;
+  endDate?: string | null;
+  excludeItemsLargerThanMB?: number | null;
+
+  // Step 8: Notification
+  sendEmailOnComplete: boolean;
+  notificationEmails: string;
+  sendUserWelcomeEmail: boolean;
+
+  // Step 9: Reporting
+  detailedItemAuditLog: boolean;
+  includeFailedItemReports: boolean;
+
+  // Step 10: Schedule
+  scheduleType: string;
+  scheduledTime?: string | null;
+  concurrencyLimit: number;
+
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface MailboxMigrationTask {
+  id: string;
+  taskName: string;
+  templateId?: string | null;
+  templateName?: string | null;
+  sourceUPN: string;
+  targetUPN: string;
+  status: 'READY' | 'IN_PROGRESS' | 'COMPLETED' | 'FAILED' | 'PAUSED';
+  progressPercent: number;
+  itemsMigrated: number;
+  totalItems: number;
+  sizeMigratedMB: number;
+  totalSizeMB: number;
+  currentFolder?: string | null;
+  errorMessage?: string | null;
+  startedAt?: string | null;
+  completedAt?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+

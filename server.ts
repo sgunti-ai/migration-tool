@@ -24,6 +24,14 @@ import {
   getDiscoveredWorkloadItems,
   exportDiscoveryData,
 } from './server/discovery.js';
+import {
+  ensureMailboxTemplatesSeeded,
+  getMailboxTemplates,
+  saveMailboxTemplate,
+  deleteMailboxTemplate,
+  getMailboxMigrationTasks,
+  createMailboxMigrationTask,
+} from './server/mailboxTemplates.js';
 
 const PORT = 3000;
 
@@ -37,6 +45,7 @@ async function startServer() {
 
   // Ensure initial discovery seed data is populated
   await ensureDiscoveryDataSeeded();
+  await ensureMailboxTemplatesSeeded();
 
   // WebSocket Server Setup on the same HTTP server
   const wss = new WebSocketServer({ server, path: '/ws' });
@@ -824,8 +833,62 @@ async function startServer() {
   });
 
   // ----------------------------------------------------
+  // MAILBOX MIGRATION TEMPLATES & TASKS API
+  // ----------------------------------------------------
+  app.get('/api/mailboxes/templates', async (req, res) => {
+    try {
+      const templates = await getMailboxTemplates();
+      res.json({ count: templates.length, templates });
+    } catch (err: any) {
+      console.error('[API] Failed to get mailbox templates:', err);
+      res.status(500).json({ error: err.message || 'Failed to get mailbox templates' });
+    }
+  });
+
+  app.post('/api/mailboxes/templates', async (req, res) => {
+    try {
+      const template = await saveMailboxTemplate(req.body);
+      res.json({ success: true, template });
+    } catch (err: any) {
+      console.error('[API] Failed to save mailbox template:', err);
+      res.status(500).json({ error: err.message || 'Failed to save mailbox template' });
+    }
+  });
+
+  app.delete('/api/mailboxes/templates/:id', async (req, res) => {
+    try {
+      await deleteMailboxTemplate(req.params.id);
+      res.json({ success: true, message: 'Template deleted' });
+    } catch (err: any) {
+      console.error('[API] Failed to delete mailbox template:', err);
+      res.status(500).json({ error: err.message || 'Failed to delete mailbox template' });
+    }
+  });
+
+  app.get('/api/mailboxes/tasks', async (req, res) => {
+    try {
+      const tasks = await getMailboxMigrationTasks();
+      res.json({ count: tasks.length, tasks });
+    } catch (err: any) {
+      console.error('[API] Failed to get mailbox migration tasks:', err);
+      res.status(500).json({ error: err.message || 'Failed to get mailbox migration tasks' });
+    }
+  });
+
+  app.post('/api/mailboxes/tasks', async (req, res) => {
+    try {
+      const task = await createMailboxMigrationTask(req.body);
+      res.json({ success: true, task });
+    } catch (err: any) {
+      console.error('[API] Failed to create mailbox migration task:', err);
+      res.status(500).json({ error: err.message || 'Failed to create mailbox migration task' });
+    }
+  });
+
+  // ----------------------------------------------------
   // 6. VITE MIDDLEWARE & STATIC SERVING
   // ----------------------------------------------------
+
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({
       server: { middlewareMode: true },

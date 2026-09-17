@@ -206,3 +206,95 @@ model DiscoveryDistributionList {
   lastScannedAt               DateTime  @default(now())
 }
 
+model MailboxMigrationTemplate {
+  id                        String    @id @default(cuid())
+  name                      String
+  description               String?
+  sourceScenario            String    @default("Primary mailbox")
+  targetScenario            String    @default("Primary mailbox")
+  
+  // Step 3: Migration Options
+  migrateMail               Boolean   @default(true)
+  migrateCalendar           Boolean   @default(true)
+  migrateContacts           Boolean   @default(true)
+  migrateTasksNotes         Boolean   @default(true)
+  migrateRecoverableItems   Boolean   @default(false)
+  migrateSafeSenderList     Boolean   @default(false)
+  resetMigration            Boolean   @default(false)
+
+  // Step 4: Migration Settings
+  migrateMailboxRules       Boolean   @default(false)
+  migrateMailboxDelegation  Boolean   @default(false)
+  enableAutomapping         Boolean   @default(true)
+  migrateFolderPermissions  Boolean   @default(false)
+  migrateAutoReply          Boolean   @default(false)
+  migrateLitigationHold     Boolean   @default(false)
+
+  // Step 5: Mail Flow
+  manageMailForwarding      Boolean   @default(true)
+  mailForwardingAction      String    @default("Apply Mail Forwarding")
+  forwardingDirection       String    @default("From target to source")
+  customForwardingDomain    String?
+
+  // Step 6: Mail Folders
+  folderSelection           String    @default("Migrate all folders")
+  excludedFolders           String    @default("[]")
+  specificFolders           String    @default("[]")
+  migrateToCustomFolder     Boolean   @default(false)
+  customFolderName          String?   @default("Migrated Mailbox")
+  migrateToFolderMap        Boolean   @default(false)
+  inboxTargetFolder         String?   @default("Inbox")
+  deletedItemsTargetFolder  String?   @default("Deleted Items")
+  archiveTargetFolder       String?   @default("Archive")
+  sentItemsTargetFolder     String?   @default("Sent Items")
+
+  // Step 2: Licensing Plan
+  targetLicensingPlan       String    @default("Exchange Online Plan 2")
+  autoAssignLicense         Boolean   @default(true)
+
+  // Step 7: Date Range
+  dateRangeFilter           String    @default("ALL")
+  startDate                 DateTime?
+  endDate                   DateTime?
+  excludeItemsLargerThanMB  Int?      @default(150)
+
+  // Step 8: Notification
+  sendEmailOnComplete       Boolean   @default(true)
+  notificationEmails        String    @default("admin@targetm365.com")
+  sendUserWelcomeEmail      Boolean   @default(false)
+
+  // Step 9: Reporting
+  detailedItemAuditLog      Boolean   @default(true)
+  includeFailedItemReports  Boolean   @default(true)
+
+  // Step 10: Schedule
+  scheduleType              String    @default("IMMEDIATE")
+  scheduledTime             DateTime?
+  concurrencyLimit          Int       @default(10)
+
+  createdAt                 DateTime  @default(now())
+  updatedAt                 DateTime  @updatedAt
+}
+
+model MailboxMigrationTask {
+  id                   String    @id @default(cuid())
+  taskName             String
+  templateId           String?
+  templateName         String?
+  sourceUPN            String
+  targetUPN            String
+  status               String    @default("READY") // READY, IN_PROGRESS, COMPLETED, FAILED, PAUSED
+  progressPercent      Int       @default(0)
+  itemsMigrated        Int       @default(0)
+  totalItems           Int       @default(0)
+  sizeMigratedMB       Float     @default(0)
+  totalSizeMB          Float     @default(0)
+  currentFolder        String?
+  errorMessage         String?
+  startedAt            DateTime?
+  completedAt          DateTime?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+}
+
+

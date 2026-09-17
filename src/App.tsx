@@ -16,6 +16,7 @@ import { AuditTrailViewer } from './components/AuditTrailViewer';
 import { SettingsDashboard } from './components/SettingsDashboard';
 import { ReportGenerationEngine } from './components/ReportGenerationEngine';
 import { DiscoveryDashboard } from './components/discovery/DiscoveryDashboard';
+import { MailboxMigrationDashboard } from './components/mailboxes/MailboxMigrationDashboard';
 import {
   TenantStatusResponse,
   MigrationJob,
@@ -25,7 +26,7 @@ import {
 } from './types';
 
 export type PrimaryTab = 'home' | 'discovery' | 'tenants' | 'migrate' | 'recover' | 'audit' | 'security' | 'reports' | 'settings';
-export type MigrateSubTab = 'projects' | 'active_directory' | 'ad_express' | 'directory_sync' | 'domain_rewrite' | 'domain_move' | 'onedrive' | 'error_management';
+export type MigrateSubTab = 'projects' | 'active_directory' | 'ad_express' | 'mailboxes' | 'directory_sync' | 'domain_rewrite' | 'domain_move' | 'onedrive' | 'error_management';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<PrimaryTab>('discovery');
@@ -338,6 +339,12 @@ export default function App() {
             {migrateSubTab === 'projects' && (
               <div className="animate-fadeIn -m-4">
                 <MigrationProjectDashboard />
+              </div>
+            )}
+
+            {migrateSubTab === 'mailboxes' && (
+              <div className="animate-fadeIn">
+                <MailboxMigrationDashboard />
               </div>
             )}
 

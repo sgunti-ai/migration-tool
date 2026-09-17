@@ -13,23 +13,46 @@ import {
   Lock, 
   Share2, 
   Archive, 
-  RefreshCw 
+  RefreshCw,
+  Plus,
+  CheckCircle2
 } from 'lucide-react';
+import { MailMigrationWizardModal } from '../mailboxes/MailMigrationWizardModal';
 
 interface WorkloadViewProps {
   workload: string;
   onBackToOverview: () => void;
   onExport: () => void;
+  onNavigateToMailboxTemplates?: () => void;
 }
 
 export const WorkloadView: React.FC<WorkloadViewProps> = ({
   workload,
   onBackToOverview,
   onExport,
+  onNavigateToMailboxTemplates,
 }) => {
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const [isWizardOpen, setIsWizardOpen] = useState<boolean>(false);
+  const [toastMsg, setToastMsg] = useState<string | null>(null);
+
+  const handleSaveMailboxTemplate = async (templateData: any) => {
+    try {
+      const res = await fetch('/api/mailboxes/templates', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(templateData),
+      });
+      if (res.ok) {
+        setToastMsg('Mailbox migration template saved successfully!');
+        setTimeout(() => setToastMsg(null), 4000);
+      }
+    } catch (err) {
+      console.error('Failed to save mailbox template:', err);
+    }
+  };
 
   const fetchItems = () => {
     setLoading(true);
@@ -110,6 +133,17 @@ export const WorkloadView: React.FC<WorkloadViewProps> = ({
         </div>
 
         <div className="flex items-center space-x-3">
+          {workload === 'exchange' && (
+            <button
+              id="btn-discovery-create-mailbox-template"
+              onClick={() => setIsWizardOpen(true)}
+              className="px-3 py-1.5 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-lg shadow-sm transition flex items-center space-x-1.5"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span>Create Mailbox Template</span>
+            </button>
+          )}
+
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-500" />
             <input
@@ -130,6 +164,15 @@ export const WorkloadView: React.FC<WorkloadViewProps> = ({
           </button>
         </div>
       </div>
+
+      {/* Toast Notification */}
+      {toastMsg && (
+        <div className="fixed bottom-6 right-6 z-50 px-4 py-3 bg-emerald-950 border border-emerald-500/50 rounded-lg shadow-xl text-xs text-emerald-200 flex items-center space-x-2 animate-fadeIn">
+          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+          <span>{toastMsg}</span>
+        </div>
+      )}
+
 
       {/* Main Table Content */}
       <div className="rounded-xl bg-slate-900/60 border border-slate-800/80 overflow-hidden">
@@ -377,6 +420,14 @@ export const WorkloadView: React.FC<WorkloadViewProps> = ({
           </div>
         )}
       </div>
+
+      {/* 11-Step Mailbox Migration Template Wizard */}
+      <MailMigrationWizardModal
+        isOpen={isWizardOpen}
+        onClose={() => setIsWizardOpen(false)}
+        onSaveTemplate={handleSaveMailboxTemplate}
+      />
     </div>
   );
 };
+

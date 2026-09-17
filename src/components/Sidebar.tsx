@@ -68,6 +68,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: 'projects', label: 'Projects', icon: Kanban },
     { id: 'active_directory', label: 'Active Directory', icon: Cloud },
     { id: 'ad_express', label: 'AD Express', icon: Triangle },
+    { id: 'mailboxes', label: 'Mailboxes', icon: Mail },
     { id: 'onedrive', label: 'OneDrive', icon: HardDrive },
     { id: 'directory_sync', label: 'Directory Sync', icon: RefreshCw },
     { id: 'domain_rewrite', label: 'Domain Rewrite', icon: Mail },
