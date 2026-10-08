@@ -37,6 +37,14 @@ app.get('/api/v2/projects/:projectId/scans',async(req,res)=>{
  if(!project)return res.sendStatus(404);
  res.json(await db.scan.findMany({where:{projectId:project.id,organizationId:project.organizationId},orderBy:{createdAt:'desc'},take:100}));
 });
+app.get('/api/v2/projects/:projectId/scans/:scanId/provenance',async(req,res)=>{
+ const {organizationId}=req.principal!;
+ const scan=await db.scan.findFirst({where:{id:req.params.scanId,projectId:req.params.projectId,organizationId}});
+ if(!scan)return res.sendStatus(404);
+ const workloads=await db.discoveryScanWorkload.findMany({where:{scanId:scan.id,projectId:scan.projectId,organizationId},select:{workload:true,status:true,itemsSeen:true,itemsDeleted:true,pagesRead:true,startedAt:true,completedAt:true,errorMessage:true}});
+ // Never return deltaLink: opaque Graph tokens can expose tenant discovery state.
+ res.json({scanId:scan.id,organizationId,projectId:scan.projectId,sourceTenantId:scan.sourceTenantId,mode:scan.mode,scanType:scan.scanType,apiProvider:scan.apiProvider,status:scan.status,startedAt:scan.startedAt,finishedAt:scan.finishedAt,workloads});
+});
 app.get('/api/v2/projects/:projectId/scans/:scanId/items',async(req,res)=>{
  const scan=await db.scan.findFirst({where:{id:req.params.scanId,projectId:req.params.projectId,organizationId:req.principal!.organizationId}});
  if(!scan)return res.sendStatus(404);
