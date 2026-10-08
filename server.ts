@@ -59,7 +59,11 @@ async function startServer() {
   app.use('/api/auth', (req, res) => res.status(501).json({error:'Legacy synthetic tenant auth disabled. Real tenant consent is not yet implemented.'}));
   app.use('/api', requireAuth, requireSameOrigin);
   app.use('/api', (req,res,next) => {
-    if (req.method === 'POST' && req.path === '/discovery/start' && process.env.DEMO_MODE !== 'true') return next();
+    if (process.env.DEMO_MODE !== 'true' && req.path.startsWith('/discovery/')) {
+      if (req.path === '/discovery/start' && req.method === 'POST') return next();
+      return res.status(410).json({error:'Legacy unscoped discovery endpoint disabled. Use /api/scoped-discovery/:projectId/scans and /items.'});
+    }
+    if (req.path.startsWith('/organizations') || req.path.startsWith('/scoped-discovery/')) return next();
     if (process.env.DEMO_MODE === 'true') return next();
     if (['POST','PUT','PATCH','DELETE'].includes(req.method)) return res.status(503).json({error:'Live migration features are disabled. Only simulated demo operations exist. Set DEMO_MODE=true for isolated demos.'});
     next();
@@ -1395,6 +1399,52 @@ async function startServer() {
     });
   });
 
+
+  // Scoped inventory endpoints. Access limited to approved console admins.
+  app.post('/api/organizations', requireRole(['GLOBAL_ADMIN']), async(req,res)=>{
+    const name=String(req.body?.name||'').trim();
+    if(!name||name.length>150)return res.status(400).json({error:'Valid organization name required'});
+    const org=await prisma.discoveryOrganization.create({data:{name}});
+    res.status(201).json(org);
+  });
+  app.get('/api/organizations',requireRole(['GLOBAL_ADMIN']),async(_req,res)=>{
+    res.json(await prisma.discoveryOrganization.findMany({orderBy:{createdAt:'desc'},take:100}));
+  });
+  app.post('/api/organizations/:organizationId/projects',requireRole(['GLOBAL_ADMIN']),async(req,res)=>{
+    const name=String(req.body?.name||'').trim();
+    const sourceTenantId=String(req.body?.sourceTenantId||'').trim();
+    if(!name||name.length>150||!/^[0-9a-f-]{36}$/i.test(sourceTenantId))return res.status(400).json({error:'Valid name and sourceTenantId required'});
+    const org=await prisma.discoveryOrganization.findUnique({where:{id:req.params.organizationId}});
+    if(!org)return res.sendStatus(404);
+    const project=await prisma.discoveryProject.create({data:{name,sourceTenantId,organizationId:org.id}});
+    res.status(201).json(project);
+  });
+  app.get('/api/organizations/:organizationId/projects',requireRole(['GLOBAL_ADMIN']),async(req,res)=>{
+    const org=await prisma.discoveryOrganization.findUnique({where:{id:req.params.organizationId}});
+    if(!org)return res.sendStatus(404);
+    res.json(await prisma.discoveryProject.findMany({where:{organizationId:org.id},orderBy:{createdAt:'desc'}}));
+  });
+  app.get('/api/scoped-discovery/:projectId/scans',requireRole(['GLOBAL_ADMIN']),async(req,res)=>{
+    const project=await prisma.discoveryProject.findUnique({where:{id:req.params.projectId}});
+    if(!project)return res.sendStatus(404);
+    res.json(await prisma.scopedDiscoveryScan.findMany({where:{projectId:project.id,tenantId:project.sourceTenantId},orderBy:{startedAt:'desc'},take:100}));
+  });
+  app.get('/api/scoped-discovery/:projectId/scans/:scanId',requireRole(['GLOBAL_ADMIN']),async(req,res)=>{
+    const scan=await prisma.scopedDiscoveryScan.findFirst({where:{id:req.params.scanId,projectId:req.params.projectId}});
+    if(!scan)return res.sendStatus(404);
+    res.json({...scan,itemCount:await prisma.scopedDiscoveryItem.count({where:{scanId:scan.id,projectId:scan.projectId,tenantId:scan.tenantId}})});
+  });
+  app.get('/api/scoped-discovery/:projectId/scans/:scanId/items',requireRole(['GLOBAL_ADMIN']),async(req,res)=>{
+    const scan=await prisma.scopedDiscoveryScan.findFirst({where:{id:req.params.scanId,projectId:req.params.projectId}});
+    if(!scan)return res.sendStatus(404);
+    const workload=typeof req.query.workload==='string'?req.query.workload:undefined;
+    const skip=Math.min(100000,Math.max(0,Number(req.query.skip)||0));
+    const take=Math.min(200,Math.max(1,Number(req.query.take)||50));
+    const where={projectId:scan.projectId,tenantId:scan.tenantId,scanId:scan.id,...(workload?{workload}:{})};
+    const [count,items]=await Promise.all([prisma.scopedDiscoveryItem.count({where}),prisma.scopedDiscoveryItem.findMany({where,skip,take,select:{id:true,scanId:true,projectId:true,tenantId:true,workload:true,sourceId:true,displayName:true,discoveredAt:true}})]);
+    res.json({count,items,skip,take});
+  });
+
   // ----------------------------------------------------
   // 5. DISCOVERY MODULE API ENDPOINTS
   // ----------------------------------------------------
@@ -1403,7 +1453,8 @@ async function startServer() {
   app.post('/api/discovery/start', async (req, res) => {
     try {
       const { scanType, workloads } = req.body;
-      const scan = process.env.DEMO_MODE === 'true' ? await startDiscoveryScan({ scanType, workloads }) : await startLiveDiscovery(workloads, (req as any).user.email);
+      const scan = process.env.DEMO_MODE === 'true' ? await startDiscoveryScan({ scanType, workloads }) : await startLiveDiscovery(workloads, (req as any).user.email, String(req.body.projectId || ''));
+      if (process.env.DEMO_MODE !== 'true') return res.json({success:true,scan,readUrl:`/api/scoped-discovery/${scan.projectId}/scans/${scan.id}`});
       res.json({ success: true, scan });
     } catch (err: any) {
       console.error('[API] Failed to start discovery scan:', err);
