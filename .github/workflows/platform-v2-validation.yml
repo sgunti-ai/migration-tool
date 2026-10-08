@@ -1,0 +1,45 @@
+name: Platform v2 validation
+on:
+  push:
+    branches: [refactor/platform-v2-services]
+    paths: ['platform/**','.github/workflows/platform-v2-validation.yml']
+  pull_request:
+    paths: ['platform/**','.github/workflows/platform-v2-validation.yml']
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: migration
+          POSTGRES_PASSWORD: test-only-password
+          POSTGRES_DB: migration
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U migration" --health-interval 5s --health-timeout 5s --health-retries 10
+      redis:
+        image: redis:7-alpine
+        ports: ['6379:6379']
+    defaults:
+      run:
+        working-directory: platform
+    env:
+      DATABASE_URL: postgresql://migration:test-only-password@127.0.0.1:5432/migration
+      REDIS_URL: redis://127.0.0.1:6379
+      OIDC_ISSUER: https://login.microsoftonline.com/00000000-0000-0000-0000-000000000000/v2.0
+      OIDC_JWKS_URL: https://login.microsoftonline.com/00000000-0000-0000-0000-000000000000/discovery/v2.0/keys
+      OIDC_AUDIENCE: test-v2-api
+      CREDENTIAL_ENCRYPTION_KEY: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+      DEMO_MODE: 'false'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install
+      - run: npx prisma validate
+      - run: npx prisma generate
+      - run: npx prisma db push --skip-generate
+      - run: npm run check
+      - run: npm test
