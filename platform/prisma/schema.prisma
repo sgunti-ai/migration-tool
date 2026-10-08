@@ -33,6 +33,10 @@ model Scan {
   workloads String
   status String @default("QUEUED")
   progress Int @default(0)
+  mode String @default("LIVE")
+  scanType String @default("FULL")
+  apiProvider String @default("MICROSOFT_GRAPH_V1")
+  initiatedBy String?
   errorCode String?
   errorMessage String?
   startedAt DateTime?
@@ -52,6 +56,8 @@ model InventoryItem {
   sourceId String
   name String?
   metadata Json
+  isDeleted Boolean @default(false)
+  observedAt DateTime @default(now())
   scan Scan @relation(fields:[scanId],references:[id],onDelete:Cascade)
   @@unique([scanId,workload,sourceId])
   @@index([organizationId,projectId,scanId,workload])
@@ -67,4 +73,33 @@ model TenantCredential {
  keyVersion Int @default(1)
  updatedAt DateTime @updatedAt
  @@index([organizationId,tenantId])
+}
+
+model DiscoveryCursor {
+ id String @id @default(cuid())
+ organizationId String
+ projectId String
+ sourceTenantId String
+ workload String
+ deltaLink String?
+ updatedAt DateTime @updatedAt
+ @@unique([projectId,sourceTenantId,workload])
+ @@index([organizationId,projectId])
+}
+model DiscoveryScanWorkload {
+ id String @id @default(cuid())
+ scanId String
+ organizationId String
+ projectId String
+ sourceTenantId String
+ workload String
+ status String @default("PENDING")
+ itemsSeen Int @default(0)
+ itemsDeleted Int @default(0)
+ pagesRead Int @default(0)
+ startedAt DateTime?
+ completedAt DateTime?
+ errorMessage String?
+ @@unique([scanId,workload])
+ @@index([organizationId,projectId,scanId])
 }
