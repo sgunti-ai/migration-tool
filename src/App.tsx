@@ -1,3 +1,4 @@
+import { SignInPage } from './components/SignInPage';
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -33,6 +34,9 @@ export type PrimaryTab = 'home' | 'discovery' | 'tenants' | 'migrate' | 'recover
 export type MigrateSubTab = 'projects' | 'workload_wizard' | 'active_directory' | 'ad_express' | 'mailboxes' | 'directory_sync' | 'domain_rewrite' | 'domain_move' | 'onedrive' | 'error_management';
 
 export default function App() {
+  const [session, setSession] = useState<{ email: string; role: AdminRole } | null>(null);
+  const [sessionLoading, setSessionLoading] = useState(true);
+  useEffect(() => { fetch('/api/session').then(r => r.ok ? r.json() : null).then(setSession).catch(() => setSession(null)).finally(() => setSessionLoading(false)); }, []);
 
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
     const saved = localStorage.getItem('theme');
@@ -300,6 +304,8 @@ export default function App() {
     }
   };
 
+  if (sessionLoading) return <div className="min-h-screen flex items-center justify-center dark:bg-slate-950">Checking sign-in...</div>;
+  if (!session) return <SignInPage />;
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex transition-colors duration-200 font-sans antialiased selection:bg-blue-600 selection:text-white">
       {/* Sidebar */}
@@ -322,7 +328,7 @@ export default function App() {
       <div className="flex-1 flex flex-col min-w-0">
         {/* Application Header */}
         <header className="flex items-center justify-end px-6 py-3 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800/80 transition-colors">
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4"><span className="text-sm text-slate-500">{session.email}</span><button className="text-sm underline" onClick={async () => { await fetch('/api/logout',{method:'POST'}); location.reload(); }}>Sign out</button>
             <button
               onClick={() => setIsDarkMode(!isDarkMode)}
               className="p-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
