@@ -315,3 +315,15 @@ model MailboxMigrationTask {
 }
 
 
+
+model AppSession {
+  id        String   @id @default(cuid())
+  tokenHash String   @unique
+  email     String
+  provider  String
+  subject   String
+  role      String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  @@index([expiresAt])
+}
