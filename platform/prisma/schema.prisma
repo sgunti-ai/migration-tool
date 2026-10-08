@@ -1,0 +1,58 @@
+generator client { provider = "prisma-client-js" }
+datasource db { provider = "postgresql"; url = env("DATABASE_URL") }
+model Organization {
+  id String @id @default(cuid())
+  name String
+  createdAt DateTime @default(now())
+  members Membership[]
+  projects Project[]
+}
+model Membership {
+  id String @id @default(cuid())
+  organizationId String
+  subject String
+  role String
+  organization Organization @relation(fields:[organizationId],references:[id],onDelete:Restrict)
+  @@unique([organizationId,subject])
+}
+model Project {
+  id String @id @default(cuid())
+  organizationId String
+  sourceTenantId String
+  name String
+  organization Organization @relation(fields:[organizationId],references:[id],onDelete:Restrict)
+  scans Scan[]
+  @@unique([organizationId,id])
+  @@index([organizationId,sourceTenantId])
+}
+model Scan {
+  id String @id @default(cuid())
+  projectId String
+  organizationId String
+  sourceTenantId String
+  workloads String
+  status String @default("QUEUED")
+  progress Int @default(0)
+  errorCode String?
+  errorMessage String?
+  startedAt DateTime?
+  finishedAt DateTime?
+  createdAt DateTime @default(now())
+  project Project @relation(fields:[projectId],references:[id],onDelete:Restrict)
+  items InventoryItem[]
+  @@index([organizationId,projectId,status])
+}
+model InventoryItem {
+  id String @id @default(cuid())
+  scanId String
+  organizationId String
+  projectId String
+  sourceTenantId String
+  workload String
+  sourceId String
+  name String?
+  metadata Json
+  scan Scan @relation(fields:[scanId],references:[id],onDelete:Cascade)
+  @@unique([scanId,workload,sourceId])
+  @@index([organizationId,projectId,scanId,workload])
+}
