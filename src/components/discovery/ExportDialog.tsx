@@ -75,21 +75,21 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
-      <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden p-6 space-y-5">
+      <div className="w-full max-w-md bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden p-6 space-y-5">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+        <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
           <div className="flex items-center space-x-2.5">
             <div className="p-2 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20">
               <Download className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-white">Export Discovery Inventory</h3>
-              <p className="text-xs text-slate-400">Download discovered tenant data for offline auditing or migration planning</p>
+              <h3 className="text-base font-bold text-slate-900 dark:text-white">Export Discovery Inventory</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Download discovered tenant data for offline auditing or migration planning</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition"
+            className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white hover:bg-white dark:bg-slate-800 rounded-lg transition"
           >
             <X className="w-4 h-4" />
           </button>
@@ -97,7 +97,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
 
         {/* Format Selection */}
         <div className="space-y-2">
-          <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider">
+          <label className="text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
             Export Format
           </label>
           <div className="grid grid-cols-2 gap-3">
@@ -107,14 +107,14 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
               onClick={() => setFormat('csv')}
               className={`p-3 rounded-xl border flex items-center space-x-3 text-left transition ${
                 format === 'csv'
-                  ? 'bg-blue-600/10 border-blue-500 text-white'
-                  : 'bg-slate-800/40 border-slate-800 text-slate-400 hover:text-slate-200'
+                  ? 'bg-blue-600/10 border-blue-500 text-slate-900 dark:text-white'
+                  : 'bg-white dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 hover:text-slate-200'
               }`}
             >
               <FileText className={`w-5 h-5 ${format === 'csv' ? 'text-blue-400' : 'text-slate-500'}`} />
               <div>
                 <div className="text-sm font-semibold">CSV Spreadsheet</div>
-                <div className="text-[11px] text-slate-400">Excel / Table compatible</div>
+                <div className="text-[11px] text-slate-500 dark:text-slate-400">Excel / Table compatible</div>
               </div>
             </button>
 
@@ -124,14 +124,14 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
               onClick={() => setFormat('json')}
               className={`p-3 rounded-xl border flex items-center space-x-3 text-left transition ${
                 format === 'json'
-                  ? 'bg-blue-600/10 border-blue-500 text-white'
-                  : 'bg-slate-800/40 border-slate-800 text-slate-400 hover:text-slate-200'
+                  ? 'bg-blue-600/10 border-blue-500 text-slate-900 dark:text-white'
+                  : 'bg-white dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 hover:text-slate-200'
               }`}
             >
               <Code2 className={`w-5 h-5 ${format === 'json' ? 'text-blue-400' : 'text-slate-500'}`} />
               <div>
                 <div className="text-sm font-semibold">Structured JSON</div>
-                <div className="text-[11px] text-slate-400">API & Scripting payload</div>
+                <div className="text-[11px] text-slate-500 dark:text-slate-400">API & Scripting payload</div>
               </div>
             </button>
           </div>
@@ -139,14 +139,14 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
 
         {/* Workload Selection */}
         <div className="space-y-2">
-          <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider">
+          <label className="text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
             Target Workload
           </label>
           <select
             id="select-export-workload"
             value={workload}
             onChange={(e) => setWorkload(e.target.value)}
-            className="w-full px-3 py-2 text-sm bg-slate-800/80 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="w-full px-3 py-2 text-sm bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-blue-500"
           >
             <option value="users">Entra ID Users & Security Profiles</option>
             <option value="groups">M365 & Security Groups</option>
@@ -161,12 +161,12 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
         {/* Export Scope (Only if Workload is Users) */}
         {workload === 'users' && (
           <div className="space-y-2">
-            <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider">
+            <label className="text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
               Data Scope
             </label>
-            <div className="space-y-1.5 text-xs text-slate-300">
+            <div className="space-y-1.5 text-xs text-slate-600 dark:text-slate-300">
               {selectedUsers.length > 0 && (
-                <label className="flex items-center space-x-2.5 p-2 rounded-lg bg-slate-800/40 border border-slate-800 cursor-pointer">
+                <label className="flex items-center space-x-2.5 p-2 rounded-lg bg-white dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 cursor-pointer">
                   <input
                     type="radio"
                     name="scope"
@@ -175,12 +175,12 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
                     className="text-blue-600 focus:ring-blue-500"
                   />
                   <span>
-                    Selected items only (<strong className="text-white">{selectedUsers.length}</strong> users)
+                    Selected items only (<strong className="text-slate-900 dark:text-white">{selectedUsers.length}</strong> users)
                   </span>
                 </label>
               )}
 
-              <label className="flex items-center space-x-2.5 p-2 rounded-lg bg-slate-800/40 border border-slate-800 cursor-pointer">
+              <label className="flex items-center space-x-2.5 p-2 rounded-lg bg-white dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 cursor-pointer">
                 <input
                   type="radio"
                   name="scope"
@@ -189,7 +189,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
                   className="text-blue-600 focus:ring-blue-500"
                 />
                 <span>
-                  All filtered users (<strong className="text-white">{totalFilteredCount}</strong> users)
+                  All filtered users (<strong className="text-slate-900 dark:text-white">{totalFilteredCount}</strong> users)
                 </span>
               </label>
             </div>
@@ -197,11 +197,11 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
         )}
 
         {/* Footer */}
-        <div className="pt-3 border-t border-slate-800 flex items-center justify-end space-x-3">
+        <div className="pt-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-end space-x-3">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 text-xs font-medium text-slate-400 hover:text-white transition"
+            className="px-4 py-2 text-xs font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white transition"
           >
             Cancel
           </button>

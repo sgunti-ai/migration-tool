@@ -7,8 +7,45 @@ export interface DiscoveryScanOptions {
   workloads?: string[];
 }
 
-// In-memory reference to active scan task if running
-let activeScanInterval: any = null;
+// In-memory reference to active scan state & timer
+export interface ActiveScanState {
+  scanId: string;
+  scanType: string;
+  workloads: string[];
+  sourceTenantDomain: string;
+  currentStageIndex: number;
+  retryCount: number;
+  maxRetries: number;
+  status: 'RUNNING' | 'RETRYING' | 'PAUSED' | 'COMPLETED' | 'FAILED';
+  currentStageName: string;
+  resumedFromStage?: string;
+  progress: number;
+  startedAt: Date;
+}
+
+let activeScanState: ActiveScanState | null = null;
+let activeScanTimer: NodeJS.Timeout | null = null;
+let lastFailedScanCheckpoint: {
+  scanId: string;
+  scanType: string;
+  workloads: string[];
+  sourceTenantDomain: string;
+  currentStageIndex: number;
+  progress: number;
+  lastCompletedWorkload?: string;
+  disconnectReason?: string;
+} | null = null;
+
+// Workload stages explicitly covering all 7 workloads requested
+export const DISCOVERY_WORKLOAD_STAGES = [
+  { id: 'Exchange', workload: 'Exchange', label: 'Mailboxes', name: 'Exchange Online Mailboxes, In-Place Archives & Routing', pct: 15 },
+  { id: 'Users', workload: 'Users', label: 'User Accounts', name: 'Entra ID User Accounts, Licenses, RBAC & MFA Enforcements', pct: 30 },
+  { id: 'Groups', workload: 'Groups', label: 'Groups', name: 'Security Groups & Microsoft 365 Unified Collaboration Groups', pct: 45 },
+  { id: 'DistributionLists', workload: 'DistributionLists', label: 'Distribution Lists', name: 'Distribution Lists, Delivery Restrictions & Moderation Policies', pct: 60 },
+  { id: 'OneDrive', workload: 'OneDrive', label: 'OneDrive Accounts', name: 'OneDrive for Business Personal Sites, Quotas & External Sharing', pct: 75 },
+  { id: 'SharePoint', workload: 'SharePoint', label: 'SharePoint Sites', name: 'SharePoint Online Site Collections, Document Libraries & Permissions', pct: 88 },
+  { id: 'Teams', workload: 'Teams', label: 'Teams Data', name: 'Microsoft Teams, Channels, Tabs, File Hierarchies & Apps', pct: 98 },
+];
 
 // Initial high-fidelity seed dataset across all 7 M365 workloads
 export const SEED_DISCOVERY_USERS = [
@@ -593,18 +630,25 @@ export async function ensureDiscoveryDataSeeded() {
 }
 
 /**
- * Starts a discovery scan across requested workloads
+ * Starts a discovery scan across requested workloads on the source tenant
  */
 export async function startDiscoveryScan(options: DiscoveryScanOptions = {}) {
   const scanType = options.scanType || 'FULL';
+  
+  // Find configured source tenant domain or default
+  const sourceTenant = await prisma.tenantConnection.findUnique({
+    where: { tenantType: 'SOURCE' },
+  });
+  const sourceTenantDomain = sourceTenant?.domain || 'contoso.onmicrosoft.com';
+
   const targetWorkloads = options.workloads && options.workloads.length > 0
     ? options.workloads
-    : ['Users', 'Groups', 'OneDrive', 'Exchange', 'SharePoint', 'Teams', 'DistributionLists'];
+    : ['Exchange', 'Users', 'Groups', 'DistributionLists', 'OneDrive', 'SharePoint', 'Teams'];
 
-  // Abort any existing interval
-  if (activeScanInterval) {
-    clearInterval(activeScanInterval);
-    activeScanInterval = null;
+  // Abort any existing timer
+  if (activeScanTimer) {
+    clearTimeout(activeScanTimer);
+    activeScanTimer = null;
   }
 
   // Create new scan record in Prisma SQLite
@@ -613,11 +657,26 @@ export async function startDiscoveryScan(options: DiscoveryScanOptions = {}) {
       scanType,
       status: 'RUNNING',
       workloads: JSON.stringify(targetWorkloads),
-      currentStage: `Initializing ${scanType} scan for ${targetWorkloads.length} workloads...`,
+      currentStage: `Connecting to source tenant ${sourceTenantDomain} (Microsoft Graph & Exchange Online)...`,
       progress: 5,
       startedAt: new Date(),
     },
   });
+
+  // Initialize active in-memory scan state with 3-retry checkpoint management
+  activeScanState = {
+    scanId: scan.id,
+    scanType,
+    workloads: targetWorkloads,
+    sourceTenantDomain,
+    currentStageIndex: 0,
+    retryCount: 0,
+    maxRetries: 3,
+    status: 'RUNNING',
+    currentStageName: `Initializing scan pipeline for source tenant ${sourceTenantDomain}...`,
+    progress: 5,
+    startedAt: new Date(),
+  };
 
   await recordAuditLog({
     actorEmail: 'admin@contoso.onmicrosoft.com',
@@ -625,140 +684,530 @@ export async function startDiscoveryScan(options: DiscoveryScanOptions = {}) {
     action: `DISCOVERY_SCAN_${scanType}_STARTED`,
     resource: `DiscoveryScan:${scan.id}`,
     status: 'SUCCESS',
-    details: `Started ${scanType} discovery scan targeting: ${targetWorkloads.join(', ')}`,
+    details: `Started ${scanType} discovery scan on source tenant ${sourceTenantDomain} targeting: ${targetWorkloads.join(', ')}`,
   });
 
-  // Execute scan pipeline asynchronously with realistic step intervals
-  executeScanStages(scan.id, scanType, targetWorkloads);
+  broadcast({
+    type: 'DISCOVERY_PROGRESS_UPDATE',
+    data: {
+      id: scan.id,
+      ...activeScanState,
+    },
+  });
 
-  return scan;
+  // Begin scanning workloads step-by-step
+  scheduleNextScanStep(1000);
+
+  return {
+    ...scan,
+    retryCount: 0,
+    maxRetries: 3,
+    sourceTenantDomain,
+  };
 }
 
 /**
- * Incremental / Full execution pipeline
+ * Schedule next workload scan step
  */
-async function executeScanStages(scanId: string, scanType: string, workloads: string[]) {
-  const stages = [
-    { name: 'Entra ID Users & Security Authentication Methods', workload: 'Users', pct: 20 },
-    { name: 'Entra ID Security & M365 Unified Groups', workload: 'Groups', pct: 35 },
-    { name: 'OneDrive for Business Sites & Personal Storage Quotas', workload: 'OneDrive', pct: 50 },
-    { name: 'Exchange Online Mailboxes, Archiving & Permissions', workload: 'Exchange', pct: 65 },
-    { name: 'SharePoint Online Site Collections & Document Libraries', workload: 'SharePoint', pct: 80 },
-    { name: 'Microsoft Teams, Channels, Tabs & File Ecosystem', workload: 'Teams', pct: 90 },
-    { name: 'Distribution Lists, Mail Delivery & Moderation Rules', workload: 'DistributionLists', pct: 98 },
-  ];
+function scheduleNextScanStep(delayMs = 1400) {
+  if (activeScanTimer) {
+    clearTimeout(activeScanTimer);
+    activeScanTimer = null;
+  }
+  activeScanTimer = setTimeout(() => {
+    executeNextScanStep();
+  }, delayMs);
+}
 
-  let currentStageIndex = 0;
+/**
+ * Executes the next workload discovery stage sequentially with checkpoint preservation
+ */
+async function executeNextScanStep() {
+  if (!activeScanState || activeScanState.status !== 'RUNNING') {
+    return;
+  }
 
-  activeScanInterval = setInterval(async () => {
-    try {
-      if (currentStageIndex >= stages.length) {
-        clearInterval(activeScanInterval);
-        activeScanInterval = null;
+  const { scanId, scanType, currentStageIndex, sourceTenantDomain } = activeScanState;
 
-        // Fetch latest counts from DB
-        const usersCount = await prisma.discoveryUser.count();
-        const groupsCount = await prisma.discoveryGroup.count();
-        const odCount = await prisma.discoveryOneDrive.count();
-        const mbxCount = await prisma.discoveryMailbox.count();
-        const spCount = await prisma.discoverySharePointSite.count();
-        const teamsCount = await prisma.discoveryTeam.count();
-        const dlCount = await prisma.discoveryDistributionList.count();
-
-        // Calculate total storage
-        const odBytes = await prisma.discoveryOneDrive.aggregate({ _sum: { storageUsedBytes: true } });
-        const spMB = await prisma.discoverySharePointSite.aggregate({ _sum: { storageUsedMB: true } });
-        const totalGB = Math.round(
-          ((odBytes._sum.storageUsedBytes || 0) / (1024 * 1024 * 1024)) +
-          ((spMB._sum.storageUsedMB || 0) / 1024)
-        );
-
-        const completedScan = await prisma.discoveryScan.update({
-          where: { id: scanId },
-          data: {
-            status: 'COMPLETED',
-            currentStage: 'Discovery Completed - All Workload Indexes Refreshed',
-            progress: 100,
-            usersDiscovered: usersCount,
-            groupsDiscovered: groupsCount,
-            oneDrivesDiscovered: odCount,
-            mailboxesDiscovered: mbxCount,
-            sharePointSitesDiscovered: spCount,
-            teamsDiscovered: teamsCount,
-            dlDiscovered: dlCount,
-            totalItemsDiscovered: usersCount + groupsCount + odCount + mbxCount + spCount + teamsCount + dlCount,
-            totalStorageGB: totalGB,
-            completedAt: new Date(),
-          },
-        });
-
-        // Broadcast to WebSocket clients
-        broadcast({
-          type: 'DISCOVERY_COMPLETED',
-          data: completedScan,
-        });
-
-        await recordAuditLog({
-          actorEmail: 'admin@contoso.onmicrosoft.com',
-          actorRole: 'GLOBAL_ADMIN',
-          action: 'DISCOVERY_SCAN_COMPLETED',
-          resource: `DiscoveryScan:${scanId}`,
-          status: 'SUCCESS',
-          details: `Completed discovery with ${completedScan.totalItemsDiscovered} items across ${workloads.length} workloads.`,
-        });
-
-        return;
+  try {
+    // Check if all workload stages are completed
+    if (currentStageIndex >= DISCOVERY_WORKLOAD_STAGES.length) {
+      if (activeScanTimer) {
+        clearTimeout(activeScanTimer);
+        activeScanTimer = null;
       }
 
-      const stage = stages[currentStageIndex];
-      currentStageIndex++;
+      // Fetch latest counts from DB
+      const usersCount = await prisma.discoveryUser.count();
+      const groupsCount = await prisma.discoveryGroup.count();
+      const odCount = await prisma.discoveryOneDrive.count();
+      const mbxCount = await prisma.discoveryMailbox.count();
+      const spCount = await prisma.discoverySharePointSite.count();
+      const teamsCount = await prisma.discoveryTeam.count();
+      const dlCount = await prisma.discoveryDistributionList.count();
 
-      // If incremental, simulate updating lastScannedAt
-      if (scanType === 'INCREMENTAL') {
-        const now = new Date();
-        if (stage.workload === 'Users') {
-          await prisma.discoveryUser.updateMany({ data: { lastScannedAt: now } });
-        } else if (stage.workload === 'Groups') {
-          await prisma.discoveryGroup.updateMany({ data: { lastScannedAt: now } });
-        }
-      }
+      // Calculate total storage
+      const odBytes = await prisma.discoveryOneDrive.aggregate({ _sum: { storageUsedBytes: true } });
+      const spMB = await prisma.discoverySharePointSite.aggregate({ _sum: { storageUsedMB: true } });
+      const mbxMB = await prisma.discoveryMailbox.aggregate({ _sum: { totalItemSizeMB: true } });
+      const totalGB = Math.round(
+        ((odBytes._sum.storageUsedBytes || 0) / (1024 * 1024 * 1024)) +
+        ((spMB._sum.storageUsedMB || 0) / 1024) +
+        ((mbxMB._sum.totalItemSizeMB || 0) / 1024)
+      );
 
-      const updatedScan = await prisma.discoveryScan.update({
+      const totalItemsDiscovered = usersCount + groupsCount + odCount + mbxCount + spCount + teamsCount + dlCount;
+
+      const completedScan = await prisma.discoveryScan.update({
         where: { id: scanId },
         data: {
-          currentStage: `Scanning ${stage.name}...`,
-          progress: stage.pct,
+          status: 'COMPLETED',
+          currentStage: `Discovery Completed - All 7 Workloads Discovered & Indexed from ${sourceTenantDomain}`,
+          progress: 100,
+          usersDiscovered: usersCount,
+          groupsDiscovered: groupsCount,
+          oneDrivesDiscovered: odCount,
+          mailboxesDiscovered: mbxCount,
+          sharePointSitesDiscovered: spCount,
+          teamsDiscovered: teamsCount,
+          dlDiscovered: dlCount,
+          totalItemsDiscovered,
+          totalStorageGB: totalGB,
+          completedAt: new Date(),
+        },
+      });
+
+      // Broadcast completion to all WebSocket clients
+      broadcast({
+        type: 'DISCOVERY_COMPLETED',
+        data: {
+          ...completedScan,
+          sourceTenantDomain,
+          retryCount: activeScanState.retryCount,
+          maxRetries: activeScanState.maxRetries,
+        },
+      });
+
+      await recordAuditLog({
+        actorEmail: 'admin@contoso.onmicrosoft.com',
+        actorRole: 'GLOBAL_ADMIN',
+        action: 'DISCOVERY_SCAN_COMPLETED',
+        resource: `DiscoveryScan:${scanId}`,
+        status: 'SUCCESS',
+        details: `Completed discovery scan on ${sourceTenantDomain} with ${totalItemsDiscovered} items across all 7 workloads.`,
+      });
+
+      activeScanState = null;
+      return;
+    }
+
+    // Execute current workload stage
+    const stage = DISCOVERY_WORKLOAD_STAGES[currentStageIndex];
+    const stageDescription = `Scanning ${stage.label} (${stage.name}) on source tenant ${sourceTenantDomain}...`;
+    activeScanState.currentStageName = stageDescription;
+    activeScanState.progress = stage.pct;
+
+    // Simulate touching lastScannedAt
+    const now = new Date();
+    if (stage.workload === 'Users') {
+      await prisma.discoveryUser.updateMany({ data: { lastScannedAt: now } });
+    } else if (stage.workload === 'Exchange') {
+      await prisma.discoveryMailbox.updateMany({ data: { lastScannedAt: now } });
+    } else if (stage.workload === 'Groups') {
+      await prisma.discoveryGroup.updateMany({ data: { lastScannedAt: now } });
+    } else if (stage.workload === 'OneDrive') {
+      await prisma.discoveryOneDrive.updateMany({ data: { lastScannedAt: now } });
+    } else if (stage.workload === 'SharePoint') {
+      await prisma.discoverySharePointSite.updateMany({ data: { lastScannedAt: now } });
+    } else if (stage.workload === 'Teams') {
+      await prisma.discoveryTeam.updateMany({ data: { lastScannedAt: now } });
+    } else if (stage.workload === 'DistributionLists') {
+      await prisma.discoveryDistributionList.updateMany({ data: { lastScannedAt: now } });
+    }
+
+    const updatedScan = await prisma.discoveryScan.update({
+      where: { id: scanId },
+      data: {
+        currentStage: stageDescription,
+        progress: stage.pct,
+      },
+    });
+
+    broadcast({
+      type: 'DISCOVERY_PROGRESS_UPDATE',
+      data: {
+        ...updatedScan,
+        currentStageIndex,
+        totalStages: DISCOVERY_WORKLOAD_STAGES.length,
+        currentWorkload: stage.label,
+        retryCount: activeScanState.retryCount,
+        maxRetries: activeScanState.maxRetries,
+        sourceTenantDomain,
+      },
+    });
+
+    // Advance to next stage index
+    activeScanState.currentStageIndex++;
+
+    // Schedule next workload scan
+    scheduleNextScanStep(1500);
+
+  } catch (err: any) {
+    console.error('[DISCOVERY] Pipeline error during stage execution:', err);
+    await handleScanDisconnect(err.message || 'Transient network or Microsoft Graph API communication error');
+  }
+}
+
+/**
+ * Handles disconnection with up to 3 retries, continuing from the exact paused stage
+ */
+export async function handleScanDisconnect(errorReason = 'Transient Microsoft Graph Connection Interruption') {
+  if (!activeScanState) return;
+
+  if (activeScanTimer) {
+    clearTimeout(activeScanTimer);
+    activeScanTimer = null;
+  }
+
+  const { scanId, retryCount, maxRetries, currentStageIndex, sourceTenantDomain } = activeScanState;
+  const currentStage = DISCOVERY_WORKLOAD_STAGES[currentStageIndex] || DISCOVERY_WORKLOAD_STAGES[0];
+
+  if (retryCount < maxRetries) {
+    activeScanState.retryCount++;
+    activeScanState.status = 'RETRYING';
+    activeScanState.resumedFromStage = currentStage.label;
+
+    const retryNotice = `Disconnected from source tenant (${errorReason}). Retrying connection (Attempt ${activeScanState.retryCount} of ${maxRetries})... Resuming from ${currentStage.label}`;
+    activeScanState.currentStageName = retryNotice;
+
+    await prisma.discoveryScan.update({
+      where: { id: scanId },
+      data: {
+        status: 'RETRYING',
+        currentStage: retryNotice,
+      },
+    });
+
+    await recordAuditLog({
+      actorEmail: 'system@contoso.onmicrosoft.com',
+      actorRole: 'GLOBAL_ADMIN',
+      action: 'DISCOVERY_SCAN_RETRYING',
+      resource: `DiscoveryScan:${scanId}`,
+      status: 'WARNING',
+      details: `Connection to source tenant ${sourceTenantDomain} interrupted. Attempting auto-recovery ${activeScanState.retryCount}/${maxRetries}. Preserving checkpoint at stage ${currentStage.label}.`,
+    });
+
+    broadcast({
+      type: 'DISCOVERY_RETRYING',
+      data: {
+        scanId,
+        status: 'RETRYING',
+        retryCount: activeScanState.retryCount,
+        maxRetries,
+        progress: activeScanState.progress,
+        currentStage: retryNotice,
+        resumedFromStage: currentStage.label,
+        sourceTenantDomain,
+      },
+    });
+
+    // Wait backoff interval and resume from EXACT checkpoint
+    activeScanTimer = setTimeout(async () => {
+      if (!activeScanState) return;
+      activeScanState.status = 'RUNNING';
+      const resumeNotice = `Connection restored to ${sourceTenantDomain}. Resuming scan from ${currentStage.label}...`;
+      activeScanState.currentStageName = resumeNotice;
+
+      await prisma.discoveryScan.update({
+        where: { id: scanId },
+        data: {
+          status: 'RUNNING',
+          currentStage: resumeNotice,
         },
       });
 
       broadcast({
         type: 'DISCOVERY_PROGRESS_UPDATE',
-        data: updatedScan,
-      });
-    } catch (err: any) {
-      console.error('[DISCOVERY] Pipeline error:', err);
-      clearInterval(activeScanInterval);
-      activeScanInterval = null;
-      await prisma.discoveryScan.update({
-        where: { id: scanId },
         data: {
-          status: 'FAILED',
-          errorMessage: err.message,
-          currentStage: 'Scan Failed',
+          scanId,
+          status: 'RUNNING',
+          retryCount: activeScanState.retryCount,
+          maxRetries,
+          progress: activeScanState.progress,
+          currentStage: resumeNotice,
+          sourceTenantDomain,
         },
       });
-    }
-  }, 1200);
+
+      // Continue execution from the exact currentStageIndex without resetting
+      scheduleNextScanStep(1000);
+    }, 2800);
+
+  } else {
+    // 3 retries exhausted -> Mark scan as FAILED
+    activeScanState.status = 'FAILED';
+    const failNotice = `Discovery scan failed after ${maxRetries} retry attempts: Unable to maintain connection to source tenant ${sourceTenantDomain}.`;
+
+    await prisma.discoveryScan.update({
+      where: { id: scanId },
+      data: {
+        status: 'FAILED',
+        errorMessage: failNotice,
+        currentStage: failNotice,
+      },
+    });
+
+    await recordAuditLog({
+      actorEmail: 'system@contoso.onmicrosoft.com',
+      actorRole: 'GLOBAL_ADMIN',
+      action: 'DISCOVERY_SCAN_FAILED',
+      resource: `DiscoveryScan:${scanId}`,
+      status: 'FAILED',
+      details: failNotice,
+    });
+
+    broadcast({
+      type: 'DISCOVERY_FAILED',
+      data: {
+        scanId,
+        status: 'FAILED',
+        errorMessage: failNotice,
+        sourceTenantDomain,
+      },
+    });
+
+    lastFailedScanCheckpoint = {
+      scanId: activeScanState.scanId,
+      scanType: activeScanState.scanType,
+      workloads: activeScanState.workloads,
+      sourceTenantDomain: activeScanState.sourceTenantDomain,
+      currentStageIndex: activeScanState.currentStageIndex,
+      progress: activeScanState.progress,
+      lastCompletedWorkload: activeScanState.resumedFromStage || currentStage.label,
+      disconnectReason: failNotice,
+    };
+
+    activeScanState = null;
+  }
 }
 
 /**
- * Returns latest discovery status & progress
+ * Retries and resumes a failed or interrupted discovery scan, transitioning it back into RUNNING progress
+ */
+export async function retryDiscoveryScan(options: { fromCheckpoint?: boolean; scanType?: string; workloads?: string[] } = {}) {
+  const fromCheckpoint = options.fromCheckpoint !== false;
+
+  if (activeScanTimer) {
+    clearTimeout(activeScanTimer);
+    activeScanTimer = null;
+  }
+
+  // 1. Resume from in-memory failed checkpoint if available
+  if (fromCheckpoint && lastFailedScanCheckpoint) {
+    const cp = lastFailedScanCheckpoint;
+    const stageToResume = DISCOVERY_WORKLOAD_STAGES[cp.currentStageIndex] || DISCOVERY_WORKLOAD_STAGES[0];
+    const resumeNotice = `Connection restored. Resuming discovery scan from checkpoint: ${stageToResume.label} (${cp.progress}%)...`;
+
+    activeScanState = {
+      scanId: cp.scanId,
+      scanType: cp.scanType,
+      workloads: cp.workloads,
+      sourceTenantDomain: cp.sourceTenantDomain,
+      currentStageIndex: cp.currentStageIndex,
+      retryCount: 0,
+      maxRetries: 3,
+      status: 'RUNNING',
+      currentStageName: resumeNotice,
+      progress: Math.max(5, cp.progress),
+      startedAt: new Date(),
+      resumedFromStage: stageToResume.label,
+    };
+
+    await prisma.discoveryScan.update({
+      where: { id: cp.scanId },
+      data: {
+        status: 'RUNNING',
+        currentStage: resumeNotice,
+        progress: Math.max(5, cp.progress),
+        errorMessage: null,
+      },
+    });
+
+    await recordAuditLog({
+      actorEmail: 'admin@contoso.onmicrosoft.com',
+      actorRole: 'GLOBAL_ADMIN',
+      action: 'DISCOVERY_SCAN_RESUMED',
+      resource: `DiscoveryScan:${cp.scanId}`,
+      status: 'SUCCESS',
+      details: `Resumed discovery scan from checkpoint at ${stageToResume.label} (${cp.progress}%) with fresh retry quota.`,
+    });
+
+    broadcast({
+      type: 'DISCOVERY_PROGRESS_UPDATE',
+      data: {
+        scanId: cp.scanId,
+        id: cp.scanId,
+        status: 'RUNNING',
+        retryCount: 0,
+        maxRetries: 3,
+        progress: activeScanState.progress,
+        currentStage: resumeNotice,
+        sourceTenantDomain: cp.sourceTenantDomain,
+      },
+    });
+
+    scheduleNextScanStep(1000);
+
+    return {
+      success: true,
+      resumed: true,
+      status: 'RUNNING',
+      stage: stageToResume.label,
+      progress: cp.progress,
+      scanId: cp.scanId,
+    };
+  }
+
+  // 2. Check if latest scan in database was marked as FAILED
+  const latestFailedScan = await prisma.discoveryScan.findFirst({
+    where: { status: 'FAILED' },
+    orderBy: { startedAt: 'desc' },
+  });
+
+  if (fromCheckpoint && latestFailedScan) {
+    const workloads = JSON.parse(latestFailedScan.workloads || '["Exchange", "Users", "Groups", "DistributionLists", "OneDrive", "SharePoint", "Teams"]');
+    const sourceTenant = await prisma.tenantConnection.findUnique({
+      where: { tenantType: 'SOURCE' },
+    });
+    const sourceTenantDomain = sourceTenant?.domain || 'contoso.onmicrosoft.com';
+    const resumeProgress = Math.max(15, latestFailedScan.progress || 15);
+    const resumeStageIndex = Math.min(
+      DISCOVERY_WORKLOAD_STAGES.length - 1,
+      Math.floor((resumeProgress / 100) * DISCOVERY_WORKLOAD_STAGES.length)
+    );
+    const stageToResume = DISCOVERY_WORKLOAD_STAGES[resumeStageIndex];
+    const resumeNotice = `Connection restored. Resuming discovery scan from checkpoint: ${stageToResume.label} (${resumeProgress}%)...`;
+
+    activeScanState = {
+      scanId: latestFailedScan.id,
+      scanType: latestFailedScan.scanType,
+      workloads,
+      sourceTenantDomain,
+      currentStageIndex: resumeStageIndex,
+      retryCount: 0,
+      maxRetries: 3,
+      status: 'RUNNING',
+      currentStageName: resumeNotice,
+      progress: resumeProgress,
+      startedAt: new Date(),
+      resumedFromStage: stageToResume.label,
+    };
+
+    await prisma.discoveryScan.update({
+      where: { id: latestFailedScan.id },
+      data: {
+        status: 'RUNNING',
+        currentStage: resumeNotice,
+        progress: resumeProgress,
+        errorMessage: null,
+      },
+    });
+
+    broadcast({
+      type: 'DISCOVERY_PROGRESS_UPDATE',
+      data: {
+        scanId: latestFailedScan.id,
+        id: latestFailedScan.id,
+        status: 'RUNNING',
+        retryCount: 0,
+        maxRetries: 3,
+        progress: resumeProgress,
+        currentStage: resumeNotice,
+        sourceTenantDomain,
+      },
+    });
+
+    scheduleNextScanStep(1000);
+
+    return {
+      success: true,
+      resumed: true,
+      status: 'RUNNING',
+      stage: stageToResume.label,
+      progress: resumeProgress,
+      scanId: latestFailedScan.id,
+    };
+  }
+
+  // 3. Fallback: Start fresh scan
+  const newScan = await startDiscoveryScan({
+    scanType: (options.scanType as any) || 'FULL',
+    workloads: options.workloads,
+  });
+
+  return {
+    success: true,
+    resumed: false,
+    status: 'RUNNING',
+    scanId: newScan.id,
+    progress: 5,
+  };
+}
+
+/**
+ * Triggers a simulated disconnect during an active scan to test the 3-attempt checkpoint retry
+ */
+export async function triggerSimulatedDisconnect(reason = 'Simulated Graph API Throttling & Network Disconnect') {
+  if (!activeScanState || (activeScanState.status !== 'RUNNING' && activeScanState.status !== 'RETRYING')) {
+    return {
+      success: false,
+      message: 'No active discovery scan is currently running to simulate disconnect on.',
+    };
+  }
+
+  await handleScanDisconnect(reason);
+
+  return {
+    success: true,
+    message: `Disconnect triggered. Retrying attempt ${activeScanState?.retryCount || 1} of ${activeScanState?.maxRetries || 3}. Resuming from checkpoint: ${activeScanState?.resumedFromStage || 'Current Workload'}`,
+    activeScanState,
+  };
+}
+
+/**
+ * Returns latest discovery status & progress with active retry & checkpoint information
  */
 export async function getDiscoveryStatus() {
   const latestScan = await prisma.discoveryScan.findFirst({
     orderBy: { startedAt: 'desc' },
   });
-  return latestScan;
+
+  const sourceTenant = await prisma.tenantConnection.findUnique({
+    where: { tenantType: 'SOURCE' },
+  });
+  const sourceTenantDomain = sourceTenant?.domain || 'contoso.onmicrosoft.com';
+
+  if (activeScanState && latestScan && activeScanState.scanId === latestScan.id) {
+    return {
+      ...latestScan,
+      status: activeScanState.status,
+      currentStage: activeScanState.currentStageName,
+      progress: activeScanState.progress,
+      retryCount: activeScanState.retryCount,
+      maxRetries: activeScanState.maxRetries,
+      sourceTenantDomain: activeScanState.sourceTenantDomain,
+      resumedFromStage: activeScanState.resumedFromStage,
+      currentStageIndex: activeScanState.currentStageIndex,
+      totalStages: DISCOVERY_WORKLOAD_STAGES.length,
+    };
+  }
+
+  return {
+    ...(latestScan || { status: 'NOT_STARTED', progress: 0 }),
+    sourceTenantDomain,
+    retryCount: 0,
+    maxRetries: 3,
+  };
 }
 
 /**
@@ -774,6 +1223,7 @@ export async function getDiscoverySummary() {
     teamsCount,
     dlCount,
     lastScan,
+    sourceTenant,
   ] = await Promise.all([
     prisma.discoveryUser.count(),
     prisma.discoveryGroup.count(),
@@ -785,6 +1235,9 @@ export async function getDiscoverySummary() {
     prisma.discoveryScan.findFirst({
       where: { status: 'COMPLETED' },
       orderBy: { completedAt: 'desc' },
+    }),
+    prisma.tenantConnection.findUnique({
+      where: { tenantType: 'SOURCE' },
     }),
   ]);
 
@@ -810,6 +1263,11 @@ export async function getDiscoverySummary() {
   const mfaDisabled = await prisma.discoveryUser.count({ where: { mfaStatus: 'DISABLED' } });
 
   return {
+    sourceTenant: {
+      domain: sourceTenant?.domain || 'contoso.onmicrosoft.com',
+      displayName: sourceTenant?.displayName || 'Contoso Enterprise Corp',
+      connected: !!sourceTenant,
+    },
     workloadCounts: {
       users: userCount,
       groups: groupCount,
@@ -1047,7 +1505,212 @@ export async function getDiscoveredWorkloadItems(workload: string) {
 }
 
 /**
- * Export discovery data as CSV or JSON
+ * Returns all historical discovery scans
+ */
+export async function getDiscoveryScanHistory() {
+  return prisma.discoveryScan.findMany({
+    orderBy: { startedAt: 'desc' },
+    take: 30,
+  });
+}
+
+/**
+ * Returns all identified workloads formatted into a unified, searchable inventory dataset
+ */
+export async function getAllDiscoveredWorkloadsUnified() {
+  const [
+    mailboxes,
+    users,
+    groups,
+    distributionLists,
+    oneDrives,
+    sharePointSites,
+    teams,
+    sourceTenant,
+  ] = await Promise.all([
+    prisma.discoveryMailbox.findMany({ orderBy: { totalItemSizeMB: 'desc' } }),
+    prisma.discoveryUser.findMany({ orderBy: { displayName: 'asc' } }),
+    prisma.discoveryGroup.findMany({ orderBy: { name: 'asc' } }),
+    prisma.discoveryDistributionList.findMany({ orderBy: { displayName: 'asc' } }),
+    prisma.discoveryOneDrive.findMany({ orderBy: { storageUsedBytes: 'desc' } }),
+    prisma.discoverySharePointSite.findMany({ orderBy: { storageUsedMB: 'desc' } }),
+    prisma.discoveryTeam.findMany({ orderBy: { teamName: 'asc' } }),
+    prisma.tenantConnection.findUnique({ where: { tenantType: 'SOURCE' } }),
+  ]);
+
+  const sourceDomain = sourceTenant?.domain || 'contoso.onmicrosoft.com';
+  const unifiedItems: any[] = [];
+
+  // 1. Mailboxes
+  for (const mbx of mailboxes) {
+    const sizeGB = Math.round((mbx.totalItemSizeMB / 1024) * 10) / 10;
+    unifiedItems.push({
+      id: mbx.id,
+      workloadKey: 'exchange',
+      workloadType: 'Mailbox',
+      name: mbx.userPrincipalName,
+      displayName: mbx.displayName,
+      primaryDetail: `${mbx.mailboxType} Mailbox`,
+      secondaryDetail: `Items: ${mbx.itemCount.toLocaleString()} | Archive: ${mbx.archiveStatus}`,
+      sizeOrVolume: `${sizeGB} GB (${mbx.totalItemSizeMB} MB)`,
+      statusBadge: mbx.archiveStatus === 'Active' ? 'Archive Active' : 'Archive Disabled',
+      securityRating: mbx.archiveStatus === 'Active' ? 'Protected' : 'Standard',
+      governance: `Delegates: ${safeParseJSON(mbx.delegates, []).length}`,
+      lastScannedAt: mbx.lastScannedAt,
+      sourceTenant: sourceDomain,
+      rawData: mbx,
+    });
+  }
+
+  // 2. User Accounts
+  for (const u of users) {
+    const licenses = safeParseJSON(u.licenses, []);
+    unifiedItems.push({
+      id: u.id,
+      workloadKey: 'users',
+      workloadType: 'User Account',
+      name: u.upn,
+      displayName: u.displayName,
+      primaryDetail: u.jobTitle ? `${u.jobTitle} (${u.department || 'General'})` : (u.department || 'General'),
+      secondaryDetail: `Licenses: ${licenses.join(', ') || 'None'}`,
+      sizeOrVolume: `${licenses.length} License(s)`,
+      statusBadge: u.mfaStatus === 'ENFORCED' ? 'MFA Enforced' : (u.mfaStatus === 'ENABLED' ? 'MFA Enabled' : 'MFA Disabled'),
+      securityRating: u.mfaStatus === 'ENFORCED' ? 'High' : 'Action Needed',
+      governance: u.accountEnabled ? 'Active Account' : 'Disabled Account',
+      lastScannedAt: u.lastScannedAt,
+      sourceTenant: sourceDomain,
+      rawData: u,
+    });
+  }
+
+  // 3. Groups
+  for (const g of groups) {
+    const owners = safeParseJSON(g.owners, []);
+    const members = safeParseJSON(g.members, []);
+    unifiedItems.push({
+      id: g.id,
+      workloadKey: 'groups',
+      workloadType: 'Group',
+      name: g.email || g.groupId,
+      displayName: g.name,
+      primaryDetail: `${g.groupType} Group`,
+      secondaryDetail: `Owners: ${owners.length} | Mail-Enabled: ${g.isMailEnabled ? 'Yes' : 'No'}`,
+      sizeOrVolume: `${g.memberCount || members.length} Members`,
+      statusBadge: g.isSecurityEnabled ? 'Security Group' : 'M365 Group',
+      securityRating: g.isMailEnabled ? 'Mail Enabled' : 'Security Only',
+      governance: g.groupType,
+      lastScannedAt: g.lastScannedAt,
+      sourceTenant: sourceDomain,
+      rawData: g,
+    });
+  }
+
+  // 4. Distribution Lists
+  for (const dl of distributionLists) {
+    const members = safeParseJSON(dl.members, []);
+    const aliases = safeParseJSON(dl.aliases, []);
+    unifiedItems.push({
+      id: dl.id,
+      workloadKey: 'distributionlists',
+      workloadType: 'Distribution List',
+      name: dl.primarySmtpAddress,
+      displayName: dl.displayName,
+      primaryDetail: dl.deliveryManagement || 'Distribution Group',
+      secondaryDetail: `Aliases: ${aliases.length} | Moderation: ${dl.moderationEnabled ? 'Enabled' : 'None'}`,
+      sizeOrVolume: `${dl.memberCount || members.length} Members`,
+      statusBadge: dl.requireSenderAuthentication ? 'Internal Only' : 'External Allowed',
+      securityRating: dl.moderationEnabled ? 'Moderated' : 'Open',
+      governance: dl.requireSenderAuthentication ? 'Auth Required' : 'Public Routing',
+      lastScannedAt: dl.lastScannedAt,
+      sourceTenant: sourceDomain,
+      rawData: dl,
+    });
+  }
+
+  // 5. OneDrive Accounts
+  for (const od of oneDrives) {
+    const usedGB = Math.round((od.storageUsedBytes / (1024 * 1024 * 1024)) * 10) / 10;
+    const quotaGB = Math.round(od.storageQuotaBytes / (1024 * 1024 * 1024));
+    unifiedItems.push({
+      id: od.id,
+      workloadKey: 'onedrive',
+      workloadType: 'OneDrive Account',
+      name: od.userPrincipalName,
+      displayName: od.displayName || od.userPrincipalName,
+      primaryDetail: `Personal Storage Quota: ${quotaGB} GB`,
+      secondaryDetail: `Files: ${od.fileCount.toLocaleString()} | External Sharing: ${od.externalSharing}`,
+      sizeOrVolume: `${usedGB} GB used (${od.fileCount} files)`,
+      statusBadge: od.externalSharing === 'Disabled' ? 'Sharing Restricted' : 'Sharing Allowed',
+      securityRating: od.externalSharing === 'Disabled' ? 'Compliant' : 'External Risk',
+      governance: `Usage: ${Math.round((usedGB / (quotaGB || 1024)) * 100)}%`,
+      lastScannedAt: od.lastScannedAt,
+      sourceTenant: sourceDomain,
+      rawData: od,
+    });
+  }
+
+  // 6. SharePoint Sites
+  for (const sp of sharePointSites) {
+    const usedGB = Math.round((sp.storageUsedMB / 1024) * 10) / 10;
+    unifiedItems.push({
+      id: sp.id,
+      workloadKey: 'sharepoint',
+      workloadType: 'SharePoint Site',
+      name: sp.siteUrl,
+      displayName: sp.siteTitle,
+      primaryDetail: `${sp.template} Template`,
+      secondaryDetail: `Owner: ${sp.primaryOwner || 'Site Administrator'} | Subsites: ${sp.subsiteCount}`,
+      sizeOrVolume: `${usedGB} GB (${sp.storageUsedMB} MB)`,
+      statusBadge: sp.template.includes('TEAM') ? 'Team Site' : 'Communication Site',
+      securityRating: sp.libraryCount > 0 ? `${sp.libraryCount} Libraries` : 'Document Storage',
+      governance: `Lists: ${sp.listCount} | Libraries: ${sp.libraryCount}`,
+      lastScannedAt: sp.lastScannedAt,
+      sourceTenant: sourceDomain,
+      rawData: sp,
+    });
+  }
+
+  // 7. Teams Data
+  for (const tm of teams) {
+    const channels = safeParseJSON(tm.channels, []);
+    const installedApps = safeParseJSON(tm.installedApps, []);
+    const storageGB = Math.round(((tm.filesCount * 45) / 1024) * 10) / 10;
+    unifiedItems.push({
+      id: tm.id,
+      workloadKey: 'teams',
+      workloadType: 'Teams Data',
+      name: tm.teamId,
+      displayName: tm.teamName,
+      primaryDetail: `${tm.visibility} Team`,
+      secondaryDetail: `Channels: ${tm.channelsCount || channels.length} | Apps: ${installedApps.length}`,
+      sizeOrVolume: `${storageGB} GB (${tm.membersCount} Members)`,
+      statusBadge: tm.visibility === 'Private' ? 'Private' : 'Public',
+      securityRating: tm.ownersCount > 0 ? `${tm.ownersCount} Owner(s)` : 'Managed Team',
+      governance: `${tm.channelsCount} Channels | ${installedApps.length} Apps`,
+      lastScannedAt: tm.lastScannedAt,
+      sourceTenant: sourceDomain,
+      rawData: tm,
+    });
+  }
+
+  return {
+    sourceTenant: sourceDomain,
+    totalItems: unifiedItems.length,
+    workloads: {
+      mailboxes: mailboxes.length,
+      users: users.length,
+      groups: groups.length,
+      distributionLists: distributionLists.length,
+      oneDrive: oneDrives.length,
+      sharePoint: sharePointSites.length,
+      teams: teams.length,
+    },
+    items: unifiedItems,
+  };
+}
+
+/**
+ * Export discovery data as CSV or JSON (Single workload or Full Master Inventory)
  */
 export async function exportDiscoveryData(options: {
   format: 'csv' | 'json';
@@ -1055,10 +1718,79 @@ export async function exportDiscoveryData(options: {
   selectedIds?: string[];
 }) {
   const format = options.format || 'json';
-  const workload = options.workload || 'users';
+  const workload = options.workload || 'full_inventory';
 
+  const sourceTenant = await prisma.tenantConnection.findUnique({
+    where: { tenantType: 'SOURCE' },
+  });
+  const sourceDomain = sourceTenant?.domain || 'contoso.onmicrosoft.com';
+
+  // Check if Full Inventory is requested across all 7 workloads
+  if (workload === 'full' || workload === 'full_inventory' || workload === 'all') {
+    const unified = await getAllDiscoveredWorkloadsUnified();
+
+    if (format === 'json') {
+      return {
+        contentType: 'application/json',
+        filename: `m365_full_discovery_inventory_${sourceDomain}_${Date.now()}.json`,
+        data: JSON.stringify(
+          {
+            reportTitle: 'Microsoft 365 Full Discovery Inventory Report',
+            sourceTenant: sourceDomain,
+            exportedAt: new Date().toISOString(),
+            totalDiscoveredItems: unified.totalItems,
+            workloadSummary: unified.workloads,
+            items: unified.items,
+          },
+          null,
+          2
+        ),
+      };
+    } else {
+      // Full Master Inventory CSV
+      const headers = [
+        'Workload_Type',
+        'Identifier',
+        'Display_Name',
+        'Classification_Or_Role',
+        'Details',
+        'Size_Or_Count',
+        'Status_Badge',
+        'Security_Governance',
+        'Source_Tenant',
+        'Last_Scanned_Timestamp',
+      ];
+
+      const csvRows = [
+        headers.join(','),
+        ...unified.items.map((item) =>
+          [
+            item.workloadType,
+            item.name,
+            item.displayName,
+            item.primaryDetail,
+            item.secondaryDetail,
+            item.sizeOrVolume,
+            item.statusBadge,
+            item.governance,
+            item.sourceTenant,
+            item.lastScannedAt ? new Date(item.lastScannedAt).toISOString() : '',
+          ]
+            .map((val) => `"${String(val || '').replace(/"/g, '""')}"`)
+            .join(',')
+        ),
+      ];
+
+      return {
+        contentType: 'text/csv',
+        filename: `m365_full_discovery_inventory_${sourceDomain}_${Date.now()}.csv`,
+        data: csvRows.join('\r\n'),
+      };
+    }
+  }
+
+  // Specific workload export
   let data: any[] = [];
-
   if (workload === 'users') {
     const where: any = {};
     if (options.selectedIds && options.selectedIds.length > 0) {
@@ -1072,16 +1804,15 @@ export async function exportDiscoveryData(options: {
   if (format === 'json') {
     return {
       contentType: 'application/json',
-      filename: `m365_discovery_${workload}_${Date.now()}.json`,
+      filename: `m365_discovery_${workload}_${sourceDomain}_${Date.now()}.json`,
       data: JSON.stringify(data, null, 2),
     };
   } else {
-    // Convert to CSV
     if (data.length === 0) {
       return {
         contentType: 'text/csv',
-        filename: `m365_discovery_${workload}_${Date.now()}.csv`,
-        data: 'No records found',
+        filename: `m365_discovery_${workload}_${sourceDomain}_${Date.now()}.csv`,
+        data: 'No records found for this workload',
       };
     }
 
@@ -1102,7 +1833,7 @@ export async function exportDiscoveryData(options: {
 
     return {
       contentType: 'text/csv',
-      filename: `m365_discovery_${workload}_${Date.now()}.csv`,
+      filename: `m365_discovery_${workload}_${sourceDomain}_${Date.now()}.csv`,
       data: csvRows.join('\r\n'),
     };
   }

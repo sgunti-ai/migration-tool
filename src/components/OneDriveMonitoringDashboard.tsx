@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Play, Pause, XCircle, RefreshCw, Download, Search, Filter, ArrowLeft, 
-  AlertTriangle, CheckCircle2, Clock, MoreVertical, FileText, Activity
+  AlertTriangle, CheckCircle2, Clock, MoreVertical, FileText, Activity,
+  Plus, HardDrive
 } from 'lucide-react';
 import { 
   AreaChart, Area, LineChart, Line, XAxis, YAxis, CartesianGrid, 
   Tooltip, ResponsiveContainer, Legend 
 } from 'recharts';
+import { OneDriveMigrationWizardModal } from './OneDriveMigrationWizardModal';
+import { TenantStatusResponse } from '../types';
 
 // --- MOCK DATA GENERATORS ---
 const generateMockJobs = (count: number) => {
@@ -94,7 +97,15 @@ const StatusBadge = ({ status, pulse = false }: { status: string, pulse?: boolea
   );
 };
 
-export const OneDriveMonitoringDashboard: React.FC = () => {
+export interface OneDriveMonitoringDashboardProps {
+  tenantStatus?: TenantStatusResponse;
+  onJobStarted?: (newJob: any) => void;
+}
+
+export const OneDriveMonitoringDashboard: React.FC<OneDriveMonitoringDashboardProps> = ({
+  tenantStatus,
+  onJobStarted,
+}) => {
   // State for List View
   const [jobs, setJobs] = useState(MOCK_JOBS);
   const [search, setSearch] = useState('');
@@ -102,6 +113,7 @@ export const OneDriveMonitoringDashboard: React.FC = () => {
   const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set());
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+  const [isWizardOpen, setIsWizardOpen] = useState(false);
 
   // State for Drill-down View
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
@@ -438,7 +450,15 @@ export const OneDriveMonitoringDashboard: React.FC = () => {
             <h1 className="text-2xl font-bold text-slate-800">OneDrive Migration Monitor</h1>
             <p className="text-sm text-slate-500 mt-1">Real-time tracking and control for personal drive migrations.</p>
           </div>
-          <div className="flex space-x-2">
+          <div className="flex items-center space-x-2.5">
+            <button
+              id="btn-create-onedrive-migration-job"
+              onClick={() => setIsWizardOpen(true)}
+              className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-md shadow-sm transition-colors text-sm"
+            >
+              <Plus className="h-4 w-4" />
+              <span>Create OneDrive Migration Job</span>
+            </button>
             <button className="flex items-center space-x-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-md transition-colors text-sm" onClick={handleExport}>
               <Download className="h-4 w-4" />
               <span>Export CSV</span>
@@ -451,7 +471,7 @@ export const OneDriveMonitoringDashboard: React.FC = () => {
           <div className="flex items-center space-x-3 w-full md:w-auto">
             {/* Search */}
             <div className="relative w-full md:w-64">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 dark:text-slate-400" />
               <input 
                 type="text" 
                 placeholder="Search user or job ID..." 
@@ -462,7 +482,7 @@ export const OneDriveMonitoringDashboard: React.FC = () => {
             </div>
             {/* Filter */}
             <div className="relative">
-              <Filter className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+              <Filter className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 dark:text-slate-400" />
               <select 
                 className="pl-9 pr-8 py-2 bg-white border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none cursor-pointer"
                 value={filterStatus}
@@ -543,7 +563,7 @@ export const OneDriveMonitoringDashboard: React.FC = () => {
                 <td className="px-4 py-4 whitespace-nowrap text-sm text-slate-500 font-mono">{job.dataSize}</td>
                 <td className="px-4 py-4 whitespace-nowrap text-sm text-slate-500">{job.duration}</td>
                 <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium" onClick={(e) => e.stopPropagation()}>
-                  <button className="text-slate-400 hover:text-slate-600 p-1">
+                  <button className="text-slate-500 dark:text-slate-400 hover:text-slate-600 p-1">
                     <MoreVertical className="h-4 w-4" />
                   </button>
                 </td>
@@ -553,7 +573,7 @@ export const OneDriveMonitoringDashboard: React.FC = () => {
               <tr>
                 <td colSpan={8} className="px-4 py-12 text-center text-slate-500">
                   <div className="flex flex-col items-center justify-center">
-                    <Search className="h-8 w-8 text-slate-300 mb-3" />
+                    <Search className="h-8 w-8 text-slate-600 dark:text-slate-300 mb-3" />
                     <p className="text-base font-medium text-slate-800">No jobs found</p>
                     <p className="text-sm mt-1">Try adjusting your filters or search query.</p>
                   </div>
@@ -586,6 +606,53 @@ export const OneDriveMonitoringDashboard: React.FC = () => {
           </button>
         </div>
       </div>
+
+      {/* Create OneDrive Migration Job Wizard Modal */}
+      {isWizardOpen && (
+        <OneDriveMigrationWizardModal
+          isOpen={isWizardOpen}
+          onClose={() => setIsWizardOpen(false)}
+          tenantStatus={tenantStatus}
+          onJobStarted={(newJob) => {
+            if (onJobStarted) onJobStarted(newJob);
+            if (newJob) {
+              const newEntry = {
+                id: newJob.id || `OD-JOB-${Math.floor(1000 + Math.random() * 9000)}`,
+                user: newJob.mappings?.[0]?.sourceUPN || 'batch.lead@contoso.onmicrosoft.com',
+                source: newJob.sourceTenantDomain || tenantStatus?.source?.domain || 'Contoso Tenant',
+                destination: newJob.targetTenantDomain || tenantStatus?.target?.domain || 'Fabrikam Tenant',
+                status: 'QUEUED',
+                progress: 0,
+                dataSize: `${newJob.totalDataGB || 32.5} GB`,
+                startTime: new Date().toISOString(),
+                duration: '-',
+                totalFiles: 12450,
+                completedFiles: 0,
+                failedFiles: 0,
+                skippedFiles: 0,
+                transferSpeed: '0',
+                timeRemaining: 'Scheduled Batch Window',
+                isThrottled: false,
+                transferHistory: Array.from({ length: 20 }).map((_, idx) => ({
+                  time: `T-${20 - idx}m`,
+                  speed: 0,
+                  cpu: 15,
+                  memory: 25,
+                })),
+                errors: [],
+                timeline: [
+                  { stage: 'Cross-Tenant Trust & Prerequisites', status: 'completed', time: new Date().toISOString() },
+                  { stage: 'Target Site Protection & Mapping', status: 'completed', time: new Date().toISOString() },
+                  { stage: 'Batch Queue Ingestion', status: 'in_progress', time: new Date().toISOString() },
+                  { stage: 'Cloud-to-Cloud Content Move', status: 'pending', time: null },
+                  { stage: 'Source URL Redirect & Final Verification', status: 'pending', time: null },
+                ],
+              };
+              setJobs((prev) => [newEntry, ...prev]);
+            }
+          }}
+        />
+      )}
     </div>
   );
 };

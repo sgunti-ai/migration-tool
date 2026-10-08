@@ -70,9 +70,9 @@ export const ReportGenerationEngine: React.FC<ReportGenerationEngineProps> = ({
       },
       performance: {
         avgLatencyMs: metrics?.currentLatencyMs || 45,
-        cpuUsagePct: metrics?.cpuUsagePct || 32,
-        memoryUsageMb: metrics?.memoryUsageMb || 1024,
-        activeConnections: metrics?.activeConnections || 15,
+        cpuUsagePct: 32,
+        memoryUsageMb: metrics?.memoryUsageMB || 1024,
+        activeConnections: metrics?.activeWsConnections || 15,
         totalItemsMigrated: 145892,
         failedItems: 23,
       },
@@ -187,14 +187,14 @@ export const ReportGenerationEngine: React.FC<ReportGenerationEngineProps> = ({
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-2xl font-bold text-white tracking-tight">Report Generation Engine</h2>
-        <p className="text-slate-400 mt-1">Export summarized performance metrics and security audit summaries for compliance.</p>
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Report Generation Engine</h2>
+        <p className="text-slate-500 dark:text-slate-400 mt-1">Export summarized performance metrics and security audit summaries for compliance.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Configuration Panel */}
-        <div className="lg:col-span-2 bg-slate-800 rounded-xl border border-slate-700 shadow-xl overflow-hidden">
-          <div className="border-b border-slate-700 bg-slate-900/40 p-4 flex items-center space-x-3">
+        <div className="lg:col-span-2 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl overflow-hidden">
+          <div className="border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/40 p-4 flex items-center space-x-3">
             <Settings className="h-5 w-5 text-blue-400" />
             <h3 className="font-semibold text-slate-100">Report Configuration</h3>
           </div>
@@ -202,18 +202,18 @@ export const ReportGenerationEngine: React.FC<ReportGenerationEngineProps> = ({
           <div className="p-6 space-y-8">
             {/* Report Type */}
             <div className="space-y-3">
-              <label className="text-sm font-medium text-slate-300">Report Type</label>
+              <label className="text-sm font-medium text-slate-600 dark:text-slate-300">Report Type</label>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <button
                   onClick={() => setReportType('PERFORMANCE')}
                   className={`flex flex-col p-4 rounded-lg border-2 text-left transition-all ${
                     reportType === 'PERFORMANCE' 
                       ? 'border-blue-500 bg-blue-900/20' 
-                      : 'border-slate-700 bg-slate-900/40 hover:border-slate-600'
+                      : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/40 hover:border-slate-600'
                   }`}
                 >
                   <Activity className={`h-6 w-6 mb-3 ${reportType === 'PERFORMANCE' ? 'text-blue-400' : 'text-slate-500'}`} />
-                  <span className={`font-semibold text-sm ${reportType === 'PERFORMANCE' ? 'text-blue-100' : 'text-slate-300'}`}>Performance</span>
+                  <span className={`font-semibold text-sm ${reportType === 'PERFORMANCE' ? 'text-blue-100' : 'text-slate-600 dark:text-slate-300'}`}>Performance</span>
                   <span className="text-xs text-slate-500 mt-1">Throughput & resource metrics</span>
                 </button>
                 <button
@@ -221,11 +221,11 @@ export const ReportGenerationEngine: React.FC<ReportGenerationEngineProps> = ({
                   className={`flex flex-col p-4 rounded-lg border-2 text-left transition-all ${
                     reportType === 'SECURITY_AUDIT' 
                       ? 'border-emerald-500 bg-emerald-900/20' 
-                      : 'border-slate-700 bg-slate-900/40 hover:border-slate-600'
+                      : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/40 hover:border-slate-600'
                   }`}
                 >
                   <ShieldAlert className={`h-6 w-6 mb-3 ${reportType === 'SECURITY_AUDIT' ? 'text-emerald-400' : 'text-slate-500'}`} />
-                  <span className={`font-semibold text-sm ${reportType === 'SECURITY_AUDIT' ? 'text-emerald-100' : 'text-slate-300'}`}>Security Audit</span>
+                  <span className={`font-semibold text-sm ${reportType === 'SECURITY_AUDIT' ? 'text-emerald-100' : 'text-slate-600 dark:text-slate-300'}`}>Security Audit</span>
                   <span className="text-xs text-slate-500 mt-1">Access logs & encryption status</span>
                 </button>
                 <button
@@ -233,11 +233,11 @@ export const ReportGenerationEngine: React.FC<ReportGenerationEngineProps> = ({
                   className={`flex flex-col p-4 rounded-lg border-2 text-left transition-all ${
                     reportType === 'COMPLIANCE_SNAPSHOT' 
                       ? 'border-purple-500 bg-purple-900/20' 
-                      : 'border-slate-700 bg-slate-900/40 hover:border-slate-600'
+                      : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/40 hover:border-slate-600'
                   }`}
                 >
                   <FileText className={`h-6 w-6 mb-3 ${reportType === 'COMPLIANCE_SNAPSHOT' ? 'text-purple-400' : 'text-slate-500'}`} />
-                  <span className={`font-semibold text-sm ${reportType === 'COMPLIANCE_SNAPSHOT' ? 'text-purple-100' : 'text-slate-300'}`}>Full Snapshot</span>
+                  <span className={`font-semibold text-sm ${reportType === 'COMPLIANCE_SNAPSHOT' ? 'text-purple-100' : 'text-slate-600 dark:text-slate-300'}`}>Full Snapshot</span>
                   <span className="text-xs text-slate-500 mt-1">Combined compliance report</span>
                 </button>
               </div>
@@ -246,19 +246,19 @@ export const ReportGenerationEngine: React.FC<ReportGenerationEngineProps> = ({
             {/* Date Range & Format */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-3">
-                <label className="text-sm font-medium text-slate-300 flex items-center">
-                  <Calendar className="h-4 w-4 mr-2 text-slate-400" />
+                <label className="text-sm font-medium text-slate-600 dark:text-slate-300 flex items-center">
+                  <Calendar className="h-4 w-4 mr-2 text-slate-500 dark:text-slate-400" />
                   Time Range
                 </label>
-                <div className="flex bg-slate-900/60 p-1 rounded-lg border border-slate-700">
+                <div className="flex bg-slate-50 dark:bg-slate-900/60 p-1 rounded-lg border border-slate-200 dark:border-slate-700">
                   {['24H', '7D', '30D'].map((range) => (
                     <button
                       key={range}
                       onClick={() => setDateRange(range as DateRange)}
                       className={`flex-1 py-2 text-sm font-medium rounded-md transition-all ${
                         dateRange === range
-                          ? 'bg-slate-700 text-white shadow-sm'
-                          : 'text-slate-400 hover:text-slate-200'
+                          ? 'bg-slate-100 dark:bg-slate-700 text-white shadow-sm'
+                          : 'text-slate-500 dark:text-slate-400 hover:text-slate-200'
                       }`}
                     >
                       Last {range}
@@ -268,8 +268,8 @@ export const ReportGenerationEngine: React.FC<ReportGenerationEngineProps> = ({
               </div>
 
               <div className="space-y-3">
-                <label className="text-sm font-medium text-slate-300 flex items-center">
-                  <Download className="h-4 w-4 mr-2 text-slate-400" />
+                <label className="text-sm font-medium text-slate-600 dark:text-slate-300 flex items-center">
+                  <Download className="h-4 w-4 mr-2 text-slate-500 dark:text-slate-400" />
                   Export Format
                 </label>
                 <div className="flex space-x-3">
@@ -278,7 +278,7 @@ export const ReportGenerationEngine: React.FC<ReportGenerationEngineProps> = ({
                     className={`flex-1 flex items-center justify-center space-x-2 py-2.5 rounded-lg border transition-all ${
                       exportFormat === 'PDF'
                         ? 'border-red-500/50 bg-red-500/10 text-red-200'
-                        : 'border-slate-700 bg-slate-900/40 text-slate-400 hover:bg-slate-800'
+                        : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/40 text-slate-500 dark:text-slate-400 hover:bg-white dark:bg-slate-800'
                     }`}
                   >
                     <FileText className="h-4 w-4" />
@@ -289,7 +289,7 @@ export const ReportGenerationEngine: React.FC<ReportGenerationEngineProps> = ({
                     className={`flex-1 flex items-center justify-center space-x-2 py-2.5 rounded-lg border transition-all ${
                       exportFormat === 'JSON'
                         ? 'border-yellow-500/50 bg-yellow-500/10 text-yellow-200'
-                        : 'border-slate-700 bg-slate-900/40 text-slate-400 hover:bg-slate-800'
+                        : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/40 text-slate-500 dark:text-slate-400 hover:bg-white dark:bg-slate-800'
                     }`}
                   >
                     <FileJson className="h-4 w-4" />
@@ -300,7 +300,7 @@ export const ReportGenerationEngine: React.FC<ReportGenerationEngineProps> = ({
             </div>
             
             {/* Action Bar */}
-            <div className="pt-4 mt-6 border-t border-slate-700 flex justify-end">
+            <div className="pt-4 mt-6 border-t border-slate-200 dark:border-slate-700 flex justify-end">
               <button
                 onClick={handleGenerateReport}
                 disabled={isGenerating || (currentRole !== 'GLOBAL_ADMIN' && currentRole !== 'AUDITOR')}
@@ -308,7 +308,7 @@ export const ReportGenerationEngine: React.FC<ReportGenerationEngineProps> = ({
                   isGenerating
                     ? 'bg-blue-600/50 text-blue-200 cursor-not-allowed'
                     : currentRole !== 'GLOBAL_ADMIN' && currentRole !== 'AUDITOR'
-                    ? 'bg-slate-700 text-slate-400 cursor-not-allowed'
+                    ? 'bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 cursor-not-allowed'
                     : 'bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-500/20'
                 }`}
               >
@@ -335,8 +335,8 @@ export const ReportGenerationEngine: React.FC<ReportGenerationEngineProps> = ({
         </div>
 
         {/* Recent Reports Sidebar */}
-        <div className="bg-slate-800 rounded-xl border border-slate-700 shadow-xl overflow-hidden flex flex-col">
-          <div className="border-b border-slate-700 bg-slate-900/40 p-4 flex items-center justify-between">
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl overflow-hidden flex flex-col">
+          <div className="border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/40 p-4 flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <History className="h-5 w-5 text-emerald-400" />
               <h3 className="font-semibold text-slate-100">Recent Reports</h3>
@@ -350,7 +350,7 @@ export const ReportGenerationEngine: React.FC<ReportGenerationEngineProps> = ({
               </div>
             ) : (
               recentReports.map(report => (
-                <div key={report.id} className="bg-slate-900/50 border border-slate-700 rounded-lg p-3 hover:bg-slate-700/50 transition-colors group cursor-pointer">
+                <div key={report.id} className="bg-slate-50/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg p-3 hover:bg-slate-100 dark:bg-slate-700/50 transition-colors group cursor-pointer">
                   <div className="flex items-start justify-between">
                     <div className="flex items-start space-x-3">
                       <div className={`p-2 rounded-md ${report.format === 'PDF' ? 'bg-red-500/10 text-red-400' : 'bg-yellow-500/10 text-yellow-400'}`}>
@@ -359,7 +359,7 @@ export const ReportGenerationEngine: React.FC<ReportGenerationEngineProps> = ({
                       <div>
                         <h4 className="text-sm font-medium text-slate-200">{report.name}</h4>
                         <div className="flex items-center space-x-2 mt-1">
-                          <span className="text-[10px] bg-slate-700 text-slate-300 px-1.5 py-0.5 rounded font-mono">
+                          <span className="text-[10px] bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-1.5 py-0.5 rounded font-mono">
                             {report.id}
                           </span>
                           <span className="text-xs text-slate-500">{report.size}</span>

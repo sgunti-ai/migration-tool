@@ -18,6 +18,7 @@ import {
   CheckCircle2
 } from 'lucide-react';
 import { MailMigrationWizardModal } from '../mailboxes/MailMigrationWizardModal';
+import { OneDriveMigrationWizardModal } from '../OneDriveMigrationWizardModal';
 
 interface WorkloadViewProps {
   workload: string;
@@ -36,6 +37,7 @@ export const WorkloadView: React.FC<WorkloadViewProps> = ({
   const [loading, setLoading] = useState<boolean>(true);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [isWizardOpen, setIsWizardOpen] = useState<boolean>(false);
+  const [isOneDriveWizardOpen, setIsOneDriveWizardOpen] = useState<boolean>(false);
   const [toastMsg, setToastMsg] = useState<string | null>(null);
 
   const handleSaveMailboxTemplate = async (templateData: any) => {
@@ -121,26 +123,37 @@ export const WorkloadView: React.FC<WorkloadViewProps> = ({
   return (
     <div className="space-y-4">
       {/* Header */}
-      <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-slate-900/60 border border-slate-800/80">
+      <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80">
         <div className="flex items-center space-x-3">
           <div className="p-2.5 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20">
             <Icon className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-base font-bold text-white">{meta.title}</h2>
-            <p className="text-xs text-slate-400">{meta.desc}</p>
+            <h2 className="text-base font-bold text-slate-900 dark:text-white">{meta.title}</h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400">{meta.desc}</p>
           </div>
         </div>
 
         <div className="flex items-center space-x-3">
           {workload === 'exchange' && (
             <button
-              id="btn-discovery-create-mailbox-template"
+              id="btn-discovery-create-mailbox-job"
               onClick={() => setIsWizardOpen(true)}
-              className="px-3 py-1.5 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-lg shadow-sm transition flex items-center space-x-1.5"
+              className="px-3 py-1.5 text-xs font-semibold text-slate-900 dark:text-white bg-blue-600 hover:bg-blue-500 rounded-lg shadow-sm transition flex items-center space-x-1.5"
             >
               <Plus className="w-3.5 h-3.5" />
-              <span>Create Mailbox Template</span>
+              <span>Create Migration Job</span>
+            </button>
+          )}
+
+          {workload === 'onedrive' && (
+            <button
+              id="btn-discovery-create-onedrive-job"
+              onClick={() => setIsOneDriveWizardOpen(true)}
+              className="px-3 py-1.5 text-xs font-semibold text-slate-900 dark:text-white bg-blue-600 hover:bg-blue-500 rounded-lg shadow-sm transition flex items-center space-x-1.5"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span>Create OneDrive Migration Job</span>
             </button>
           )}
 
@@ -151,13 +164,13 @@ export const WorkloadView: React.FC<WorkloadViewProps> = ({
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search items..."
-              className="pl-8 pr-3 py-1.5 text-xs bg-slate-800/80 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-blue-500 w-48"
+              className="pl-8 pr-3 py-1.5 text-xs bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-blue-500 w-48"
             />
           </div>
 
           <button
             onClick={fetchItems}
-            className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg border border-slate-700 transition"
+            className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white hover:bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 transition"
             title="Refresh list"
           >
             <RefreshCw className="w-4 h-4" />
@@ -175,9 +188,9 @@ export const WorkloadView: React.FC<WorkloadViewProps> = ({
 
 
       {/* Main Table Content */}
-      <div className="rounded-xl bg-slate-900/60 border border-slate-800/80 overflow-hidden">
+      <div className="rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80 overflow-hidden">
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-24 space-y-3 text-slate-400">
+          <div className="flex flex-col items-center justify-center py-24 space-y-3 text-slate-500 dark:text-slate-400">
             <div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
             <span className="text-xs">Loading workload data...</span>
           </div>
@@ -190,7 +203,7 @@ export const WorkloadView: React.FC<WorkloadViewProps> = ({
             {/* 1. GROUPS TABLE */}
             {workload.toLowerCase() === 'groups' && (
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-800/60 text-slate-400 font-semibold border-b border-slate-800 uppercase tracking-wider">
+                <thead className="bg-white dark:bg-slate-800/60 text-slate-500 dark:text-slate-400 font-semibold border-b border-slate-200 dark:border-slate-800 uppercase tracking-wider">
                   <tr>
                     <th className="px-4 py-3">Group Name</th>
                     <th className="px-4 py-3">Type</th>
@@ -200,18 +213,18 @@ export const WorkloadView: React.FC<WorkloadViewProps> = ({
                     <th className="px-4 py-3">Security</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800/60 text-slate-300">
+                <tbody className="divide-y divide-slate-800/60 text-slate-600 dark:text-slate-300">
                   {filteredItems.map((grp: any) => (
-                    <tr key={grp.id} className="hover:bg-slate-800/40 transition">
-                      <td className="px-4 py-3 font-medium text-white">{grp.name}</td>
+                    <tr key={grp.id} className="hover:bg-white dark:bg-slate-800/40 transition">
+                      <td className="px-4 py-3 font-medium text-slate-900 dark:text-white">{grp.name}</td>
                       <td className="px-4 py-3">
                         <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-blue-500/10 text-blue-300 border border-blue-500/20">
                           {grp.groupType}
                         </span>
                       </td>
-                      <td className="px-4 py-3 font-mono text-slate-400">{grp.email || '—'}</td>
-                      <td className="px-4 py-3 font-mono font-semibold text-white">{grp.memberCount}</td>
-                      <td className="px-4 py-3 text-slate-400 truncate max-w-xs">
+                      <td className="px-4 py-3 font-mono text-slate-500 dark:text-slate-400">{grp.email || '—'}</td>
+                      <td className="px-4 py-3 font-mono font-semibold text-slate-900 dark:text-white">{grp.memberCount}</td>
+                      <td className="px-4 py-3 text-slate-500 dark:text-slate-400 truncate max-w-xs">
                         {Array.isArray(grp.owners) ? grp.owners.join(', ') : grp.owners}
                       </td>
                       <td className="px-4 py-3">
@@ -230,7 +243,7 @@ export const WorkloadView: React.FC<WorkloadViewProps> = ({
             {/* 2. ONEDRIVE TABLE */}
             {workload.toLowerCase() === 'onedrive' && (
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-800/60 text-slate-400 font-semibold border-b border-slate-800 uppercase tracking-wider">
+                <thead className="bg-white dark:bg-slate-800/60 text-slate-500 dark:text-slate-400 font-semibold border-b border-slate-200 dark:border-slate-800 uppercase tracking-wider">
                   <tr>
                     <th className="px-4 py-3">User Principal Name</th>
                     <th className="px-4 py-3">Site URL</th>
@@ -240,19 +253,19 @@ export const WorkloadView: React.FC<WorkloadViewProps> = ({
                     <th className="px-4 py-3">External Sharing</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800/60 text-slate-300">
+                <tbody className="divide-y divide-slate-800/60 text-slate-600 dark:text-slate-300">
                   {filteredItems.map((od: any) => {
                     const usedGB = (od.storageUsedBytes / (1024 * 1024 * 1024)).toFixed(1);
                     const quotaGB = Math.round(od.storageQuotaBytes / (1024 * 1024 * 1024));
                     return (
-                      <tr key={od.id} className="hover:bg-slate-800/40 transition">
-                        <td className="px-4 py-3 font-medium text-white">{od.userPrincipalName}</td>
+                      <tr key={od.id} className="hover:bg-white dark:bg-slate-800/40 transition">
+                        <td className="px-4 py-3 font-medium text-slate-900 dark:text-white">{od.userPrincipalName}</td>
                         <td className="px-4 py-3 font-mono text-blue-400 truncate max-w-xs" title={od.siteUrl}>
                           {od.siteUrl}
                         </td>
                         <td className="px-4 py-3 font-mono font-bold text-emerald-400">{usedGB} GB</td>
-                        <td className="px-4 py-3 font-mono text-slate-400">{quotaGB} GB</td>
-                        <td className="px-4 py-3 font-mono text-white">{(od.fileCount ?? 0).toLocaleString()}</td>
+                        <td className="px-4 py-3 font-mono text-slate-500 dark:text-slate-400">{quotaGB} GB</td>
+                        <td className="px-4 py-3 font-mono text-slate-900 dark:text-white">{(od.fileCount ?? 0).toLocaleString()}</td>
                         <td className="px-4 py-3">
                           <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-amber-500/10 text-amber-300 border border-amber-500/20">
                             {od.externalSharing}
@@ -268,7 +281,7 @@ export const WorkloadView: React.FC<WorkloadViewProps> = ({
             {/* 3. EXCHANGE TABLE */}
             {workload.toLowerCase() === 'exchange' && (
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-800/60 text-slate-400 font-semibold border-b border-slate-800 uppercase tracking-wider">
+                <thead className="bg-white dark:bg-slate-800/60 text-slate-500 dark:text-slate-400 font-semibold border-b border-slate-200 dark:border-slate-800 uppercase tracking-wider">
                   <tr>
                     <th className="px-4 py-3">User Principal Name</th>
                     <th className="px-4 py-3">Type</th>
@@ -278,31 +291,31 @@ export const WorkloadView: React.FC<WorkloadViewProps> = ({
                     <th className="px-4 py-3">Delegates</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800/60 text-slate-300">
+                <tbody className="divide-y divide-slate-800/60 text-slate-600 dark:text-slate-300">
                   {filteredItems.map((mbx: any) => {
                     const sizeGB = (mbx.totalItemSizeMB / 1024).toFixed(2);
                     return (
-                      <tr key={mbx.id} className="hover:bg-slate-800/40 transition">
-                        <td className="px-4 py-3 font-medium text-white">{mbx.userPrincipalName}</td>
+                      <tr key={mbx.id} className="hover:bg-white dark:bg-slate-800/40 transition">
+                        <td className="px-4 py-3 font-medium text-slate-900 dark:text-white">{mbx.userPrincipalName}</td>
                         <td className="px-4 py-3">
                           <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-blue-500/10 text-blue-300 border border-blue-500/20">
                             {mbx.mailboxType}
                           </span>
                         </td>
-                        <td className="px-4 py-3 font-mono font-bold text-white">{sizeGB} GB</td>
-                        <td className="px-4 py-3 font-mono text-slate-300">{(mbx.itemCount ?? 0).toLocaleString()}</td>
+                        <td className="px-4 py-3 font-mono font-bold text-slate-900 dark:text-white">{sizeGB} GB</td>
+                        <td className="px-4 py-3 font-mono text-slate-600 dark:text-slate-300">{(mbx.itemCount ?? 0).toLocaleString()}</td>
                         <td className="px-4 py-3">
                           <span
                             className={`px-2 py-0.5 rounded text-[10px] font-medium ${
                               mbx.archiveStatus === 'Active'
                                 ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                                : 'bg-slate-800 text-slate-400'
+                                : 'bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400'
                             }`}
                           >
                             {mbx.archiveStatus}
                           </span>
                         </td>
-                        <td className="px-4 py-3 text-slate-400 truncate max-w-xs">
+                        <td className="px-4 py-3 text-slate-500 dark:text-slate-400 truncate max-w-xs">
                           {Array.isArray(mbx.delegates) && mbx.delegates.length > 0
                             ? mbx.delegates.join(', ')
                             : 'None'}
@@ -317,7 +330,7 @@ export const WorkloadView: React.FC<WorkloadViewProps> = ({
             {/* 4. SHAREPOINT TABLE */}
             {workload.toLowerCase() === 'sharepoint' && (
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-800/60 text-slate-400 font-semibold border-b border-slate-800 uppercase tracking-wider">
+                <thead className="bg-white dark:bg-slate-800/60 text-slate-500 dark:text-slate-400 font-semibold border-b border-slate-200 dark:border-slate-800 uppercase tracking-wider">
                   <tr>
                     <th className="px-4 py-3">Site Collection Title</th>
                     <th className="px-4 py-3">Site URL</th>
@@ -327,19 +340,19 @@ export const WorkloadView: React.FC<WorkloadViewProps> = ({
                     <th className="px-4 py-3">Primary Owner</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800/60 text-slate-300">
+                <tbody className="divide-y divide-slate-800/60 text-slate-600 dark:text-slate-300">
                   {filteredItems.map((sp: any) => {
                     const sizeGB = (sp.storageUsedMB / 1024).toFixed(1);
                     return (
-                      <tr key={sp.id} className="hover:bg-slate-800/40 transition">
-                        <td className="px-4 py-3 font-medium text-white">{sp.siteTitle}</td>
+                      <tr key={sp.id} className="hover:bg-white dark:bg-slate-800/40 transition">
+                        <td className="px-4 py-3 font-medium text-slate-900 dark:text-white">{sp.siteTitle}</td>
                         <td className="px-4 py-3 font-mono text-blue-400 truncate max-w-xs" title={sp.siteUrl}>
                           {sp.siteUrl}
                         </td>
                         <td className="px-4 py-3 font-mono font-bold text-indigo-400">{sizeGB} GB</td>
-                        <td className="px-4 py-3 font-mono text-white">{sp.subsiteCount}</td>
-                        <td className="px-4 py-3 font-mono text-white">{sp.libraryCount}</td>
-                        <td className="px-4 py-3 text-slate-400">{sp.primaryOwner || 'Admin'}</td>
+                        <td className="px-4 py-3 font-mono text-slate-900 dark:text-white">{sp.subsiteCount}</td>
+                        <td className="px-4 py-3 font-mono text-slate-900 dark:text-white">{sp.libraryCount}</td>
+                        <td className="px-4 py-3 text-slate-500 dark:text-slate-400">{sp.primaryOwner || 'Admin'}</td>
                       </tr>
                     );
                   })}
@@ -350,7 +363,7 @@ export const WorkloadView: React.FC<WorkloadViewProps> = ({
             {/* 5. TEAMS TABLE */}
             {workload.toLowerCase() === 'teams' && (
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-800/60 text-slate-400 font-semibold border-b border-slate-800 uppercase tracking-wider">
+                <thead className="bg-white dark:bg-slate-800/60 text-slate-500 dark:text-slate-400 font-semibold border-b border-slate-200 dark:border-slate-800 uppercase tracking-wider">
                   <tr>
                     <th className="px-4 py-3">Team Name</th>
                     <th className="px-4 py-3">Visibility</th>
@@ -360,24 +373,24 @@ export const WorkloadView: React.FC<WorkloadViewProps> = ({
                     <th className="px-4 py-3">Installed Apps</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800/60 text-slate-300">
+                <tbody className="divide-y divide-slate-800/60 text-slate-600 dark:text-slate-300">
                   {filteredItems.map((tm: any) => (
-                    <tr key={tm.id} className="hover:bg-slate-800/40 transition">
+                    <tr key={tm.id} className="hover:bg-white dark:bg-slate-800/40 transition">
                       <td className="px-4 py-3">
-                        <div className="font-semibold text-white">{tm.teamName}</div>
-                        <div className="text-[11px] text-slate-400 truncate max-w-xs">{tm.description}</div>
+                        <div className="font-semibold text-slate-900 dark:text-white">{tm.teamName}</div>
+                        <div className="text-[11px] text-slate-500 dark:text-slate-400 truncate max-w-xs">{tm.description}</div>
                       </td>
                       <td className="px-4 py-3">
                         <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-purple-500/10 text-purple-300 border border-purple-500/20">
                           {tm.visibility}
                         </span>
                       </td>
-                      <td className="px-4 py-3 font-mono font-semibold text-white">{tm.channelsCount}</td>
-                      <td className="px-4 py-3 font-mono text-slate-300">{tm.membersCount}</td>
-                      <td className="px-4 py-3 text-slate-400 truncate max-w-xs">
+                      <td className="px-4 py-3 font-mono font-semibold text-slate-900 dark:text-white">{tm.channelsCount}</td>
+                      <td className="px-4 py-3 font-mono text-slate-600 dark:text-slate-300">{tm.membersCount}</td>
+                      <td className="px-4 py-3 text-slate-500 dark:text-slate-400 truncate max-w-xs">
                         {Array.isArray(tm.owners) ? tm.owners.join(', ') : tm.owners}
                       </td>
-                      <td className="px-4 py-3 text-slate-400 truncate max-w-xs">
+                      <td className="px-4 py-3 text-slate-500 dark:text-slate-400 truncate max-w-xs">
                         {Array.isArray(tm.installedApps) ? tm.installedApps.join(', ') : 'Default'}
                       </td>
                     </tr>
@@ -389,7 +402,7 @@ export const WorkloadView: React.FC<WorkloadViewProps> = ({
             {/* 6. DISTRIBUTION LISTS TABLE */}
             {(workload.toLowerCase() === 'distributionlists' || workload.toLowerCase() === 'dl') && (
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-800/60 text-slate-400 font-semibold border-b border-slate-800 uppercase tracking-wider">
+                <thead className="bg-white dark:bg-slate-800/60 text-slate-500 dark:text-slate-400 font-semibold border-b border-slate-200 dark:border-slate-800 uppercase tracking-wider">
                   <tr>
                     <th className="px-4 py-3">Display Name</th>
                     <th className="px-4 py-3">Primary SMTP</th>
@@ -398,13 +411,13 @@ export const WorkloadView: React.FC<WorkloadViewProps> = ({
                     <th className="px-4 py-3">Moderation</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800/60 text-slate-300">
+                <tbody className="divide-y divide-slate-800/60 text-slate-600 dark:text-slate-300">
                   {filteredItems.map((dl: any) => (
-                    <tr key={dl.id} className="hover:bg-slate-800/40 transition">
-                      <td className="px-4 py-3 font-medium text-white">{dl.displayName}</td>
+                    <tr key={dl.id} className="hover:bg-white dark:bg-slate-800/40 transition">
+                      <td className="px-4 py-3 font-medium text-slate-900 dark:text-white">{dl.displayName}</td>
                       <td className="px-4 py-3 font-mono text-rose-400">{dl.primarySmtpAddress}</td>
-                      <td className="px-4 py-3 font-mono font-semibold text-white">{dl.memberCount}</td>
-                      <td className="px-4 py-3 text-slate-400">{dl.deliveryManagement}</td>
+                      <td className="px-4 py-3 font-mono font-semibold text-slate-900 dark:text-white">{dl.memberCount}</td>
+                      <td className="px-4 py-3 text-slate-500 dark:text-slate-400">{dl.deliveryManagement}</td>
                       <td className="px-4 py-3">
                         {dl.moderationEnabled ? (
                           <span className="text-amber-400 font-medium">Moderated</span>
@@ -427,6 +440,18 @@ export const WorkloadView: React.FC<WorkloadViewProps> = ({
         onClose={() => setIsWizardOpen(false)}
         onSaveTemplate={handleSaveMailboxTemplate}
       />
+
+      {/* OneDrive Cross-Tenant Migration Job Wizard */}
+      {isOneDriveWizardOpen && (
+        <OneDriveMigrationWizardModal
+          isOpen={isOneDriveWizardOpen}
+          onClose={() => setIsOneDriveWizardOpen(false)}
+          onJobStarted={(newJob) => {
+            setToastMsg(`Successfully initiated OneDrive migration job for ${newJob?.name || 'OneDrive accounts'}`);
+            setTimeout(() => setToastMsg(null), 4000);
+          }}
+        />
+      )}
     </div>
   );
 };

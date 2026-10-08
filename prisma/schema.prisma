@@ -11,7 +11,18 @@ model MigrationJob {
   id                 String                @id @default(cuid())
   sourceTenantDomain String
   targetTenantDomain String
+  name               String?
+  workloadType       String?               @default("HYBRID")
+  batchCode          String?
+  wave               String?
   status             String                @default("PENDING") // PENDING, PROCESSING, PAUSED, COMPLETED, FAILED
+  streamingMode      String?               @default("DIRECT_CHUNKED")
+  chunkSizeMB        Int?                  @default(10)
+  concurrencyLimit   Int?                  @default(4)
+  totalDataGB        Float?                @default(0)
+  dataTransferredGB  Float?                @default(0)
+  checkpointState    String?               // JSON string of checkpoints
+  configPayload      String?               // JSON string of template options
   totalUsers         Int                   @default(0)
   completedUsers     Int                   @default(0)
   failedUsers        Int                   @default(0)
@@ -33,6 +44,10 @@ model UserMigrationStatus {
   migrateOneDrive Boolean      @default(true)
   activeStep      String?
   errorMessage    String?
+  checkpointStage String?
+  bytesMigrated   Float?       @default(0)
+  totalBytes      Float?       @default(0)
+  resumableToken  String?
   retryCount      Int          @default(0)
   createdAt       DateTime     @default(now())
   updatedAt       DateTime     @updatedAt
@@ -63,8 +78,10 @@ model TenantConnection {
   id                    String    @id @default(cuid())
   tenantType            String    @unique // "SOURCE" or "TARGET"
   tenantId              String?
+  clientId              String?
   domain                String
   displayName           String?
+  cloudEnvironment      String?   @default("PUBLIC")
   encryptedAccessToken  String?
   encryptedRefreshToken String?
   expiresAt             DateTime?

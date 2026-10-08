@@ -155,27 +155,27 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm p-4 overflow-y-auto">
       <div
-        className="relative w-full max-w-5xl bg-[#1e222d] border border-slate-700/80 rounded-lg shadow-2xl overflow-hidden flex flex-col my-8"
+        className="relative w-full max-w-5xl bg-slate-50 dark:bg-[#1e222d] border border-slate-300 dark:border-slate-700/80 rounded-lg shadow-2xl overflow-hidden flex flex-col my-8"
         style={{ minHeight: '680px' }}
       >
         {/* Wizard Header Bar */}
-        <div className="px-6 py-4 bg-[#181b24] border-b border-slate-700/80 flex items-center justify-between">
+        <div className="px-6 py-4 bg-white dark:bg-[#181b24] border-b border-slate-300 dark:border-slate-700/80 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <div className="w-8 h-8 rounded bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400">
               <Mail className="w-4 h-4" />
             </div>
             <div>
-              <h2 className="text-base font-semibold text-white tracking-wide">
-                New Mail Migration Task
+              <h2 className="text-base font-semibold text-slate-900 dark:text-white tracking-wide">
+                Create Mailbox Migration Job
               </h2>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 Configure mailbox transfer options, items, mail flow coexistence, and scheduling
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded transition"
+            className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white hover:bg-white dark:bg-slate-800 rounded transition"
             title="Close dialog"
           >
             <X className="w-5 h-5" />
@@ -185,7 +185,7 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
         {/* Wizard Body: Left Step Sidebar + Right Step Content */}
         <div className="flex-1 flex flex-col md:flex-row min-h-[500px]">
           {/* Left Steps Navigation Sidebar */}
-          <div className="w-full md:w-60 bg-[#161821] border-r border-slate-800/80 p-3 shrink-0">
+          <div className="w-full md:w-60 bg-white dark:bg-[#161821] border-r border-slate-200 dark:border-slate-800/80 p-3 shrink-0">
             <nav className="space-y-0.5">
               {steps.map((step) => {
                 const isCurrent = currentStep === step.number;
@@ -198,10 +198,10 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                     onClick={() => setCurrentStep(step.number)}
                     className={`w-full flex items-center space-x-3 px-3 py-2 text-xs text-left transition relative rounded ${
                       isCurrent
-                        ? 'bg-[#222736] text-white font-semibold'
+                        ? 'bg-blue-50 dark:bg-[#222736] text-slate-900 dark:text-white font-semibold'
                         : isPassed
-                        ? 'text-slate-300 hover:bg-slate-800/60 hover:text-white'
-                        : 'text-slate-500 hover:text-slate-300'
+                        ? 'text-slate-600 dark:text-slate-300 hover:bg-white dark:bg-slate-800/60 hover:text-slate-900 dark:text-white'
+                        : 'text-slate-500 hover:text-slate-600 dark:text-slate-300'
                     }`}
                   >
                     {/* Active orange left border bar as shown in screenshots */}
@@ -215,8 +215,8 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                         isPassed
                           ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 font-bold'
                           : isCurrent
-                          ? 'bg-blue-600 text-white font-bold'
-                          : 'bg-slate-800 text-slate-500 border border-slate-700'
+                          ? 'bg-blue-600 text-slate-900 dark:text-white font-bold'
+                          : 'bg-white dark:bg-slate-800 text-slate-500 border border-slate-300 dark:border-slate-700'
                       }`}
                     >
                       {isPassed ? <Check className="w-3 h-3" /> : step.number}
@@ -230,50 +230,50 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
           </div>
 
           {/* Right Main Step Form Content */}
-          <div className="flex-1 p-6 md:p-8 bg-[#1e222d] overflow-y-auto flex flex-col justify-between">
+          <div className="flex-1 p-6 md:p-8 bg-slate-50 dark:bg-[#1e222d] overflow-y-auto flex flex-col justify-between">
             <div>
               {/* ============================================================== */}
               {/* STEP 1: START */}
               {/* ============================================================== */}
               {currentStep === 1 && (
                 <div className="space-y-6 animate-fadeIn">
-                  <div className="border-b border-slate-800 pb-3">
-                    <h3 className="text-sm font-semibold text-white">General Information & Tenants</h3>
-                    <p className="text-xs text-slate-400">
+                  <div className="border-b border-slate-200 dark:border-slate-800 pb-3">
+                    <h3 className="text-sm font-semibold text-slate-900 dark:text-white">General Information & Tenants</h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">
                       Define the name of this mail migration task and verify tenant endpoints.
                     </p>
                   </div>
 
                   <div className="space-y-4 max-w-xl">
                     <div>
-                      <label className="block text-xs font-medium text-slate-300 mb-1.5">
+                      <label className="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1.5">
                         Task / Template Name <span className="text-rose-400">*</span>
                       </label>
                       <input
                         type="text"
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        className="w-full px-3 py-2 text-xs bg-[#161821] border border-slate-700 rounded text-white focus:outline-none focus:border-blue-500"
+                        className="w-full px-3 py-2 text-xs bg-white dark:bg-[#161821] border border-slate-300 dark:border-slate-700 rounded text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
                         placeholder="e.g. Standard Cutover Template"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-xs font-medium text-slate-300 mb-1.5">
+                      <label className="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1.5">
                         Description / Notes
                       </label>
                       <textarea
                         rows={3}
                         value={formData.description}
                         onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                        className="w-full px-3 py-2 text-xs bg-[#161821] border border-slate-700 rounded text-white focus:outline-none focus:border-blue-500"
+                        className="w-full px-3 py-2 text-xs bg-white dark:bg-[#161821] border border-slate-300 dark:border-slate-700 rounded text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
                         placeholder="Purpose, migration wave notes, or stakeholder instructions"
                       />
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                      <div className="p-3.5 bg-[#161821] border border-slate-800 rounded">
-                        <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block mb-1">
+                      <div className="p-3.5 bg-white dark:bg-[#161821] border border-slate-200 dark:border-slate-800 rounded">
+                        <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">
                           Source Tenant
                         </span>
                         <div className="text-xs font-mono text-blue-400 font-medium">
@@ -282,8 +282,8 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                         <span className="text-[10px] text-emerald-400 mt-1 block">Connected (EWS & Graph API)</span>
                       </div>
 
-                      <div className="p-3.5 bg-[#161821] border border-slate-800 rounded">
-                        <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block mb-1">
+                      <div className="p-3.5 bg-white dark:bg-[#161821] border border-slate-200 dark:border-slate-800 rounded">
+                        <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">
                           Target Tenant
                         </span>
                         <div className="text-xs font-mono text-emerald-400 font-medium">
@@ -299,9 +299,9 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                           type="checkbox"
                           checked={formData.saveAsTemplate}
                           onChange={(e) => setFormData({ ...formData, saveAsTemplate: e.target.checked })}
-                          className="w-4 h-4 rounded bg-[#161821] border-slate-700 text-blue-600 focus:ring-blue-500"
+                          className="w-4 h-4 rounded bg-white dark:bg-[#161821] border-slate-300 dark:border-slate-700 text-blue-600 focus:ring-blue-500"
                         />
-                        <span className="text-xs text-slate-300">
+                        <span className="text-xs text-slate-600 dark:text-slate-300">
                           Save as reusable Mailbox Migration Template for future waves
                         </span>
                       </label>
@@ -315,22 +315,22 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
               {/* ============================================================== */}
               {currentStep === 2 && (
                 <div className="space-y-6 animate-fadeIn">
-                  <div className="border-b border-slate-800 pb-3">
-                    <h3 className="text-sm font-semibold text-white">Target Licensing Plan</h3>
-                    <p className="text-xs text-slate-400">
+                  <div className="border-b border-slate-200 dark:border-slate-800 pb-3">
+                    <h3 className="text-sm font-semibold text-slate-900 dark:text-white">Target Licensing Plan</h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">
                       Specify the Exchange Online license assignment policy for the destination mailboxes.
                     </p>
                   </div>
 
                   <div className="space-y-4 max-w-xl">
                     <div>
-                      <label className="block text-xs font-medium text-slate-300 mb-1.5">
+                      <label className="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1.5">
                         Target License Plan
                       </label>
                       <select
                         value={formData.targetLicensingPlan}
                         onChange={(e) => setFormData({ ...formData, targetLicensingPlan: e.target.value })}
-                        className="w-full px-3 py-2 text-xs bg-[#161821] border border-slate-700 rounded text-white focus:outline-none focus:border-blue-500"
+                        className="w-full px-3 py-2 text-xs bg-white dark:bg-[#161821] border border-slate-300 dark:border-slate-700 rounded text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
                       >
                         <option value="Exchange Online Plan 2">Exchange Online Plan 2 (100 GB Mailbox + In-Place Archive)</option>
                         <option value="Exchange Online Plan 1">Exchange Online Plan 1 (50 GB Mailbox)</option>
@@ -340,19 +340,19 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                       </select>
                     </div>
 
-                    <div className="p-4 bg-[#161821] border border-slate-800 rounded space-y-3">
+                    <div className="p-4 bg-white dark:bg-[#161821] border border-slate-200 dark:border-slate-800 rounded space-y-3">
                       <label className="flex items-start space-x-2.5 cursor-pointer">
                         <input
                           type="checkbox"
                           checked={formData.autoAssignLicense}
                           onChange={(e) => setFormData({ ...formData, autoAssignLicense: e.target.checked })}
-                          className="w-4 h-4 rounded bg-slate-800 border-slate-700 text-blue-600 focus:ring-blue-500 mt-0.5"
+                          className="w-4 h-4 rounded bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-blue-600 focus:ring-blue-500 mt-0.5"
                         />
                         <div>
-                          <span className="text-xs font-medium text-white block">
+                          <span className="text-xs font-medium text-slate-900 dark:text-white block">
                             Auto-assign target license if destination account is unlicensed
                           </span>
-                          <span className="text-[11px] text-slate-400">
+                          <span className="text-[11px] text-slate-500 dark:text-slate-400">
                             Ensures the destination mailbox is created and enabled before data sync begins.
                           </span>
                         </div>
@@ -369,16 +369,16 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                 <div className="space-y-6 animate-fadeIn">
                   {/* Migration Scenario Section */}
                   <div>
-                    <h3 className="text-sm font-semibold text-white mb-3">Migration Scenario</h3>
+                    <h3 className="text-sm font-semibold text-slate-900 dark:text-white mb-3">Migration Scenario</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-md">
                       <div>
-                        <label className="block text-xs font-medium text-slate-300 mb-1.5">
+                        <label className="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1.5">
                           from
                         </label>
                         <select
                           value={formData.sourceScenario}
                           onChange={(e) => setFormData({ ...formData, sourceScenario: e.target.value })}
-                          className="w-full px-3 py-2 text-xs bg-[#161821] border border-slate-700 rounded text-white focus:outline-none focus:border-blue-500"
+                          className="w-full px-3 py-2 text-xs bg-white dark:bg-[#161821] border border-slate-300 dark:border-slate-700 rounded text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
                         >
                           <option value="Primary mailbox">Primary mailbox</option>
                           <option value="Archive mailbox">Archive mailbox</option>
@@ -386,13 +386,13 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                       </div>
 
                       <div>
-                        <label className="block text-xs font-medium text-slate-300 mb-1.5">
+                        <label className="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1.5">
                           to
                         </label>
                         <select
                           value={formData.targetScenario}
                           onChange={(e) => setFormData({ ...formData, targetScenario: e.target.value })}
-                          className="w-full px-3 py-2 text-xs bg-[#161821] border border-slate-700 rounded text-white focus:outline-none focus:border-blue-500"
+                          className="w-full px-3 py-2 text-xs bg-white dark:bg-[#161821] border border-slate-300 dark:border-slate-700 rounded text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
                         >
                           <option value="Primary mailbox">Primary mailbox</option>
                           <option value="Archive mailbox">Archive mailbox</option>
@@ -402,13 +402,13 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                   </div>
 
                   {/* Checkboxes items list matching screenshot 2 */}
-                  <div className="pt-2 border-t border-slate-800 space-y-3">
+                  <div className="pt-2 border-t border-slate-200 dark:border-slate-800 space-y-3">
                     <label className="flex items-center space-x-2.5 cursor-pointer">
                       <input
                         type="checkbox"
                         checked={formData.migrateMail}
                         onChange={(e) => setFormData({ ...formData, migrateMail: e.target.checked })}
-                        className="w-4 h-4 rounded bg-[#161821] border-slate-700 text-blue-600 focus:ring-blue-500"
+                        className="w-4 h-4 rounded bg-white dark:bg-[#161821] border-slate-300 dark:border-slate-700 text-blue-600 focus:ring-blue-500"
                       />
                       <span className="text-xs text-slate-200">Migrate Mail</span>
                     </label>
@@ -418,7 +418,7 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                         type="checkbox"
                         checked={formData.migrateCalendar}
                         onChange={(e) => setFormData({ ...formData, migrateCalendar: e.target.checked })}
-                        className="w-4 h-4 rounded bg-[#161821] border-slate-700 text-blue-600 focus:ring-blue-500"
+                        className="w-4 h-4 rounded bg-white dark:bg-[#161821] border-slate-300 dark:border-slate-700 text-blue-600 focus:ring-blue-500"
                       />
                       <span className="text-xs text-slate-200">Migrate Calendar</span>
                     </label>
@@ -428,7 +428,7 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                         type="checkbox"
                         checked={formData.migrateContacts}
                         onChange={(e) => setFormData({ ...formData, migrateContacts: e.target.checked })}
-                        className="w-4 h-4 rounded bg-[#161821] border-slate-700 text-blue-600 focus:ring-blue-500"
+                        className="w-4 h-4 rounded bg-white dark:bg-[#161821] border-slate-300 dark:border-slate-700 text-blue-600 focus:ring-blue-500"
                       />
                       <span className="text-xs text-slate-200">Migrate Contacts</span>
                     </label>
@@ -438,7 +438,7 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                         type="checkbox"
                         checked={formData.migrateTasksNotes}
                         onChange={(e) => setFormData({ ...formData, migrateTasksNotes: e.target.checked })}
-                        className="w-4 h-4 rounded bg-[#161821] border-slate-700 text-blue-600 focus:ring-blue-500"
+                        className="w-4 h-4 rounded bg-white dark:bg-[#161821] border-slate-300 dark:border-slate-700 text-blue-600 focus:ring-blue-500"
                       />
                       <span className="text-xs text-slate-200">Migrate Tasks/Notes</span>
                     </label>
@@ -448,7 +448,7 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                         type="checkbox"
                         checked={formData.migrateRecoverableItems}
                         onChange={(e) => setFormData({ ...formData, migrateRecoverableItems: e.target.checked })}
-                        className="w-4 h-4 rounded bg-[#161821] border-slate-700 text-blue-600 focus:ring-blue-500"
+                        className="w-4 h-4 rounded bg-white dark:bg-[#161821] border-slate-300 dark:border-slate-700 text-blue-600 focus:ring-blue-500"
                       />
                       <span className="text-xs text-slate-200">Migrate Recoverable Items</span>
                     </label>
@@ -458,7 +458,7 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                         type="checkbox"
                         checked={formData.migrateSafeSenderList}
                         onChange={(e) => setFormData({ ...formData, migrateSafeSenderList: e.target.checked })}
-                        className="w-4 h-4 rounded bg-[#161821] border-slate-700 text-blue-600 focus:ring-blue-500"
+                        className="w-4 h-4 rounded bg-white dark:bg-[#161821] border-slate-300 dark:border-slate-700 text-blue-600 focus:ring-blue-500"
                       />
                       <span className="text-xs text-slate-200">Migrate Safe Sender and Blocked List</span>
                     </label>
@@ -469,18 +469,18 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                           type="checkbox"
                           checked={formData.resetMigration}
                           onChange={(e) => setFormData({ ...formData, resetMigration: e.target.checked })}
-                          className="w-4 h-4 rounded bg-[#161821] border-slate-700 text-blue-600 focus:ring-blue-500"
+                          className="w-4 h-4 rounded bg-white dark:bg-[#161821] border-slate-300 dark:border-slate-700 text-blue-600 focus:ring-blue-500"
                         />
                         <span className="text-xs text-slate-200">Reset Migration</span>
                       </label>
                       <div
-                        className="relative cursor-pointer text-slate-400 hover:text-blue-400"
+                        className="relative cursor-pointer text-slate-500 dark:text-slate-400 hover:text-blue-400"
                         onMouseEnter={() => setTooltipHover('resetMigration')}
                         onMouseLeave={() => setTooltipHover(null)}
                       >
                         <Info className="w-3.5 h-3.5" />
                         {tooltipHover === 'resetMigration' && (
-                          <div className="absolute left-6 top-1/2 -translate-y-1/2 w-64 p-2 bg-slate-900 border border-slate-700 rounded text-[11px] text-slate-200 shadow-xl z-20">
+                          <div className="absolute left-6 top-1/2 -translate-y-1/2 w-64 p-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded text-[11px] text-slate-200 shadow-xl z-20">
                             Resets migration state tracking and syncs all items again from scratch.
                           </div>
                         )}
@@ -495,9 +495,9 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
               {/* ============================================================== */}
               {currentStep === 4 && (
                 <div className="space-y-6 animate-fadeIn">
-                  <div className="border-b border-slate-800 pb-3">
-                    <h3 className="text-sm font-semibold text-white">Migration Settings</h3>
-                    <p className="text-xs text-slate-400">
+                  <div className="border-b border-slate-200 dark:border-slate-800 pb-3">
+                    <h3 className="text-sm font-semibold text-slate-900 dark:text-white">Migration Settings</h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">
                       Configure inbox rules, mailbox delegation permissions, automapping, and compliance hold.
                     </p>
                   </div>
@@ -510,18 +510,18 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                           type="checkbox"
                           checked={formData.migrateMailboxRules}
                           onChange={(e) => setFormData({ ...formData, migrateMailboxRules: e.target.checked })}
-                          className="w-4 h-4 rounded bg-[#161821] border-slate-700 text-blue-600 focus:ring-blue-500"
+                          className="w-4 h-4 rounded bg-white dark:bg-[#161821] border-slate-300 dark:border-slate-700 text-blue-600 focus:ring-blue-500"
                         />
                         <span className="text-xs text-slate-200">Migrate Mailbox Rules</span>
                       </label>
                       <div
-                        className="relative cursor-pointer text-slate-400 hover:text-blue-400"
+                        className="relative cursor-pointer text-slate-500 dark:text-slate-400 hover:text-blue-400"
                         onMouseEnter={() => setTooltipHover('rules')}
                         onMouseLeave={() => setTooltipHover(null)}
                       >
                         <Info className="w-3.5 h-3.5" />
                         {tooltipHover === 'rules' && (
-                          <div className="absolute left-6 top-1/2 -translate-y-1/2 w-64 p-2 bg-slate-900 border border-slate-700 rounded text-[11px] text-slate-200 shadow-xl z-20">
+                          <div className="absolute left-6 top-1/2 -translate-y-1/2 w-64 p-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded text-[11px] text-slate-200 shadow-xl z-20">
                             Migrates client-side and server-side Outlook inbox routing rules.
                           </div>
                         )}
@@ -535,7 +535,7 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                           type="checkbox"
                           checked={formData.migrateMailboxDelegation}
                           onChange={(e) => setFormData({ ...formData, migrateMailboxDelegation: e.target.checked })}
-                          className="w-4 h-4 rounded bg-[#161821] border-slate-700 text-blue-600 focus:ring-blue-500"
+                          className="w-4 h-4 rounded bg-white dark:bg-[#161821] border-slate-300 dark:border-slate-700 text-blue-600 focus:ring-blue-500"
                         />
                         <span className="text-xs text-slate-200">Migrate Mailbox Delegation</span>
                       </label>
@@ -548,9 +548,9 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                             checked={formData.enableAutomapping}
                             disabled={!formData.migrateMailboxDelegation}
                             onChange={(e) => setFormData({ ...formData, enableAutomapping: e.target.checked })}
-                            className="w-4 h-4 rounded bg-[#161821] border-slate-700 text-blue-600 focus:ring-blue-500 disabled:opacity-50"
+                            className="w-4 h-4 rounded bg-white dark:bg-[#161821] border-slate-300 dark:border-slate-700 text-blue-600 focus:ring-blue-500 disabled:opacity-50"
                           />
-                          <span className={`text-xs ${formData.migrateMailboxDelegation ? 'text-slate-300' : 'text-slate-500'}`}>
+                          <span className={`text-xs ${formData.migrateMailboxDelegation ? 'text-slate-600 dark:text-slate-300' : 'text-slate-500'}`}>
                             Enable Automapping for shared mailboxes
                           </span>
                         </label>
@@ -564,7 +564,7 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                           type="checkbox"
                           checked={formData.migrateFolderPermissions}
                           onChange={(e) => setFormData({ ...formData, migrateFolderPermissions: e.target.checked })}
-                          className="w-4 h-4 rounded bg-[#161821] border-slate-700 text-blue-600 focus:ring-blue-500"
+                          className="w-4 h-4 rounded bg-white dark:bg-[#161821] border-slate-300 dark:border-slate-700 text-blue-600 focus:ring-blue-500"
                         />
                         <span className="text-xs text-slate-200">Migrate Folder Permissions</span>
                       </label>
@@ -577,7 +577,7 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                           type="checkbox"
                           checked={formData.migrateAutoReply}
                           onChange={(e) => setFormData({ ...formData, migrateAutoReply: e.target.checked })}
-                          className="w-4 h-4 rounded bg-[#161821] border-slate-700 text-blue-600 focus:ring-blue-500"
+                          className="w-4 h-4 rounded bg-white dark:bg-[#161821] border-slate-300 dark:border-slate-700 text-blue-600 focus:ring-blue-500"
                         />
                         <span className="text-xs text-slate-200">Migrate Auto Reply</span>
                       </label>
@@ -590,18 +590,18 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                           type="checkbox"
                           checked={formData.migrateLitigationHold}
                           onChange={(e) => setFormData({ ...formData, migrateLitigationHold: e.target.checked })}
-                          className="w-4 h-4 rounded bg-[#161821] border-slate-700 text-blue-600 focus:ring-blue-500"
+                          className="w-4 h-4 rounded bg-white dark:bg-[#161821] border-slate-300 dark:border-slate-700 text-blue-600 focus:ring-blue-500"
                         />
                         <span className="text-xs text-slate-200">Migrate Litigation Hold Settings</span>
                       </label>
                       <div
-                        className="relative cursor-pointer text-slate-400 hover:text-blue-400"
+                        className="relative cursor-pointer text-slate-500 dark:text-slate-400 hover:text-blue-400"
                         onMouseEnter={() => setTooltipHover('litigation')}
                         onMouseLeave={() => setTooltipHover(null)}
                       >
                         <Info className="w-3.5 h-3.5" />
                         {tooltipHover === 'litigation' && (
-                          <div className="absolute left-6 top-1/2 -translate-y-1/2 w-64 p-2 bg-slate-900 border border-slate-700 rounded text-[11px] text-slate-200 shadow-xl z-20">
+                          <div className="absolute left-6 top-1/2 -translate-y-1/2 w-64 p-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded text-[11px] text-slate-200 shadow-xl z-20">
                             Preserves legal hold flags, retention duration, and compliance owner attributes.
                           </div>
                         )}
@@ -622,18 +622,18 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                         type="checkbox"
                         checked={formData.manageMailForwarding}
                         onChange={(e) => setFormData({ ...formData, manageMailForwarding: e.target.checked })}
-                        className="w-4 h-4 rounded bg-[#161821] border-slate-700 text-blue-600 focus:ring-blue-500"
+                        className="w-4 h-4 rounded bg-white dark:bg-[#161821] border-slate-300 dark:border-slate-700 text-blue-600 focus:ring-blue-500"
                       />
-                      <span className="text-sm font-semibold text-white">Manage Mail Forwarding</span>
+                      <span className="text-sm font-semibold text-slate-900 dark:text-white">Manage Mail Forwarding</span>
                     </label>
                     <div
-                      className="relative cursor-pointer text-slate-400 hover:text-blue-400"
+                      className="relative cursor-pointer text-slate-500 dark:text-slate-400 hover:text-blue-400"
                       onMouseEnter={() => setTooltipHover('mailflow')}
                       onMouseLeave={() => setTooltipHover(null)}
                     >
                       <Info className="w-3.5 h-3.5" />
                       {tooltipHover === 'mailflow' && (
-                        <div className="absolute left-6 top-1/2 -translate-y-1/2 w-64 p-2 bg-slate-900 border border-slate-700 rounded text-[11px] text-slate-200 shadow-xl z-20">
+                        <div className="absolute left-6 top-1/2 -translate-y-1/2 w-64 p-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded text-[11px] text-slate-200 shadow-xl z-20">
                           Automatically configures routing forwarders to maintain mail delivery during coexistence.
                         </div>
                       )}
@@ -641,7 +641,7 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                   </div>
 
                   {formData.manageMailForwarding && (
-                    <div className="space-y-4 pl-6 border-l-2 border-slate-700/80">
+                    <div className="space-y-4 pl-6 border-l-2 border-slate-300 dark:border-slate-700/80">
                       {/* Radio buttons: Apply vs Remove Mail Forwarding */}
                       <div className="space-y-2">
                         <label className="flex items-center space-x-2.5 cursor-pointer">
@@ -651,7 +651,7 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                             value="Apply Mail Forwarding"
                             checked={formData.mailForwardingAction === 'Apply Mail Forwarding'}
                             onChange={(e) => setFormData({ ...formData, mailForwardingAction: e.target.value })}
-                            className="w-4 h-4 text-blue-600 bg-[#161821] border-slate-700 focus:ring-blue-500"
+                            className="w-4 h-4 text-blue-600 bg-white dark:bg-[#161821] border-slate-300 dark:border-slate-700 focus:ring-blue-500"
                           />
                           <span className="text-xs text-slate-200">Apply Mail Forwarding</span>
                         </label>
@@ -663,7 +663,7 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                             value="Remove Mail Forwarding"
                             checked={formData.mailForwardingAction === 'Remove Mail Forwarding'}
                             onChange={(e) => setFormData({ ...formData, mailForwardingAction: e.target.value })}
-                            className="w-4 h-4 text-blue-600 bg-[#161821] border-slate-700 focus:ring-blue-500"
+                            className="w-4 h-4 text-blue-600 bg-white dark:bg-[#161821] border-slate-300 dark:border-slate-700 focus:ring-blue-500"
                           />
                           <span className="text-xs text-slate-200">Remove Mail Forwarding</span>
                         </label>
@@ -671,13 +671,13 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
 
                       {/* Mail Forwarding Direction Dropdown */}
                       <div className="max-w-md pt-2">
-                        <label className="block text-xs font-medium text-slate-300 mb-1.5">
+                        <label className="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1.5">
                           Mail forwarding direction
                         </label>
                         <select
                           value={formData.forwardingDirection}
                           onChange={(e) => setFormData({ ...formData, forwardingDirection: e.target.value })}
-                          className="w-full px-3 py-2 text-xs bg-[#161821] border border-slate-700 rounded text-white focus:outline-none focus:border-blue-500"
+                          className="w-full px-3 py-2 text-xs bg-white dark:bg-[#161821] border border-slate-300 dark:border-slate-700 rounded text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
                         >
                           <option value="From target to source">From target to source</option>
                           <option value="From source to target">From source to target</option>
@@ -686,17 +686,17 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
 
                       {/* Custom domain for forwarding */}
                       <div className="max-w-md pt-2">
-                        <label className="block text-xs font-medium text-slate-300 mb-1.5">
+                        <label className="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1.5">
                           Custom domain for forwarding
                         </label>
                         <input
                           type="text"
                           value={formData.customForwardingDomain}
                           onChange={(e) => setFormData({ ...formData, customForwardingDomain: e.target.value })}
-                          className="w-full px-3 py-2 text-xs bg-[#161821] border border-slate-700 rounded text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+                          className="w-full px-3 py-2 text-xs bg-white dark:bg-[#161821] border border-slate-300 dark:border-slate-700 rounded text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
                           placeholder="e.g. forward.targettenant.com"
                         />
-                        <p className="text-[11px] text-slate-400 mt-2 leading-relaxed">
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
                           Specify the custom domain name for forwarding email addresses. If the domain is omitted or does not exist, the primary SMTP address will be used.
                         </p>
                       </div>
@@ -719,7 +719,7 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                         value="Migrate all folders"
                         checked={formData.folderSelection === 'Migrate all folders'}
                         onChange={(e) => setFormData({ ...formData, folderSelection: e.target.value })}
-                        className="w-4 h-4 text-blue-600 bg-[#161821] border-slate-700 focus:ring-blue-500"
+                        className="w-4 h-4 text-blue-600 bg-white dark:bg-[#161821] border-slate-300 dark:border-slate-700 focus:ring-blue-500"
                       />
                       <span className="text-xs text-slate-200">Migrate all folders</span>
                     </label>
@@ -731,7 +731,7 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                         value="Migrate all folders except"
                         checked={formData.folderSelection === 'Migrate all folders except'}
                         onChange={(e) => setFormData({ ...formData, folderSelection: e.target.value })}
-                        className="w-4 h-4 text-blue-600 bg-[#161821] border-slate-700 focus:ring-blue-500"
+                        className="w-4 h-4 text-blue-600 bg-white dark:bg-[#161821] border-slate-300 dark:border-slate-700 focus:ring-blue-500"
                       />
                       <span className="text-xs text-slate-200">Migrate all folders except</span>
                     </label>
@@ -743,18 +743,18 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                         value="Migrate specific folders"
                         checked={formData.folderSelection === 'Migrate specific folders'}
                         onChange={(e) => setFormData({ ...formData, folderSelection: e.target.value })}
-                        className="w-4 h-4 text-blue-600 bg-[#161821] border-slate-700 focus:ring-blue-500"
+                        className="w-4 h-4 text-blue-600 bg-white dark:bg-[#161821] border-slate-300 dark:border-slate-700 focus:ring-blue-500"
                       />
                       <span className="text-xs text-slate-200">Migrate specific folders</span>
                     </label>
                   </div>
 
                   {/* Folder Selection Explanation */}
-                  <p className="text-xs text-slate-400 italic">
+                  <p className="text-xs text-slate-500 dark:text-slate-400 italic">
                     Transfer all mailbox content to the target.
                   </p>
 
-                  <div className="pt-2 border-t border-slate-800 space-y-4 max-w-md">
+                  <div className="pt-2 border-t border-slate-200 dark:border-slate-800 space-y-4 max-w-md">
                     {/* Migrate to custom folder */}
                     <div className="space-y-2">
                       <div className="flex items-center space-x-2">
@@ -763,7 +763,7 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                             type="checkbox"
                             checked={formData.migrateToCustomFolder}
                             onChange={(e) => setFormData({ ...formData, migrateToCustomFolder: e.target.checked })}
-                            className="w-4 h-4 rounded bg-[#161821] border-slate-700 text-blue-600 focus:ring-blue-500"
+                            className="w-4 h-4 rounded bg-white dark:bg-[#161821] border-slate-300 dark:border-slate-700 text-blue-600 focus:ring-blue-500"
                           />
                           <span className="text-xs text-slate-200">Migrate to custom folder</span>
                         </label>
@@ -771,15 +771,15 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
 
                       {formData.migrateToCustomFolder && (
                         <div className="pl-6 flex items-center space-x-2">
-                          <span className="text-xs text-slate-400 whitespace-nowrap">Custom Folder Name:</span>
+                          <span className="text-xs text-slate-500 dark:text-slate-400 whitespace-nowrap">Custom Folder Name:</span>
                           <input
                             type="text"
                             value={formData.customFolderName}
                             onChange={(e) => setFormData({ ...formData, customFolderName: e.target.value })}
-                            className="flex-1 px-2.5 py-1.5 text-xs bg-[#161821] border border-slate-700 rounded text-white focus:outline-none focus:border-blue-500"
+                            className="flex-1 px-2.5 py-1.5 text-xs bg-white dark:bg-[#161821] border border-slate-300 dark:border-slate-700 rounded text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
                             placeholder="Migrated Mailbox"
                           />
-                          <Info className="w-3.5 h-3.5 text-slate-400" />
+                          <Info className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
                         </div>
                       )}
                     </div>
@@ -792,57 +792,57 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                             type="checkbox"
                             checked={formData.migrateToFolderMap}
                             onChange={(e) => setFormData({ ...formData, migrateToFolderMap: e.target.checked })}
-                            className="w-4 h-4 rounded bg-[#161821] border-slate-700 text-blue-600 focus:ring-blue-500"
+                            className="w-4 h-4 rounded bg-white dark:bg-[#161821] border-slate-300 dark:border-slate-700 text-blue-600 focus:ring-blue-500"
                           />
                           <span className="text-xs text-slate-200">Migrate to folder</span>
                         </label>
-                        <Info className="w-3.5 h-3.5 text-slate-400" />
+                        <Info className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
                       </div>
 
                       {formData.migrateToFolderMap && (
                         <div className="pl-6 space-y-2">
                           <div className="flex items-center space-x-3">
-                            <span className="text-xs text-slate-400 w-28">Inbox:</span>
+                            <span className="text-xs text-slate-500 dark:text-slate-400 w-28">Inbox:</span>
                             <input
                               type="text"
                               value={formData.inboxTargetFolder}
                               onChange={(e) => setFormData({ ...formData, inboxTargetFolder: e.target.value })}
-                              className="flex-1 px-2.5 py-1.5 text-xs bg-[#161821] border border-slate-700 rounded text-white"
+                              className="flex-1 px-2.5 py-1.5 text-xs bg-white dark:bg-[#161821] border border-slate-300 dark:border-slate-700 rounded text-slate-900 dark:text-white"
                             />
                           </div>
 
                           <div className="flex items-center space-x-3">
-                            <span className="text-xs text-slate-400 w-28">Deleted Items:</span>
+                            <span className="text-xs text-slate-500 dark:text-slate-400 w-28">Deleted Items:</span>
                             <input
                               type="text"
                               value={formData.deletedItemsTargetFolder}
                               onChange={(e) => setFormData({ ...formData, deletedItemsTargetFolder: e.target.value })}
-                              className="flex-1 px-2.5 py-1.5 text-xs bg-[#161821] border border-slate-700 rounded text-white"
+                              className="flex-1 px-2.5 py-1.5 text-xs bg-white dark:bg-[#161821] border border-slate-300 dark:border-slate-700 rounded text-slate-900 dark:text-white"
                             />
                           </div>
 
                           <div className="flex items-center space-x-3">
-                            <span className="text-xs text-slate-400 w-28">Archive:</span>
+                            <span className="text-xs text-slate-500 dark:text-slate-400 w-28">Archive:</span>
                             <input
                               type="text"
                               value={formData.archiveTargetFolder}
                               onChange={(e) => setFormData({ ...formData, archiveTargetFolder: e.target.value })}
-                              className="flex-1 px-2.5 py-1.5 text-xs bg-[#161821] border border-slate-700 rounded text-white"
+                              className="flex-1 px-2.5 py-1.5 text-xs bg-white dark:bg-[#161821] border border-slate-300 dark:border-slate-700 rounded text-slate-900 dark:text-white"
                             />
-                            <Info className="w-3.5 h-3.5 text-slate-400" />
+                            <Info className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
                           </div>
 
                           <div className="flex items-center space-x-3">
-                            <span className="text-xs text-slate-400 w-28">Sent Items:</span>
+                            <span className="text-xs text-slate-500 dark:text-slate-400 w-28">Sent Items:</span>
                             <input
                               type="text"
                               value={formData.sentItemsTargetFolder}
                               onChange={(e) => setFormData({ ...formData, sentItemsTargetFolder: e.target.value })}
-                              className="flex-1 px-2.5 py-1.5 text-xs bg-[#161821] border border-slate-700 rounded text-white"
+                              className="flex-1 px-2.5 py-1.5 text-xs bg-white dark:bg-[#161821] border border-slate-300 dark:border-slate-700 rounded text-slate-900 dark:text-white"
                             />
                           </div>
 
-                          <p className="text-[11px] text-slate-400 mt-2">
+                          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-2">
                             Migrates well known folders to any custom named folder.
                           </p>
                         </div>
@@ -857,9 +857,9 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
               {/* ============================================================== */}
               {currentStep === 7 && (
                 <div className="space-y-6 animate-fadeIn">
-                  <div className="border-b border-slate-800 pb-3">
-                    <h3 className="text-sm font-semibold text-white">Date Range & Size Filters</h3>
-                    <p className="text-xs text-slate-400">
+                  <div className="border-b border-slate-200 dark:border-slate-800 pb-3">
+                    <h3 className="text-sm font-semibold text-slate-900 dark:text-white">Date Range & Size Filters</h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">
                       Select which message date horizons to include and configure size exclusion limits.
                     </p>
                   </div>
@@ -873,7 +873,7 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                           value="ALL"
                           checked={formData.dateRangeFilter === 'ALL'}
                           onChange={(e) => setFormData({ ...formData, dateRangeFilter: e.target.value })}
-                          className="w-4 h-4 text-blue-600 bg-[#161821] border-slate-700"
+                          className="w-4 h-4 text-blue-600 bg-white dark:bg-[#161821] border-slate-300 dark:border-slate-700"
                         />
                         <span className="text-xs text-slate-200">Migrate all items regardless of age</span>
                       </label>
@@ -885,14 +885,14 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                           value="NEWER_THAN_6M"
                           checked={formData.dateRangeFilter === 'NEWER_THAN_6M'}
                           onChange={(e) => setFormData({ ...formData, dateRangeFilter: e.target.value })}
-                          className="w-4 h-4 text-blue-600 bg-[#161821] border-slate-700"
+                          className="w-4 h-4 text-blue-600 bg-white dark:bg-[#161821] border-slate-300 dark:border-slate-700"
                         />
                         <span className="text-xs text-slate-200">Only migrate recent items (Newer than 6 months)</span>
                       </label>
                     </div>
 
-                    <div className="pt-3 border-t border-slate-800">
-                      <label className="block text-xs font-medium text-slate-300 mb-1.5">
+                    <div className="pt-3 border-t border-slate-200 dark:border-slate-800">
+                      <label className="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1.5">
                         Exclude items larger than (MB)
                       </label>
                       <div className="flex items-center space-x-3">
@@ -900,11 +900,11 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                           type="number"
                           value={formData.excludeItemsLargerThanMB}
                           onChange={(e) => setFormData({ ...formData, excludeItemsLargerThanMB: Number(e.target.value) })}
-                          className="w-32 px-3 py-1.5 text-xs bg-[#161821] border border-slate-700 rounded text-white"
+                          className="w-32 px-3 py-1.5 text-xs bg-white dark:bg-[#161821] border border-slate-300 dark:border-slate-700 rounded text-slate-900 dark:text-white"
                           min={10}
                           max={500}
                         />
-                        <span className="text-xs text-slate-400">MB (Exchange transport default max 150 MB)</span>
+                        <span className="text-xs text-slate-500 dark:text-slate-400">MB (Exchange transport default max 150 MB)</span>
                       </div>
                     </div>
                   </div>
@@ -916,9 +916,9 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
               {/* ============================================================== */}
               {currentStep === 8 && (
                 <div className="space-y-6 animate-fadeIn">
-                  <div className="border-b border-slate-800 pb-3">
-                    <h3 className="text-sm font-semibold text-white">Alerts & Notifications</h3>
-                    <p className="text-xs text-slate-400">
+                  <div className="border-b border-slate-200 dark:border-slate-800 pb-3">
+                    <h3 className="text-sm font-semibold text-slate-900 dark:text-white">Alerts & Notifications</h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">
                       Configure automated alerts upon task completion, failures, or cutover milestones.
                     </p>
                   </div>
@@ -929,21 +929,21 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                         type="checkbox"
                         checked={formData.sendEmailOnComplete}
                         onChange={(e) => setFormData({ ...formData, sendEmailOnComplete: e.target.checked })}
-                        className="w-4 h-4 rounded bg-[#161821] border-slate-700 text-blue-600"
+                        className="w-4 h-4 rounded bg-white dark:bg-[#161821] border-slate-300 dark:border-slate-700 text-blue-600"
                       />
                       <span className="text-xs text-slate-200">Send status email upon completion or failure</span>
                     </label>
 
                     {formData.sendEmailOnComplete && (
                       <div>
-                        <label className="block text-xs font-medium text-slate-300 mb-1.5">
+                        <label className="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1.5">
                           Admin Notification Email(s)
                         </label>
                         <input
                           type="text"
                           value={formData.notificationEmails}
                           onChange={(e) => setFormData({ ...formData, notificationEmails: e.target.value })}
-                          className="w-full px-3 py-2 text-xs bg-[#161821] border border-slate-700 rounded text-white"
+                          className="w-full px-3 py-2 text-xs bg-white dark:bg-[#161821] border border-slate-300 dark:border-slate-700 rounded text-slate-900 dark:text-white"
                           placeholder="admin@targettenant.com, operator@contoso.com"
                         />
                       </div>
@@ -955,7 +955,7 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                           type="checkbox"
                           checked={formData.sendUserWelcomeEmail}
                           onChange={(e) => setFormData({ ...formData, sendUserWelcomeEmail: e.target.checked })}
-                          className="w-4 h-4 rounded bg-[#161821] border-slate-700 text-blue-600"
+                          className="w-4 h-4 rounded bg-white dark:bg-[#161821] border-slate-300 dark:border-slate-700 text-blue-600"
                         />
                         <span className="text-xs text-slate-200">Send welcome & Outlook setup guide to target user</span>
                       </label>
@@ -969,9 +969,9 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
               {/* ============================================================== */}
               {currentStep === 9 && (
                 <div className="space-y-6 animate-fadeIn">
-                  <div className="border-b border-slate-800 pb-3">
-                    <h3 className="text-sm font-semibold text-white">Migration Reporting & Audit Logs</h3>
-                    <p className="text-xs text-slate-400">
+                  <div className="border-b border-slate-200 dark:border-slate-800 pb-3">
+                    <h3 className="text-sm font-semibold text-slate-900 dark:text-white">Migration Reporting & Audit Logs</h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">
                       Configure item-level logging and regulatory compliance audit records.
                     </p>
                   </div>
@@ -982,7 +982,7 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                         type="checkbox"
                         checked={formData.detailedItemAuditLog}
                         onChange={(e) => setFormData({ ...formData, detailedItemAuditLog: e.target.checked })}
-                        className="w-4 h-4 rounded bg-[#161821] border-slate-700 text-blue-600"
+                        className="w-4 h-4 rounded bg-white dark:bg-[#161821] border-slate-300 dark:border-slate-700 text-blue-600"
                       />
                       <span className="text-xs text-slate-200">Maintain item-level audit log (Subject, Hash, Folder, Timestamp)</span>
                     </label>
@@ -992,7 +992,7 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                         type="checkbox"
                         checked={formData.includeFailedItemReports}
                         onChange={(e) => setFormData({ ...formData, includeFailedItemReports: e.target.checked })}
-                        className="w-4 h-4 rounded bg-[#161821] border-slate-700 text-blue-600"
+                        className="w-4 h-4 rounded bg-white dark:bg-[#161821] border-slate-300 dark:border-slate-700 text-blue-600"
                       />
                       <span className="text-xs text-slate-200">Generate diagnostic report for skipped or corrupt items</span>
                     </label>
@@ -1005,9 +1005,9 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
               {/* ============================================================== */}
               {currentStep === 10 && (
                 <div className="space-y-6 animate-fadeIn">
-                  <div className="border-b border-slate-800 pb-3">
-                    <h3 className="text-sm font-semibold text-white">Execution Schedule & Throttling</h3>
-                    <p className="text-xs text-slate-400">
+                  <div className="border-b border-slate-200 dark:border-slate-800 pb-3">
+                    <h3 className="text-sm font-semibold text-slate-900 dark:text-white">Execution Schedule & Throttling</h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">
                       Decide whether to execute immediately, schedule for off-peak hours, or save as template only.
                     </p>
                   </div>
@@ -1021,7 +1021,7 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                           value="IMMEDIATE"
                           checked={formData.scheduleType === 'IMMEDIATE'}
                           onChange={(e) => setFormData({ ...formData, scheduleType: e.target.value })}
-                          className="w-4 h-4 text-blue-600 bg-[#161821] border-slate-700"
+                          className="w-4 h-4 text-blue-600 bg-white dark:bg-[#161821] border-slate-300 dark:border-slate-700"
                         />
                         <span className="text-xs text-slate-200">Run immediately upon clicking Finish</span>
                       </label>
@@ -1033,14 +1033,14 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                           value="SCHEDULED"
                           checked={formData.scheduleType === 'SCHEDULED'}
                           onChange={(e) => setFormData({ ...formData, scheduleType: e.target.value })}
-                          className="w-4 h-4 text-blue-600 bg-[#161821] border-slate-700"
+                          className="w-4 h-4 text-blue-600 bg-white dark:bg-[#161821] border-slate-300 dark:border-slate-700"
                         />
                         <span className="text-xs text-slate-200">Schedule execution for off-peak maintenance window</span>
                       </label>
                     </div>
 
-                    <div className="pt-3 border-t border-slate-800">
-                      <label className="block text-xs font-medium text-slate-300 mb-1.5">
+                    <div className="pt-3 border-t border-slate-200 dark:border-slate-800">
+                      <label className="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1.5">
                         Concurrent Mailbox Sync Limit
                       </label>
                       <div className="flex items-center space-x-3">
@@ -1048,11 +1048,11 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                           type="number"
                           value={formData.concurrencyLimit}
                           onChange={(e) => setFormData({ ...formData, concurrencyLimit: Number(e.target.value) })}
-                          className="w-24 px-3 py-1.5 text-xs bg-[#161821] border border-slate-700 rounded text-white"
+                          className="w-24 px-3 py-1.5 text-xs bg-white dark:bg-[#161821] border border-slate-300 dark:border-slate-700 rounded text-slate-900 dark:text-white"
                           min={1}
                           max={50}
                         />
-                        <span className="text-xs text-slate-400">Concurrent streams (Avoids Graph API 429 throttling)</span>
+                        <span className="text-xs text-slate-500 dark:text-slate-400">Concurrent streams (Avoids Graph API 429 throttling)</span>
                       </div>
                     </div>
                   </div>
@@ -1064,22 +1064,22 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
               {/* ============================================================== */}
               {currentStep === 11 && (
                 <div className="space-y-6 animate-fadeIn">
-                  <div className="border-b border-slate-800 pb-3">
-                    <h3 className="text-sm font-semibold text-white">Configuration Summary</h3>
-                    <p className="text-xs text-slate-400">
+                  <div className="border-b border-slate-200 dark:border-slate-800 pb-3">
+                    <h3 className="text-sm font-semibold text-slate-900 dark:text-white">Configuration Summary</h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">
                       Review your mailbox migration options before creating the task or saving the template.
                     </p>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                     {/* Scenario & Scope Card */}
-                    <div className="p-4 bg-[#161821] border border-slate-800 rounded space-y-2">
+                    <div className="p-4 bg-white dark:bg-[#161821] border border-slate-200 dark:border-slate-800 rounded space-y-2">
                       <div className="font-semibold text-blue-400 flex items-center gap-1.5">
                         <Mail className="w-3.5 h-3.5" />
                         <span>Scenario & Items</span>
                       </div>
-                      <div className="text-slate-300 space-y-1">
-                        <div>Direction: <span className="text-white font-medium">{formData.sourceScenario} → {formData.targetScenario}</span></div>
+                      <div className="text-slate-600 dark:text-slate-300 space-y-1">
+                        <div>Direction: <span className="text-slate-900 dark:text-white font-medium">{formData.sourceScenario} → {formData.targetScenario}</span></div>
                         <div>Mail: <span className={formData.migrateMail ? 'text-emerald-400' : 'text-slate-500'}>{formData.migrateMail ? 'Yes' : 'No'}</span></div>
                         <div>Calendar: <span className={formData.migrateCalendar ? 'text-emerald-400' : 'text-slate-500'}>{formData.migrateCalendar ? 'Yes' : 'No'}</span></div>
                         <div>Contacts: <span className={formData.migrateContacts ? 'text-emerald-400' : 'text-slate-500'}>{formData.migrateContacts ? 'Yes' : 'No'}</span></div>
@@ -1088,12 +1088,12 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                     </div>
 
                     {/* Settings & Permissions */}
-                    <div className="p-4 bg-[#161821] border border-slate-800 rounded space-y-2">
+                    <div className="p-4 bg-white dark:bg-[#161821] border border-slate-200 dark:border-slate-800 rounded space-y-2">
                       <div className="font-semibold text-amber-400 flex items-center gap-1.5">
                         <Settings className="w-3.5 h-3.5" />
                         <span>Settings & Coexistence</span>
                       </div>
-                      <div className="text-slate-300 space-y-1">
+                      <div className="text-slate-600 dark:text-slate-300 space-y-1">
                         <div>Mailbox Rules: <span className={formData.migrateMailboxRules ? 'text-emerald-400' : 'text-slate-500'}>{formData.migrateMailboxRules ? 'Enabled' : 'Disabled'}</span></div>
                         <div>Delegations: <span className={formData.migrateMailboxDelegation ? 'text-emerald-400' : 'text-slate-500'}>{formData.migrateMailboxDelegation ? 'Enabled' : 'Disabled'}</span></div>
                         <div>Automapping: <span className={formData.enableAutomapping ? 'text-emerald-400' : 'text-slate-500'}>{formData.enableAutomapping ? 'Enabled' : 'Disabled'}</span></div>
@@ -1102,29 +1102,29 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                     </div>
 
                     {/* Folders & Filters */}
-                    <div className="p-4 bg-[#161821] border border-slate-800 rounded space-y-2">
+                    <div className="p-4 bg-white dark:bg-[#161821] border border-slate-200 dark:border-slate-800 rounded space-y-2">
                       <div className="font-semibold text-purple-400 flex items-center gap-1.5">
                         <FolderTree className="w-3.5 h-3.5" />
                         <span>Folders & Filters</span>
                       </div>
-                      <div className="text-slate-300 space-y-1">
-                        <div>Folder Scope: <span className="text-white font-medium">{formData.folderSelection}</span></div>
-                        <div>Custom Folder: <span className="text-slate-400">{formData.migrateToCustomFolder ? formData.customFolderName : 'Root'}</span></div>
-                        <div>Size Limit: <span className="text-slate-400">{formData.excludeItemsLargerThanMB} MB</span></div>
+                      <div className="text-slate-600 dark:text-slate-300 space-y-1">
+                        <div>Folder Scope: <span className="text-slate-900 dark:text-white font-medium">{formData.folderSelection}</span></div>
+                        <div>Custom Folder: <span className="text-slate-500 dark:text-slate-400">{formData.migrateToCustomFolder ? formData.customFolderName : 'Root'}</span></div>
+                        <div>Size Limit: <span className="text-slate-500 dark:text-slate-400">{formData.excludeItemsLargerThanMB} MB</span></div>
                       </div>
                     </div>
 
                     {/* Target License & Execution */}
-                    <div className="p-4 bg-[#161821] border border-slate-800 rounded space-y-2">
+                    <div className="p-4 bg-white dark:bg-[#161821] border border-slate-200 dark:border-slate-800 rounded space-y-2">
                       <div className="font-semibold text-emerald-400 flex items-center gap-1.5">
                         <ShieldCheck className="w-3.5 h-3.5" />
                         <span>License & Schedule</span>
                       </div>
-                      <div className="text-slate-300 space-y-1">
-                        <div>Target License: <span className="text-white font-medium">{formData.targetLicensingPlan}</span></div>
+                      <div className="text-slate-600 dark:text-slate-300 space-y-1">
+                        <div>Target License: <span className="text-slate-900 dark:text-white font-medium">{formData.targetLicensingPlan}</span></div>
                         <div>Auto-assign: <span className={formData.autoAssignLicense ? 'text-emerald-400' : 'text-slate-500'}>{formData.autoAssignLicense ? 'Yes' : 'No'}</span></div>
                         <div>Execution: <span className="text-blue-400 font-medium">{formData.scheduleType}</span></div>
-                        <div>Concurrency: <span className="text-white font-mono">{formData.concurrencyLimit} mailboxes</span></div>
+                        <div>Concurrency: <span className="text-slate-900 dark:text-white font-mono">{formData.concurrencyLimit} mailboxes</span></div>
                       </div>
                     </div>
                   </div>
@@ -1133,9 +1133,9 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
             </div>
 
             {/* Wizard Bottom Navigation Bar matching screenshots */}
-            <div className="pt-6 border-t border-slate-700/80 mt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="pt-6 border-t border-slate-300 dark:border-slate-700/80 mt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
               {/* Step Counter */}
-              <div className="text-xs text-slate-400 font-medium">
+              <div className="text-xs text-slate-500 dark:text-slate-400 font-medium">
                 Step {currentStep} of 11
               </div>
 
@@ -1146,7 +1146,7 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                   type="button"
                   disabled={currentStep === 1 || isSubmitting}
                   onClick={handleBack}
-                  className="px-4 py-2 text-xs font-medium text-slate-300 bg-slate-800 hover:bg-slate-700 rounded border border-slate-700 transition disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="px-4 py-2 text-xs font-medium text-slate-600 dark:text-slate-300 bg-slate-800 hover:bg-slate-100 dark:bg-slate-700 rounded border border-slate-300 dark:border-slate-700 transition disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   Back
                 </button>
@@ -1156,7 +1156,7 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                     id="btn-wizard-next"
                     type="button"
                     onClick={handleNext}
-                    className="px-5 py-2 text-xs font-medium text-white bg-blue-600 hover:bg-blue-500 rounded transition shadow-sm flex items-center space-x-1"
+                    className="px-5 py-2 text-xs font-medium text-slate-900 dark:text-white bg-blue-600 hover:bg-blue-500 rounded transition shadow-sm flex items-center space-x-1"
                   >
                     <span>Next</span>
                     <ChevronRight className="w-3.5 h-3.5" />
@@ -1167,14 +1167,14 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                     type="button"
                     disabled={isSubmitting}
                     onClick={handleFinish}
-                    className="px-5 py-2 text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-500 rounded transition shadow-sm flex items-center space-x-1.5 disabled:opacity-50"
+                    className="px-5 py-2 text-xs font-semibold text-slate-900 dark:text-white bg-emerald-600 hover:bg-emerald-500 rounded transition shadow-sm flex items-center space-x-1.5 disabled:opacity-50"
                   >
                     {isSubmitting ? (
                       <span>Saving...</span>
                     ) : (
                       <>
                         <Save className="w-3.5 h-3.5" />
-                        <span>Finish & Save Template</span>
+                        <span>Create Migration Job</span>
                       </>
                     )}
                   </button>
@@ -1184,7 +1184,7 @@ export const MailMigrationWizardModal: React.FC<MailMigrationWizardModalProps> =
                   id="btn-wizard-cancel"
                   type="button"
                   onClick={onClose}
-                  className="px-4 py-2 text-xs font-medium text-slate-400 hover:text-white transition"
+                  className="px-4 py-2 text-xs font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white transition"
                 >
                   Cancel
                 </button>

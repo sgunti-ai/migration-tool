@@ -79,26 +79,26 @@ export const DiscoveryDetailDrawer: React.FC<DiscoveryDetailDrawerProps> = ({
       <div className="flex-1" onClick={onClose} />
 
       {/* Drawer Container */}
-      <div className="w-full max-w-2xl bg-slate-900 border-l border-slate-800 h-full flex flex-col shadow-2xl animate-slideLeft overflow-hidden">
+      <div className="w-full max-w-2xl bg-slate-50 dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 h-full flex flex-col shadow-2xl animate-slideLeft overflow-hidden">
         {/* Drawer Header */}
-        <div className="p-6 border-b border-slate-800 bg-slate-900/90 flex items-start justify-between">
+        <div className="p-6 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/90 flex items-start justify-between">
           <div className="flex items-start space-x-4 min-w-0">
             <div className="w-12 h-12 rounded-xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-lg font-bold text-blue-400 shrink-0">
               {user.displayName.charAt(0)}
             </div>
             <div className="min-w-0">
               <div className="flex items-center space-x-2.5">
-                <h2 className="text-lg font-bold text-white truncate">{user.displayName}</h2>
+                <h2 className="text-lg font-bold text-slate-900 dark:text-white truncate">{user.displayName}</h2>
                 <span className={`px-2 py-0.5 rounded-full text-xs font-medium border flex items-center gap-1 ${mfaColor}`}>
                   {mfaIcon}
                   {user.mfaStatus}
                 </span>
               </div>
-              <p className="text-xs text-slate-400 font-mono truncate mt-0.5">{user.upn}</p>
-              <div className="flex items-center space-x-2 text-xs text-slate-400 mt-2">
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-mono truncate mt-0.5">{user.upn}</p>
+              <div className="flex items-center space-x-2 text-xs text-slate-500 dark:text-slate-400 mt-2">
                 <span>{user.jobTitle || 'No Title'}</span>
                 <span>•</span>
-                <span className="text-slate-300 font-medium">{user.department || 'General'}</span>
+                <span className="text-slate-600 dark:text-slate-300 font-medium">{user.department || 'General'}</span>
                 <span>•</span>
                 <span>Location: {user.usageLocation || 'US'}</span>
               </div>
@@ -108,14 +108,14 @@ export const DiscoveryDetailDrawer: React.FC<DiscoveryDetailDrawerProps> = ({
           <button
             id="btn-close-drawer"
             onClick={onClose}
-            className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition"
+            className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white hover:bg-white dark:bg-slate-800 rounded-lg transition"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Tab Navigation */}
-        <div className="px-6 border-b border-slate-800 bg-slate-900/50 flex space-x-6 text-xs font-medium overflow-x-auto">
+        <div className="px-6 border-b border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 flex space-x-6 text-xs font-medium overflow-x-auto">
           {[
             { id: 'profile', label: 'Identity & Access', icon: User },
             { id: 'exchange', label: 'Exchange Mailbox', icon: Mail },
@@ -132,7 +132,7 @@ export const DiscoveryDetailDrawer: React.FC<DiscoveryDetailDrawerProps> = ({
                 className={`py-3 flex items-center space-x-1.5 border-b-2 transition whitespace-nowrap ${
                   isActive
                     ? 'border-blue-500 text-blue-400 font-semibold'
-                    : 'border-transparent text-slate-400 hover:text-slate-200'
+                    : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-200'
                 }`}
               >
                 <Icon className="w-3.5 h-3.5" />
@@ -145,7 +145,7 @@ export const DiscoveryDetailDrawer: React.FC<DiscoveryDetailDrawerProps> = ({
         {/* Drawer Body Content */}
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {loading ? (
-            <div className="flex flex-col items-center justify-center py-20 space-y-3 text-slate-400">
+            <div className="flex flex-col items-center justify-center py-20 space-y-3 text-slate-500 dark:text-slate-400">
               <div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
               <p className="text-xs">Querying Microsoft Graph & Exchange Online statistics...</p>
             </div>
@@ -155,14 +155,14 @@ export const DiscoveryDetailDrawer: React.FC<DiscoveryDetailDrawerProps> = ({
               {activeTab === 'profile' && (
                 <div className="space-y-6">
                   {/* Account Status Card */}
-                  <div className="p-4 rounded-xl bg-slate-800/40 border border-slate-800 space-y-3">
-                    <h3 className="text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                  <div className="p-4 rounded-xl bg-white dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 space-y-3">
+                    <h3 className="text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
                       Account & Authentication State
                     </h3>
                     <div className="grid grid-cols-2 gap-4 text-xs">
                       <div>
-                        <span className="text-slate-400">Account Enabled:</span>
-                        <div className="font-medium text-white mt-0.5">
+                        <span className="text-slate-500 dark:text-slate-400">Account Enabled:</span>
+                        <div className="font-medium text-slate-900 dark:text-white mt-0.5">
                           {user.accountEnabled ? (
                             <span className="text-emerald-400">Yes (Active)</span>
                           ) : (
@@ -171,25 +171,25 @@ export const DiscoveryDetailDrawer: React.FC<DiscoveryDetailDrawerProps> = ({
                         </div>
                       </div>
                       <div>
-                        <span className="text-slate-400">MFA Policy Status:</span>
-                        <div className="font-medium text-white mt-0.5">{user.mfaStatus}</div>
+                        <span className="text-slate-500 dark:text-slate-400">MFA Policy Status:</span>
+                        <div className="font-medium text-slate-900 dark:text-white mt-0.5">{user.mfaStatus}</div>
                       </div>
                       <div>
-                        <span className="text-slate-400">Reporting Manager:</span>
-                        <div className="font-medium text-white mt-0.5">
+                        <span className="text-slate-500 dark:text-slate-400">Reporting Manager:</span>
+                        <div className="font-medium text-slate-900 dark:text-white mt-0.5">
                           {user.manager || <span className="text-slate-500 italic">None assigned</span>}
                         </div>
                       </div>
                       <div>
-                        <span className="text-slate-400">Entra ID Sync ETag:</span>
-                        <div className="font-mono text-slate-300 mt-0.5">{user.etag || 'None'}</div>
+                        <span className="text-slate-500 dark:text-slate-400">Entra ID Sync ETag:</span>
+                        <div className="font-mono text-slate-600 dark:text-slate-300 mt-0.5">{user.etag || 'None'}</div>
                       </div>
                     </div>
                   </div>
 
                   {/* Directory Roles */}
-                  <div className="p-4 rounded-xl bg-slate-800/40 border border-slate-800 space-y-3">
-                    <h3 className="text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center space-x-1.5">
+                  <div className="p-4 rounded-xl bg-white dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 space-y-3">
+                    <h3 className="text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider flex items-center space-x-1.5">
                       <Key className="w-3.5 h-3.5 text-amber-400" />
                       <span>Assigned Entra ID Directory Roles</span>
                     </h3>
@@ -215,10 +215,10 @@ export const DiscoveryDetailDrawer: React.FC<DiscoveryDetailDrawerProps> = ({
                       <Sparkles className="w-4 h-4" />
                       <span>Migration Readiness Assessment</span>
                     </div>
-                    <p className="text-xs text-slate-300">
+                    <p className="text-xs text-slate-600 dark:text-slate-300">
                       User identity and workloads are fully mapped. Target domain Fabrikam tenant has matching license quotas available.
                     </p>
-                    <div className="pt-2 flex items-center space-x-4 text-xs text-slate-400">
+                    <div className="pt-2 flex items-center space-x-4 text-xs text-slate-500 dark:text-slate-400">
                       <span>• UPN Format: Compliant</span>
                       <span>• Mailbox Size: Supported</span>
                       <span>• OneDrive Quota: Validated</span>
@@ -232,9 +232,9 @@ export const DiscoveryDetailDrawer: React.FC<DiscoveryDetailDrawerProps> = ({
                 <div className="space-y-6">
                   {detailData?.mailbox ? (
                     <>
-                      <div className="p-4 rounded-xl bg-slate-800/40 border border-slate-800 space-y-4">
+                      <div className="p-4 rounded-xl bg-white dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 space-y-4">
                         <div className="flex items-center justify-between">
-                          <span className="text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                          <span className="text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
                             Exchange Online Mailbox
                           </span>
                           <span className="px-2 py-0.5 rounded text-xs font-mono bg-blue-500/10 text-blue-400 border border-blue-500/20">
@@ -244,8 +244,8 @@ export const DiscoveryDetailDrawer: React.FC<DiscoveryDetailDrawerProps> = ({
 
                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-xs">
                           <div>
-                            <span className="text-slate-400">Total Primary Size:</span>
-                            <div className="text-base font-bold text-white mt-0.5">
+                            <span className="text-slate-500 dark:text-slate-400">Total Primary Size:</span>
+                            <div className="text-base font-bold text-slate-900 dark:text-white mt-0.5">
                               {(detailData.mailbox.totalItemSizeMB / 1024).toFixed(2)} GB
                             </div>
                             <span className="text-[10px] text-slate-500">
@@ -254,28 +254,28 @@ export const DiscoveryDetailDrawer: React.FC<DiscoveryDetailDrawerProps> = ({
                           </div>
 
                           <div>
-                            <span className="text-slate-400">Item Count:</span>
-                            <div className="text-base font-bold text-white mt-0.5">
+                            <span className="text-slate-500 dark:text-slate-400">Item Count:</span>
+                            <div className="text-base font-bold text-slate-900 dark:text-white mt-0.5">
                               {(detailData.mailbox?.itemCount ?? 0).toLocaleString()} items
                             </div>
                           </div>
 
                           <div>
-                            <span className="text-slate-400">Online Archive:</span>
-                            <div className="text-base font-bold text-white mt-0.5 flex items-center space-x-1">
+                            <span className="text-slate-500 dark:text-slate-400">Online Archive:</span>
+                            <div className="text-base font-bold text-slate-900 dark:text-white mt-0.5 flex items-center space-x-1">
                               <Archive className="w-3.5 h-3.5 text-indigo-400" />
                               <span>{detailData.mailbox.archiveStatus}</span>
                             </div>
                             {detailData.mailbox.archiveStatus === 'Active' && (
-                              <span className="text-[10px] text-slate-400">
+                              <span className="text-[10px] text-slate-500 dark:text-slate-400">
                                 Archive Size: {(detailData.mailbox.archiveSizeMB / 1024).toFixed(1)} GB
                               </span>
                             )}
                           </div>
                         </div>
 
-                        <div className="pt-2 border-t border-slate-700/60 text-xs">
-                          <span className="text-slate-400">Retention Policy:</span>
+                        <div className="pt-2 border-t border-slate-200 dark:border-slate-700/60 text-xs">
+                          <span className="text-slate-500 dark:text-slate-400">Retention Policy:</span>
                           <div className="font-medium text-slate-200 mt-0.5">
                             {detailData.mailbox.retentionPolicy || 'Default MRM Policy'}
                           </div>
@@ -283,8 +283,8 @@ export const DiscoveryDetailDrawer: React.FC<DiscoveryDetailDrawerProps> = ({
                       </div>
 
                       {/* Delegation & Permissions */}
-                      <div className="p-4 rounded-xl bg-slate-800/40 border border-slate-800 space-y-3">
-                        <h4 className="text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center space-x-1.5">
+                      <div className="p-4 rounded-xl bg-white dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 space-y-3">
+                        <h4 className="text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider flex items-center space-x-1.5">
                           <FolderLock className="w-3.5 h-3.5 text-cyan-400" />
                           <span>Mailbox Delegation & Permissions</span>
                         </h4>
@@ -293,7 +293,7 @@ export const DiscoveryDetailDrawer: React.FC<DiscoveryDetailDrawerProps> = ({
                             {detailData.mailbox.delegates.map((del, idx) => (
                               <div
                                 key={idx}
-                                className="px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs font-mono text-slate-300 flex items-center space-x-2"
+                                className="px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs font-mono text-slate-600 dark:text-slate-300 flex items-center space-x-2"
                               >
                                 <span className="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
                                 <span>{del}</span>
@@ -306,8 +306,8 @@ export const DiscoveryDetailDrawer: React.FC<DiscoveryDetailDrawerProps> = ({
                       </div>
 
                       {/* Forwarding Rules */}
-                      <div className="p-4 rounded-xl bg-slate-800/40 border border-slate-800 space-y-3">
-                        <h4 className="text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center space-x-1.5">
+                      <div className="p-4 rounded-xl bg-white dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 space-y-3">
+                        <h4 className="text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider flex items-center space-x-1.5">
                           <ArrowRight className="w-3.5 h-3.5 text-amber-400" />
                           <span>Inbox Forwarding Rules & Redirection</span>
                         </h4>
@@ -316,7 +316,7 @@ export const DiscoveryDetailDrawer: React.FC<DiscoveryDetailDrawerProps> = ({
                             {detailData.mailbox.forwardingRules.map((rule, idx) => (
                               <div
                                 key={idx}
-                                className="px-3 py-2 rounded-lg bg-slate-900 border border-slate-700 text-xs font-mono text-amber-300"
+                                className="px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs font-mono text-amber-300"
                               >
                                 {rule}
                               </div>
@@ -340,9 +340,9 @@ export const DiscoveryDetailDrawer: React.FC<DiscoveryDetailDrawerProps> = ({
                 <div className="space-y-6">
                   {detailData?.oneDrive ? (
                     <>
-                      <div className="p-4 rounded-xl bg-slate-800/40 border border-slate-800 space-y-4">
+                      <div className="p-4 rounded-xl bg-white dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 space-y-4">
                         <div className="flex items-center justify-between">
-                          <span className="text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                          <span className="text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
                             Personal Site Details
                           </span>
                           <span className="px-2 py-0.5 rounded text-xs font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
@@ -351,8 +351,8 @@ export const DiscoveryDetailDrawer: React.FC<DiscoveryDetailDrawerProps> = ({
                         </div>
 
                         <div className="text-xs">
-                          <span className="text-slate-400">Site Collection URL:</span>
-                          <div className="font-mono text-blue-400 mt-1 break-all bg-slate-900 p-2 rounded-lg border border-slate-800 flex items-center justify-between">
+                          <span className="text-slate-500 dark:text-slate-400">Site Collection URL:</span>
+                          <div className="font-mono text-blue-400 mt-1 break-all bg-slate-50 dark:bg-slate-900 p-2 rounded-lg border border-slate-200 dark:border-slate-800 flex items-center justify-between">
                             <span>{detailData.oneDrive.siteUrl}</span>
                             <ExternalLink className="w-3.5 h-3.5 text-slate-500 shrink-0 ml-2" />
                           </div>
@@ -360,8 +360,8 @@ export const DiscoveryDetailDrawer: React.FC<DiscoveryDetailDrawerProps> = ({
 
                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-xs pt-2">
                           <div>
-                            <span className="text-slate-400">Storage Used:</span>
-                            <div className="text-base font-bold text-white mt-0.5">
+                            <span className="text-slate-500 dark:text-slate-400">Storage Used:</span>
+                            <div className="text-base font-bold text-slate-900 dark:text-white mt-0.5">
                               {detailData.oneDrive.storageUsedGB} GB
                             </div>
                             <span className="text-[10px] text-slate-500">
@@ -370,19 +370,19 @@ export const DiscoveryDetailDrawer: React.FC<DiscoveryDetailDrawerProps> = ({
                           </div>
 
                           <div>
-                            <span className="text-slate-400">Total File Count:</span>
-                            <div className="text-base font-bold text-white mt-0.5">
+                            <span className="text-slate-500 dark:text-slate-400">Total File Count:</span>
+                            <div className="text-base font-bold text-slate-900 dark:text-white mt-0.5">
                               {(detailData.oneDrive?.fileCount ?? 0).toLocaleString()}
                             </div>
                           </div>
 
                           <div>
-                            <span className="text-slate-400">External Sharing:</span>
+                            <span className="text-slate-500 dark:text-slate-400">External Sharing:</span>
                             <div className="text-sm font-semibold text-amber-400 mt-0.5 flex items-center space-x-1">
                               <Share2 className="w-3.5 h-3.5" />
                               <span>{detailData.oneDrive.externalSharing}</span>
                             </div>
-                            <span className="text-[10px] text-slate-400">
+                            <span className="text-[10px] text-slate-500 dark:text-slate-400">
                               {detailData.oneDrive.sharingLinksCount} active sharing links
                             </span>
                           </div>
@@ -390,7 +390,7 @@ export const DiscoveryDetailDrawer: React.FC<DiscoveryDetailDrawerProps> = ({
 
                         {/* Storage usage bar */}
                         <div className="pt-2">
-                          <div className="flex justify-between text-xs text-slate-400 mb-1">
+                          <div className="flex justify-between text-xs text-slate-500 dark:text-slate-400 mb-1">
                             <span>Quota Utilization</span>
                             <span>
                               {Math.round(
@@ -399,7 +399,7 @@ export const DiscoveryDetailDrawer: React.FC<DiscoveryDetailDrawerProps> = ({
                               %
                             </span>
                           </div>
-                          <div className="w-full bg-slate-700/60 h-2 rounded-full overflow-hidden">
+                          <div className="w-full bg-slate-100 dark:bg-slate-700/60 h-2 rounded-full overflow-hidden">
                             <div
                               className="bg-emerald-500 h-full rounded-full"
                               style={{
@@ -425,8 +425,8 @@ export const DiscoveryDetailDrawer: React.FC<DiscoveryDetailDrawerProps> = ({
               {activeTab === 'teams' && (
                 <div className="space-y-6">
                   {/* Teams */}
-                  <div className="p-4 rounded-xl bg-slate-800/40 border border-slate-800 space-y-3">
-                    <h3 className="text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center space-x-1.5">
+                  <div className="p-4 rounded-xl bg-white dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 space-y-3">
+                    <h3 className="text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider flex items-center space-x-1.5">
                       <Users className="w-3.5 h-3.5 text-purple-400" />
                       <span>Microsoft Teams Memberships</span>
                     </h3>
@@ -435,11 +435,11 @@ export const DiscoveryDetailDrawer: React.FC<DiscoveryDetailDrawerProps> = ({
                         {detailData.teams.map((tm) => (
                           <div
                             key={tm.id}
-                            className="p-3 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-between text-xs"
+                            className="p-3 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs"
                           >
                             <div>
-                              <div className="font-semibold text-white">{tm.teamName}</div>
-                              <div className="text-[11px] text-slate-400">
+                              <div className="font-semibold text-slate-900 dark:text-white">{tm.teamName}</div>
+                              <div className="text-[11px] text-slate-500 dark:text-slate-400">
                                 {tm.channelsCount} channels • Visibility: {tm.visibility}
                               </div>
                             </div>
@@ -455,8 +455,8 @@ export const DiscoveryDetailDrawer: React.FC<DiscoveryDetailDrawerProps> = ({
                   </div>
 
                   {/* Groups */}
-                  <div className="p-4 rounded-xl bg-slate-800/40 border border-slate-800 space-y-3">
-                    <h3 className="text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center space-x-1.5">
+                  <div className="p-4 rounded-xl bg-white dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 space-y-3">
+                    <h3 className="text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider flex items-center space-x-1.5">
                       <Layers className="w-3.5 h-3.5 text-blue-400" />
                       <span>Group Memberships</span>
                     </h3>
@@ -465,7 +465,7 @@ export const DiscoveryDetailDrawer: React.FC<DiscoveryDetailDrawerProps> = ({
                         {user.groups.map((grp) => (
                           <span
                             key={grp}
-                            className="px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700"
+                            className="px-2.5 py-1 rounded-lg text-xs font-medium bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700"
                           >
                             {grp}
                           </span>
@@ -481,8 +481,8 @@ export const DiscoveryDetailDrawer: React.FC<DiscoveryDetailDrawerProps> = ({
               {/* TAB 5: LICENSES & SKUS */}
               {activeTab === 'licenses' && (
                 <div className="space-y-6">
-                  <div className="p-4 rounded-xl bg-slate-800/40 border border-slate-800 space-y-3">
-                    <h3 className="text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center space-x-1.5">
+                  <div className="p-4 rounded-xl bg-white dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 space-y-3">
+                    <h3 className="text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider flex items-center space-x-1.5">
                       <Sparkles className="w-3.5 h-3.5 text-blue-400" />
                       <span>Assigned Subscriptions & Plans</span>
                     </h3>
@@ -491,11 +491,11 @@ export const DiscoveryDetailDrawer: React.FC<DiscoveryDetailDrawerProps> = ({
                         {user.licenses.map((lic) => (
                           <div
                             key={lic}
-                            className="p-3 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-between text-xs"
+                            className="p-3 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs"
                           >
                             <div>
-                              <div className="font-semibold text-white">{lic}</div>
-                              <div className="text-[11px] text-slate-400">Active • Direct Entra Assignment</div>
+                              <div className="font-semibold text-slate-900 dark:text-white">{lic}</div>
+                              <div className="text-[11px] text-slate-500 dark:text-slate-400">Active • Direct Entra Assignment</div>
                             </div>
                             <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                               Licensed
@@ -514,10 +514,10 @@ export const DiscoveryDetailDrawer: React.FC<DiscoveryDetailDrawerProps> = ({
         </div>
 
         {/* Drawer Footer Actions */}
-        <div className="p-4 border-t border-slate-800 bg-slate-900/90 flex items-center justify-between">
+        <div className="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/90 flex items-center justify-between">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-xs font-medium text-slate-400 hover:text-white transition"
+            className="px-4 py-2 text-xs font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white transition"
           >
             Close
           </button>

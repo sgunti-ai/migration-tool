@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { Sun, Moon, Sparkles } from 'lucide-react';
 import { Sidebar } from './components/Sidebar';
 import { TenantConfigurationDashboard } from './components/TenantConfigurationDashboard';
 import { CsvMappingEngine } from './components/CsvMappingEngine';
@@ -17,6 +18,9 @@ import { SettingsDashboard } from './components/SettingsDashboard';
 import { ReportGenerationEngine } from './components/ReportGenerationEngine';
 import { DiscoveryDashboard } from './components/discovery/DiscoveryDashboard';
 import { MailboxMigrationDashboard } from './components/mailboxes/MailboxMigrationDashboard';
+import { MigrationToolDashboard } from './components/dashboard/MigrationToolDashboard';
+import { MigrationAdvisorWidget } from './components/advisor/MigrationAdvisorWidget';
+import { WorkloadMigrationWizardModal } from './components/WorkloadMigrationWizardModal';
 import {
   TenantStatusResponse,
   MigrationJob,
@@ -26,18 +30,36 @@ import {
 } from './types';
 
 export type PrimaryTab = 'home' | 'discovery' | 'tenants' | 'migrate' | 'recover' | 'audit' | 'security' | 'reports' | 'settings';
-export type MigrateSubTab = 'projects' | 'active_directory' | 'ad_express' | 'mailboxes' | 'directory_sync' | 'domain_rewrite' | 'domain_move' | 'onedrive' | 'error_management';
+export type MigrateSubTab = 'projects' | 'workload_wizard' | 'active_directory' | 'ad_express' | 'mailboxes' | 'directory_sync' | 'domain_rewrite' | 'domain_move' | 'onedrive' | 'error_management';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<PrimaryTab>('discovery');
+
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
+    const saved = localStorage.getItem('theme');
+    if (saved) return saved === 'dark';
+    return true; // Default to dark mode
+  });
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  }, [isDarkMode]);
+
+  const [activeTab, setActiveTab] = useState<PrimaryTab>('home');
   const [migrateSubTab, setMigrateSubTab] = useState<MigrateSubTab>('ad_express');
-  const [discoverySubTab, setDiscoverySubTab] = useState<string>('users');
+  const [discoverySubTab, setDiscoverySubTab] = useState<string>('dashboard');
   const [currentRole, setCurrentRole] = useState<AdminRole>('GLOBAL_ADMIN');
   const [tenantStatus, setTenantStatus] = useState<TenantStatusResponse>({
     source: { connected: false },
     target: { connected: false },
   });
   const [activeJob, setActiveJob] = useState<MigrationJob | null>(null);
+  const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
   const [recentJobs, setRecentJobs] = useState<MigrationJob[]>([]);
   const [metrics, setMetrics] = useState<SystemMetrics | null>(null);
   const [wsConnected, setWsConnected] = useState(false);
@@ -45,75 +67,85 @@ export default function App() {
 
   const wsRef = useRef<WebSocket | null>(null);
   const reconnectTimeoutRef = useRef<any>(null);
+  const activeJobRef = useRef<MigrationJob | null>(null);
 
-  // Fetch tenant status
-  const fetchTenantStatus = useCallback(async () => {
-    try {
-      const res = await fetch('/api/auth/status');
-      if (res.ok) {
-        const data = await res.json();
-        setTenantStatus(data);
-      }
-    } catch (err) {
-      console.error('Failed to fetch tenant status:', err);
-    }
-  }, []);
+  useEffect(() => {
+    activeJobRef.current = activeJob;
+  }, [activeJob]);
 
-  // Fetch active job details
-  const fetchJobDetails = useCallback(async (jobId?: string) => {
-    const idToFetch = jobId || activeJob?.id;
-    if (!idToFetch) return;
-
-    try {
-      const res = await fetch(`/api/jobs/${idToFetch}`);
-      if (res.ok) {
-        const data = await res.json();
-        setActiveJob(data);
-      }
-    } catch (err) {
-      console.error('Failed to fetch job details:', err);
-    }
-  }, [activeJob?.id]);
-
-  // Fetch recent jobs list
-  const fetchRecentJobs = useCallback(async () => {
-    try {
-      const res = await fetch('/api/jobs');
-      if (res.ok) {
-        const data: MigrationJob[] = await res.json();
-        setRecentJobs(data);
-        if (!activeJob && data.length > 0) {
-          // If no active job is selected, load the latest one
-          const latest = data[0];
-          fetchJobDetails(latest.id);
+  // Resilient fetch helper with retry for cold start and transient network issues
+  const fetchWithRetry = useCallback(async <T,>(url: string, retries = 2, delayMs = 1200): Promise<T | null> => {
+    for (let i = 0; i <= retries; i++) {
+      try {
+        const res = await fetch(url);
+        if (res.ok) {
+          return (await res.json()) as T;
+        }
+        if (res.status >= 500 && i < retries) {
+          await new Promise((r) => setTimeout(r, delayMs));
+          continue;
+        }
+        return null;
+      } catch {
+        if (i < retries) {
+          await new Promise((r) => setTimeout(r, delayMs));
+        } else {
+          return null;
         }
       }
-    } catch (err) {
-      console.error('Failed to fetch recent jobs:', err);
     }
-  }, [activeJob, fetchJobDetails]);
-
-  // Fetch system health & latency metrics
-  const fetchMetrics = useCallback(async () => {
-    try {
-      const res = await fetch('/api/system/health');
-      if (res.ok) {
-        const data = await res.json();
-        setMetrics(data);
-      }
-    } catch (err) {
-      console.error('Failed to fetch metrics:', err);
-    }
+    return null;
   }, []);
+
+  // Fetch tenant status with retry
+  const fetchTenantStatus = useCallback(async () => {
+    const data = await fetchWithRetry<TenantStatusResponse>('/api/auth/status');
+    if (data) {
+      setTenantStatus(data);
+    }
+  }, [fetchWithRetry]);
+
+  // Fetch active job details with retry
+  const fetchJobDetails = useCallback(async (jobId?: string) => {
+    const idToFetch = jobId || activeJobRef.current?.id;
+    if (!idToFetch) return;
+
+    const data = await fetchWithRetry<MigrationJob>(`/api/jobs/${idToFetch}`);
+    if (data) {
+      setActiveJob(data);
+    }
+  }, [fetchWithRetry]);
+
+  // Fetch recent jobs list with retry
+  const fetchRecentJobs = useCallback(async () => {
+    const data = await fetchWithRetry<MigrationJob[]>('/api/jobs');
+    if (data && Array.isArray(data)) {
+      setRecentJobs(data);
+      if (!activeJobRef.current && data.length > 0) {
+        const latest = data[0];
+        fetchJobDetails(latest.id);
+      }
+    }
+  }, [fetchWithRetry, fetchJobDetails]);
+
+  // Fetch system health & latency metrics with retry
+  const fetchMetrics = useCallback(async () => {
+    const data = await fetchWithRetry<SystemMetrics>('/api/system/health');
+    if (data) {
+      setMetrics(data);
+    }
+  }, [fetchWithRetry]);
 
   // Set up real-time WebSocket connection
   const setupWebSocket = useCallback(() => {
-    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+    if (wsRef.current && (wsRef.current.readyState === WebSocket.OPEN || wsRef.current.readyState === WebSocket.CONNECTING)) {
       return;
     }
 
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const wsUrl = `${protocol}//${window.location.host}/ws`;
+    const host = window.location.host;
+    if (!host) return;
+    const wsUrl = `${protocol}//${host}/ws`;
 
     try {
       const ws = new WebSocket(wsUrl);
@@ -179,10 +211,12 @@ export default function App() {
 
       ws.onerror = () => {
         setWsConnected(false);
-        ws.close();
+        try {
+          ws.close();
+        } catch (_) {}
       };
     } catch (err) {
-      console.error('WebSocket connection initialization error:', err);
+      console.warn('WebSocket connection initialization error:', err);
     }
   }, [fetchJobDetails, fetchRecentJobs, fetchTenantStatus]);
 
@@ -234,8 +268,8 @@ export default function App() {
           'x-admin-role': currentRole,
         },
         body: JSON.stringify({
-          sourceTenantDomain: tenantStatus.source.domain || 'contoso.onmicrosoft.com',
-          targetTenantDomain: tenantStatus.target.domain || 'fabrikam.com',
+          sourceTenantDomain: tenantStatus?.source?.domain || 'contoso.onmicrosoft.com',
+          targetTenantDomain: tenantStatus?.target?.domain || 'fabrikam.com',
           mappings: mappings.map((m) => ({
             sourceUPN: m.sourceUPN,
             targetUPN: m.targetUPN,
@@ -256,7 +290,8 @@ export default function App() {
       fetchRecentJobs();
 
       // Immediately redirect to Execution Cockpit grid
-      setActiveTab('cockpit');
+      setActiveTab('migrate');
+      setMigrateSubTab('projects');
     } catch (err: any) {
       console.error('Job initialization error:', err);
       alert(`Error initializing pipeline: ${err.message}`);
@@ -266,7 +301,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex font-sans antialiased selection:bg-blue-600 selection:text-white">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex transition-colors duration-200 font-sans antialiased selection:bg-blue-600 selection:text-white">
       {/* Sidebar */}
       <Sidebar
         activeTab={activeTab}
@@ -282,10 +317,41 @@ export default function App() {
         wsConnected={wsConnected}
       />
 
+
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0">
+        {/* Application Header */}
+        <header className="flex items-center justify-end px-6 py-3 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800/80 transition-colors">
+          <div className="flex items-center space-x-4">
+            <button
+              onClick={() => setIsDarkMode(!isDarkMode)}
+              className="p-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+              title="Toggle Theme"
+              aria-label="Toggle Theme"
+            >
+              {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </button>
+          </div>
+        </header>
+
         {/* Main Container */}
+
         <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* TENANTS */}
+        {activeTab === 'tenants' && (
+           <div className="h-full animate-fadeIn">
+             <TenantConfigurationDashboard 
+               tenantStatus={tenantStatus}
+               onRefresh={fetchTenantStatus}
+               currentRole={currentRole}
+               onNavigateTab={(tab, subTab) => {
+                 setActiveTab(tab);
+                 if (subTab) setMigrateSubTab(subTab);
+               }}
+             />
+           </div>
+         )}
+
         {/* DISCOVERY */}
         {activeTab === 'discovery' && (
           <div className="animate-fadeIn">
@@ -298,13 +364,6 @@ export default function App() {
                 setMigrateSubTab('ad_express');
               }}
             />
-          </div>
-        )}
-
-        {/* TENANTS */}
-        {activeTab === 'tenants' && (
-          <div className="h-full animate-fadeIn -m-4">
-            <TenantConfigurationDashboard />
           </div>
         )}
 
@@ -336,9 +395,42 @@ export default function App() {
               </div>
             )}
             
+            {migrateSubTab === 'workload_wizard' && (
+              <div className="animate-fadeIn">
+                <WorkloadMigrationWizardModal
+                  isOpen={true}
+                  onClose={() => setMigrateSubTab('projects')}
+                  tenantStatus={tenantStatus}
+                  onJobStarted={(newJob) => {
+                    fetchRecentJobs();
+                    if (newJob?.id) fetchJobDetails(newJob.id);
+                    setMigrateSubTab('projects');
+                  }}
+                />
+              </div>
+            )}
+
             {migrateSubTab === 'projects' && (
-              <div className="animate-fadeIn -m-4">
-                <MigrationProjectDashboard />
+              <div className="animate-fadeIn">
+                <MigrationProjectDashboard
+                  currentRole={currentRole}
+                  tenantStatus={tenantStatus}
+                  activeJob={activeJob}
+                  recentJobs={recentJobs}
+                  onSelectJob={(id) => {
+                    fetchJobDetails(id);
+                    setActiveTab('migrate');
+                    setMigrateSubTab('active_directory');
+                  }}
+                  onNavigateTab={(tab, subTab) => {
+                    setActiveTab(tab);
+                    if (subTab) setMigrateSubTab(subTab);
+                  }}
+                  onRefreshJobs={() => {
+                    fetchRecentJobs();
+                    if (activeJob) fetchJobDetails();
+                  }}
+                />
               </div>
             )}
 
@@ -350,7 +442,13 @@ export default function App() {
 
             {migrateSubTab === 'onedrive' && (
               <div className="animate-fadeIn -m-4">
-                <OneDriveMonitoringDashboard />
+                <OneDriveMonitoringDashboard
+                  tenantStatus={tenantStatus}
+                  onJobStarted={(newJob) => {
+                    fetchRecentJobs();
+                    if (newJob?.id) fetchJobDetails(newJob.id);
+                  }}
+                />
               </div>
             )}
 
@@ -362,7 +460,7 @@ export default function App() {
 
             {/* Placeholder for other migrate sub-tabs */}
             {['directory_sync', 'domain_rewrite', 'domain_move'].includes(migrateSubTab) && (
-              <div className="flex items-center justify-center h-64 border-2 border-dashed border-slate-800 rounded-xl text-slate-500">
+              <div className="flex items-center justify-center h-64 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-xl text-slate-500">
                 <p>Module configuration for {migrateSubTab.replace('_', ' ')} is coming soon.</p>
               </div>
             )}
@@ -397,10 +495,25 @@ export default function App() {
           </div>
         )}
 
-        {/* OTHER TABS */}
-        {['home', 'recover'].includes(activeTab) && (
-           <div className="flex items-center justify-center h-64 border-2 border-dashed border-slate-800 rounded-xl text-slate-500">
-             <p className="capitalize">{activeTab} Dashboard Coming Soon</p>
+        {/* DASHBOARD (HOME) */}
+        {activeTab === 'home' && (
+          <div className="animate-fadeIn">
+            <MigrationToolDashboard
+              currentRole={currentRole}
+              tenantStatus={tenantStatus}
+              onOpenAdvisor={() => setIsAdvisorOpen(true)}
+              onNavigateTab={(tab, subTab) => {
+                setActiveTab(tab);
+                if (subTab) setMigrateSubTab(subTab);
+              }}
+            />
+          </div>
+        )}
+
+        {/* RECOVER */}
+        {activeTab === 'recover' && (
+           <div className="animate-fadeIn">
+             <ErrorManagementDashboard />
            </div>
         )}
 
@@ -412,21 +525,37 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-800/80 bg-slate-900/60 py-4 text-center text-xs text-slate-500">
+      <footer className="border-t border-slate-200 dark:border-slate-800/80 bg-slate-50 dark:bg-slate-900/60 py-4 text-center text-xs text-slate-500">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <div className="flex items-center space-x-2">
-            <span className="font-semibold text-slate-400">M365 Migration Engine</span>
-            <span>•</span>
-            <span>Prisma SQLite Persistent State</span>
-            <span>•</span>
-            <span>Microsoft Graph Client v3</span>
+          <div className="flex items-center space-x-2 text-slate-500 dark:text-slate-400">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>System Operational</span>
           </div>
           <div className="flex items-center space-x-4">
             <span className="text-emerald-400/90 font-mono">TLS 1.3 & AES-256-GCM</span>
-            <span className="text-slate-400">Failover Ready</span>
+            <span className="text-slate-500 dark:text-slate-400">Failover Ready</span>
           </div>
         </div>
       </footer>
+      
+      {/* Global AI Advisor FAB */}
+      <button
+        onClick={() => setIsAdvisorOpen(true)}
+        className="fixed bottom-6 right-6 z-40 bg-indigo-600 hover:bg-indigo-500 text-white rounded-full p-4 shadow-xl hover:shadow-2xl hover:scale-105 transition-all flex items-center justify-center group"
+      >
+        <Sparkles className="w-6 h-6 group-hover:animate-pulse" />
+        <span className="absolute right-full mr-4 bg-slate-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 whitespace-nowrap transition-opacity shadow-lg">
+          AI Migration Advisor
+        </span>
+      </button>
+
+      {/* Advisor Slide-out Widget */}
+      {isAdvisorOpen && (
+        <MigrationAdvisorWidget 
+          activeJob={activeJob} 
+          onClose={() => setIsAdvisorOpen(false)} 
+        />
+      )}
       </div>
     </div>
   );

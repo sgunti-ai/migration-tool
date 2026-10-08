@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { MailboxMigrationTemplate, MailboxMigrationTask } from '../../types';
 import { MailMigrationWizardModal } from './MailMigrationWizardModal';
+import { WorkloadMigrationWizardModal } from '../WorkloadMigrationWizardModal';
 
 export const MailboxMigrationDashboard: React.FC = () => {
   const [activeSubTab, setActiveSubTab] = useState<'templates' | 'mailboxes' | 'tasks'>('templates');
@@ -33,6 +34,7 @@ export const MailboxMigrationDashboard: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedMailboxUPNs, setSelectedMailboxUPNs] = useState<string[]>([]);
   const [isWizardOpen, setIsWizardOpen] = useState<boolean>(false);
+  const [isJobWizardOpen, setIsJobWizardOpen] = useState<boolean>(false);
   const [editingTemplate, setEditingTemplate] = useState<MailboxMigrationTemplate | null>(null);
   const [targetUserForWizard, setTargetUserForWizard] = useState<string | undefined>(undefined);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -176,14 +178,14 @@ export const MailboxMigrationDashboard: React.FC = () => {
       )}
 
       {/* Top Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-slate-800">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-slate-200 dark:border-slate-800">
         <div className="flex items-center space-x-3">
           <div className="p-2.5 rounded-xl bg-blue-600/20 border border-blue-500/30 text-blue-400">
             <Mail className="w-6 h-6" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-white tracking-tight">Mailbox Migration Management</h1>
-            <p className="text-xs text-slate-400">
+            <h1 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">Mailbox Migration Management</h1>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
               Configure mail migration templates, coexistence routing forwarders, and batch execution tasks
             </p>
           </div>
@@ -193,68 +195,66 @@ export const MailboxMigrationDashboard: React.FC = () => {
           <button
             id="btn-refresh-mailboxes"
             onClick={refreshAll}
-            className="px-3.5 py-2 text-xs font-medium text-slate-300 bg-slate-800 hover:bg-slate-700 hover:text-white rounded-lg border border-slate-700 transition flex items-center space-x-1.5"
+            className="px-3.5 py-2 text-xs font-medium text-slate-600 dark:text-slate-300 bg-slate-800 hover:bg-slate-100 dark:bg-slate-700 hover:text-white rounded-lg border border-slate-200 dark:border-slate-700 transition flex items-center space-x-1.5"
           >
-            <RefreshCw className={`w-3.5 h-3.5 text-slate-400 ${isLoading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`w-3.5 h-3.5 text-slate-500 dark:text-slate-400 ${isLoading ? 'animate-spin' : ''}`} />
             <span>Refresh</span>
           </button>
 
           <button
-            id="btn-create-mailbox-template"
+            id="btn-create-mailbox-migration-job"
             onClick={() => {
-              setEditingTemplate(null);
-              setTargetUserForWizard(undefined);
-              setIsWizardOpen(true);
+              setIsJobWizardOpen(true);
             }}
             className="px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-lg shadow-sm transition flex items-center space-x-2"
           >
             <Plus className="w-4 h-4" />
-            <span>Create Template / Task</span>
+            <span>Create Migration Job</span>
           </button>
         </div>
       </div>
 
       {/* KPI Overview Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800/80">
-          <div className="flex items-center justify-between text-slate-400 mb-1">
+        <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80">
+          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-1">
             <span className="text-xs font-medium">Discovered Mailboxes</span>
             <Mail className="w-4 h-4 text-blue-400" />
           </div>
-          <div className="text-2xl font-bold text-white font-mono">{mailboxes.length}</div>
-          <span className="text-[11px] text-slate-400 mt-1 block">Ready for transfer wave</span>
+          <div className="text-2xl font-bold text-slate-900 dark:text-white font-mono">{mailboxes.length}</div>
+          <span className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 block">Ready for transfer wave</span>
         </div>
 
-        <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800/80">
-          <div className="flex items-center justify-between text-slate-400 mb-1">
+        <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80">
+          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-1">
             <span className="text-xs font-medium">Configured Templates</span>
             <Layers className="w-4 h-4 text-amber-400" />
           </div>
-          <div className="text-2xl font-bold text-white font-mono">{templates.length}</div>
+          <div className="text-2xl font-bold text-slate-900 dark:text-white font-mono">{templates.length}</div>
           <span className="text-[11px] text-amber-400 mt-1 block">Reusable task profiles</span>
         </div>
 
-        <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800/80">
-          <div className="flex items-center justify-between text-slate-400 mb-1">
+        <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80">
+          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-1">
             <span className="text-xs font-medium">Active Migration Tasks</span>
             <Clock className="w-4 h-4 text-emerald-400" />
           </div>
-          <div className="text-2xl font-bold text-white font-mono">{tasks.length}</div>
+          <div className="text-2xl font-bold text-slate-900 dark:text-white font-mono">{tasks.length}</div>
           <span className="text-[11px] text-emerald-400 mt-1 block">Running EWS/Graph sync</span>
         </div>
 
-        <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800/80">
-          <div className="flex items-center justify-between text-slate-400 mb-1">
+        <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80">
+          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-1">
             <span className="text-xs font-medium">Mail Coexistence</span>
             <Shield className="w-4 h-4 text-purple-400" />
           </div>
           <div className="text-2xl font-bold text-emerald-400 font-mono">Active</div>
-          <span className="text-[11px] text-slate-400 mt-1 block">Mail Forwarding Managed</span>
+          <span className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 block">Mail Forwarding Managed</span>
         </div>
       </div>
 
       {/* Sub-Tabs Navigation */}
-      <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+      <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
         <div className="flex items-center space-x-2">
           <button
             id="tab-mailbox-templates"
@@ -262,7 +262,7 @@ export const MailboxMigrationDashboard: React.FC = () => {
             className={`px-4 py-2 text-xs font-medium rounded-lg transition flex items-center space-x-2 ${
               activeSubTab === 'templates'
                 ? 'bg-blue-600 text-white shadow-sm'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white hover:bg-white dark:bg-slate-800'
             }`}
           >
             <Layers className="w-3.5 h-3.5" />
@@ -275,7 +275,7 @@ export const MailboxMigrationDashboard: React.FC = () => {
             className={`px-4 py-2 text-xs font-medium rounded-lg transition flex items-center space-x-2 ${
               activeSubTab === 'mailboxes'
                 ? 'bg-blue-600 text-white shadow-sm'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white hover:bg-white dark:bg-slate-800'
             }`}
           >
             <Mail className="w-3.5 h-3.5" />
@@ -288,7 +288,7 @@ export const MailboxMigrationDashboard: React.FC = () => {
             className={`px-4 py-2 text-xs font-medium rounded-lg transition flex items-center space-x-2 ${
               activeSubTab === 'tasks'
                 ? 'bg-blue-600 text-white shadow-sm'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white hover:bg-white dark:bg-slate-800'
             }`}
           >
             <Clock className="w-3.5 h-3.5" />
@@ -304,7 +304,7 @@ export const MailboxMigrationDashboard: React.FC = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search templates or mailboxes..."
-            className="pl-8 pr-3 py-1.5 text-xs bg-slate-900 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 w-56"
+            className="pl-8 pr-3 py-1.5 text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 w-56"
           />
         </div>
       </div>
@@ -316,21 +316,22 @@ export const MailboxMigrationDashboard: React.FC = () => {
         <div className="space-y-4 animate-fadeIn">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-sm font-semibold text-white">Configured Mailbox Migration Templates</h2>
-              <p className="text-xs text-slate-400">
+              <h2 className="text-sm font-semibold text-slate-900 dark:text-white">Configured Mailbox Migration Templates</h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 Templates capture reusable migration policies matching the 11-step options (Mail Flow, Folders, Settings, Rules, and Licensing).
               </p>
             </div>
             <button
+              id="btn-create-mailbox-migration-job"
               onClick={() => {
                 setEditingTemplate(null);
                 setTargetUserForWizard(undefined);
                 setIsWizardOpen(true);
               }}
-              className="px-3.5 py-1.5 text-xs font-medium text-blue-400 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 rounded-lg transition flex items-center space-x-1.5"
+              className="px-3.5 py-1.5 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-lg shadow-sm transition flex items-center space-x-1.5"
             >
               <Plus className="w-3.5 h-3.5" />
-              <span>Create Template</span>
+              <span>Create Migration Job</span>
             </button>
           </div>
 
@@ -338,18 +339,18 @@ export const MailboxMigrationDashboard: React.FC = () => {
             {filteredTemplates.map((tmpl) => (
               <div
                 key={tmpl.id}
-                className="p-5 rounded-xl bg-slate-900/60 border border-slate-800/80 hover:border-slate-700 transition flex flex-col justify-between space-y-4"
+                className="p-5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80 hover:border-slate-200 dark:border-slate-700 transition flex flex-col justify-between space-y-4"
               >
                 <div>
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                      <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
                         <span>{tmpl.name}</span>
                         <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-blue-500/10 text-blue-300 border border-blue-500/20">
                           {tmpl.sourceScenario} → {tmpl.targetScenario}
                         </span>
                       </h3>
-                      <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
                         {tmpl.description || 'No description provided.'}
                       </p>
                     </div>
@@ -357,7 +358,7 @@ export const MailboxMigrationDashboard: React.FC = () => {
                     <div className="flex items-center space-x-1">
                       <button
                         onClick={() => handleDeleteTemplate(tmpl.id, tmpl.name)}
-                        className="p-1.5 text-slate-500 hover:text-rose-400 hover:bg-slate-800 rounded transition"
+                        className="p-1.5 text-slate-500 hover:text-rose-400 hover:bg-white dark:bg-slate-800 rounded transition"
                         title="Delete template"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -406,9 +407,9 @@ export const MailboxMigrationDashboard: React.FC = () => {
                 </div>
 
                 {/* Card Footer Actions */}
-                <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs">
+                <div className="pt-3 border-t border-slate-200 dark:border-slate-800/80 flex items-center justify-between text-xs">
                   <span className="text-[11px] text-slate-500">
-                    License: <span className="text-slate-300 font-medium">{tmpl.targetLicensingPlan}</span>
+                    License: <span className="text-slate-600 dark:text-slate-300 font-medium">{tmpl.targetLicensingPlan}</span>
                   </span>
 
                   <div className="flex items-center space-x-2">
@@ -417,7 +418,7 @@ export const MailboxMigrationDashboard: React.FC = () => {
                         setEditingTemplate(tmpl);
                         setIsWizardOpen(true);
                       }}
-                      className="px-3 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition font-medium"
+                      className="px-3 py-1.5 rounded bg-white dark:bg-slate-800 hover:bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:text-white transition font-medium"
                     >
                       Edit Options
                     </button>
@@ -443,8 +444,8 @@ export const MailboxMigrationDashboard: React.FC = () => {
         <div className="space-y-4 animate-fadeIn">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-sm font-semibold text-white">Discovered Exchange Online Mailboxes</h2>
-              <p className="text-xs text-slate-400">
+              <h2 className="text-sm font-semibold text-slate-900 dark:text-white">Discovered Exchange Online Mailboxes</h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 Select discovered mailboxes to stage migration tasks or apply configured templates.
               </p>
             </div>
@@ -455,7 +456,7 @@ export const MailboxMigrationDashboard: React.FC = () => {
                   setTargetUserForWizard(selectedMailboxUPNs[0]);
                   setIsWizardOpen(true);
                 }}
-                className="px-3.5 py-1.5 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-lg shadow-sm transition flex items-center space-x-1.5"
+                className="px-3.5 py-1.5 text-xs font-semibold text-slate-900 dark:text-white bg-blue-600 hover:bg-blue-500 rounded-lg shadow-sm transition flex items-center space-x-1.5"
               >
                 <span>Apply Template to {selectedMailboxUPNs.length} Mailbox(es)</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -463,10 +464,10 @@ export const MailboxMigrationDashboard: React.FC = () => {
             )}
           </div>
 
-          <div className="rounded-xl bg-slate-900/60 border border-slate-800/80 overflow-hidden">
+          <div className="rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-800/60 text-slate-400 font-semibold border-b border-slate-800 uppercase tracking-wider">
+                <thead className="bg-white dark:bg-slate-800/60 text-slate-500 dark:text-slate-400 font-semibold border-b border-slate-200 dark:border-slate-800 uppercase tracking-wider">
                   <tr>
                     <th className="px-4 py-3 w-10">
                       <input
@@ -479,7 +480,7 @@ export const MailboxMigrationDashboard: React.FC = () => {
                             setSelectedMailboxUPNs([]);
                           }
                         }}
-                        className="w-4 h-4 rounded bg-slate-800 border-slate-700 text-blue-600"
+                        className="w-4 h-4 rounded bg-white dark:bg-slate-800 border-slate-700 text-blue-600"
                       />
                     </th>
                     <th className="px-4 py-3">User Principal Name</th>
@@ -490,14 +491,14 @@ export const MailboxMigrationDashboard: React.FC = () => {
                     <th className="px-4 py-3 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800/60 text-slate-300">
+                <tbody className="divide-y divide-slate-800/60 text-slate-600 dark:text-slate-300">
                   {filteredMailboxes.map((mbx) => {
                     const isSelected = selectedMailboxUPNs.includes(mbx.userPrincipalName);
                     const sizeGB = (mbx.totalItemSizeMB / 1024).toFixed(2);
                     return (
                       <tr
                         key={mbx.id || mbx.userPrincipalName}
-                        className={`hover:bg-slate-800/40 transition ${isSelected ? 'bg-blue-900/10' : ''}`}
+                        className={`hover:bg-white dark:bg-slate-800/40 transition ${isSelected ? 'bg-blue-900/10' : ''}`}
                       >
                         <td className="px-4 py-3">
                           <input
@@ -512,22 +513,22 @@ export const MailboxMigrationDashboard: React.FC = () => {
                                 );
                               }
                             }}
-                            className="w-4 h-4 rounded bg-slate-800 border-slate-700 text-blue-600"
+                            className="w-4 h-4 rounded bg-white dark:bg-slate-800 border-slate-700 text-blue-600"
                           />
                         </td>
-                        <td className="px-4 py-3 font-medium text-white">{mbx.userPrincipalName}</td>
+                        <td className="px-4 py-3 font-medium text-slate-900 dark:text-white">{mbx.userPrincipalName}</td>
                         <td className="px-4 py-3">
                           <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-blue-500/10 text-blue-300 border border-blue-500/20">
                             {mbx.mailboxType}
                           </span>
                         </td>
-                        <td className="px-4 py-3 font-mono font-bold text-white">{sizeGB} GB</td>
-                        <td className="px-4 py-3 font-mono text-slate-300">{(mbx.itemCount ?? 0).toLocaleString()}</td>
+                        <td className="px-4 py-3 font-mono font-bold text-slate-900 dark:text-white">{sizeGB} GB</td>
+                        <td className="px-4 py-3 font-mono text-slate-600 dark:text-slate-300">{(mbx.itemCount ?? 0).toLocaleString()}</td>
                         <td className="px-4 py-3">
                           <span className={`px-2 py-0.5 rounded text-[10px] font-medium ${
                             mbx.archiveStatus === 'Active'
                               ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                              : 'bg-slate-800 text-slate-400'
+                              : 'bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400'
                           }`}>
                             {mbx.archiveStatus || 'Disabled'}
                           </span>
@@ -539,7 +540,7 @@ export const MailboxMigrationDashboard: React.FC = () => {
                               setTargetUserForWizard(mbx.userPrincipalName);
                               setIsWizardOpen(true);
                             }}
-                            className="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition font-medium text-[11px]"
+                            className="px-2.5 py-1 rounded bg-white dark:bg-slate-800 hover:bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:text-white transition font-medium text-[11px]"
                           >
                             Migrate Mailbox
                           </button>
@@ -561,33 +562,45 @@ export const MailboxMigrationDashboard: React.FC = () => {
         <div className="space-y-4 animate-fadeIn">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-sm font-semibold text-white">Active & Scheduled Mailbox Tasks</h2>
-              <p className="text-xs text-slate-400">
+              <h2 className="text-sm font-semibold text-slate-900 dark:text-white">Active & Scheduled Mailbox Migration Jobs</h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 Track mailbox synchronization batches, transfer speeds, and EWS/Graph status.
               </p>
             </div>
+            <button
+              id="btn-create-mailbox-job-from-tasks"
+              onClick={() => {
+                setEditingTemplate(null);
+                setTargetUserForWizard(undefined);
+                setIsWizardOpen(true);
+              }}
+              className="px-3.5 py-1.5 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-lg shadow-sm transition flex items-center space-x-1.5"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span>Create Migration Job</span>
+            </button>
           </div>
 
           <div className="space-y-3">
             {tasks.length === 0 ? (
-              <div className="text-center py-16 text-slate-500 text-xs border border-dashed border-slate-800 rounded-xl">
+              <div className="text-center py-16 text-slate-500 text-xs border border-dashed border-slate-200 dark:border-slate-800 rounded-xl">
                 No active mailbox migration tasks. Launch a task from the templates tab above.
               </div>
             ) : (
               tasks.map((task) => (
                 <div
                   key={task.id}
-                  className="p-4 rounded-xl bg-slate-900/60 border border-slate-800/80 hover:border-slate-700 transition space-y-3"
+                  className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80 hover:border-slate-200 dark:border-slate-700 transition space-y-3"
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div>
-                      <h4 className="text-xs font-bold text-white flex items-center gap-2">
+                      <h4 className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-2">
                         <span>{task.taskName}</span>
                         <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-blue-500/10 text-blue-300 border border-blue-500/20">
                           {task.templateName}
                         </span>
                       </h4>
-                      <p className="text-[11px] text-slate-400 font-mono mt-0.5">
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 font-mono mt-0.5">
                         {task.sourceUPN} → {task.targetUPN}
                       </p>
                     </div>
@@ -602,11 +615,11 @@ export const MailboxMigrationDashboard: React.FC = () => {
 
                   {/* Progress Bar */}
                   <div className="space-y-1">
-                    <div className="flex justify-between text-[11px] text-slate-400 font-mono">
+                    <div className="flex justify-between text-[11px] text-slate-500 dark:text-slate-400 font-mono">
                       <span>Syncing folder: {task.currentFolder || 'Inbox'}</span>
                       <span>{task.progressPercent}% ({task.itemsMigrated} / {task.totalItems} items)</span>
                     </div>
-                    <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                    <div className="w-full h-1.5 bg-white dark:bg-slate-800 rounded-full overflow-hidden">
                       <div
                         className="h-full bg-blue-500 transition-all duration-500"
                         style={{ width: `${task.progressPercent}%` }}
@@ -632,6 +645,19 @@ export const MailboxMigrationDashboard: React.FC = () => {
         initialTemplate={editingTemplate}
         targetUserUPN={targetUserForWizard}
       />
+
+      {/* Workload Migration Wizard Modal for Creating Real Migration Jobs */}
+      {isJobWizardOpen && (
+        <WorkloadMigrationWizardModal
+          isOpen={isJobWizardOpen}
+          initialWorkload="EXCHANGE_MAILBOX"
+          onClose={() => setIsJobWizardOpen(false)}
+          onJobStarted={(newJob) => {
+            showToast(`Mailbox migration job "${newJob?.name || 'Exchange Mailbox Stream'}" created successfully!`);
+            refreshAll();
+          }}
+        />
+      )}
     </div>
   );
 };

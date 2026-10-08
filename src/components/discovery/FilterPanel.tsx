@@ -36,7 +36,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
     filters.accountEnabled !== 'ALL';
 
   return (
-    <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800/80 space-y-3">
+    <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80 space-y-3">
       <div className="flex flex-col md:flex-row items-center gap-3">
         {/* Search input */}
         <div className="relative flex-1 w-full">
@@ -47,12 +47,12 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
             value={filters.search}
             onChange={(e) => onFilterChange({ search: e.target.value })}
             placeholder="Search by name, UPN, title, or department..."
-            className="w-full pl-9 pr-8 py-2 text-sm bg-slate-800/80 border border-slate-700/80 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition"
+            className="w-full pl-9 pr-8 py-2 text-sm bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 rounded-lg text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition"
           />
           {filters.search && (
             <button
               onClick={() => onFilterChange({ search: '' })}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white"
             >
               <X className="w-3.5 h-3.5" />
             </button>
@@ -66,7 +66,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
             id="select-department-filter"
             value={filters.department}
             onChange={(e) => onFilterChange({ department: e.target.value })}
-            className="px-3 py-2 text-xs bg-slate-800/80 border border-slate-700/80 rounded-lg text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="px-3 py-2 text-xs bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 rounded-lg text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
           >
             <option value="ALL">All Departments</option>
             {departments.map((d) => (
@@ -81,7 +81,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
             id="select-mfa-filter"
             value={filters.mfaStatus}
             onChange={(e) => onFilterChange({ mfaStatus: e.target.value })}
-            className="px-3 py-2 text-xs bg-slate-800/80 border border-slate-700/80 rounded-lg text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="px-3 py-2 text-xs bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 rounded-lg text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
           >
             <option value="ALL">All MFA Status</option>
             <option value="ENFORCED">Enforced (Conditional Access)</option>
@@ -94,7 +94,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
             id="select-license-filter"
             value={filters.license}
             onChange={(e) => onFilterChange({ license: e.target.value })}
-            className="px-3 py-2 text-xs bg-slate-800/80 border border-slate-700/80 rounded-lg text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="px-3 py-2 text-xs bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 rounded-lg text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
           >
             <option value="ALL">All Licenses</option>
             {licenses.map((l) => (
@@ -109,7 +109,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
             id="select-account-status-filter"
             value={filters.accountEnabled}
             onChange={(e) => onFilterChange({ accountEnabled: e.target.value })}
-            className="px-3 py-2 text-xs bg-slate-800/80 border border-slate-700/80 rounded-lg text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="px-3 py-2 text-xs bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 rounded-lg text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
           >
             <option value="ALL">All Account States</option>
             <option value="true">Enabled Only</option>
@@ -132,12 +132,12 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
       </div>
 
       {/* Filter status banner */}
-      <div className="flex items-center justify-between text-xs text-slate-400 pt-1">
+      <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 pt-1">
         <div className="flex items-center space-x-2">
           <Filter className="w-3.5 h-3.5 text-blue-400" />
           <span>
-            Showing <strong className="text-white">{totalFiltered}</strong> of{' '}
-            <strong className="text-white">{totalAll}</strong> discovered users
+            Showing <strong className="text-slate-900 dark:text-white">{totalFiltered}</strong> of{' '}
+            <strong className="text-slate-900 dark:text-white">{totalAll}</strong> discovered users
           </span>
           {hasActiveFilters && (
             <span className="px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 text-[10px] font-medium border border-blue-500/20">

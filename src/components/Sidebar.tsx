@@ -20,7 +20,10 @@ import {
   Compass,
   Users,
   MessageSquare,
-  ListTree
+  ListTree,
+  LayoutDashboard,
+  FileText,
+  PlusCircle
 } from 'lucide-react';
 import { AdminRole, SystemMetrics } from '../types';
 import { PrimaryTab, MigrateSubTab } from '../App';
@@ -44,7 +47,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   setActiveTab,
   migrateSubTab,
   setMigrateSubTab,
-  discoverySubTab = 'users',
+  discoverySubTab = 'dashboard',
   setDiscoverySubTab,
   currentRole,
   setCurrentRole,
@@ -53,9 +56,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
   wsConnected,
 }) => {
   const primaryTabs: { id: PrimaryTab; label: string; icon: React.FC<any> }[] = [
-    { id: 'home', label: 'Home', icon: Home },
-    { id: 'discovery', label: 'Discovery', icon: Compass },
+    { id: 'home', label: 'Dashboard', icon: Home },
     { id: 'tenants', label: 'Tenants', icon: Layers },
+    { id: 'discovery', label: 'Discovery', icon: Compass },
     { id: 'migrate', label: 'Migrate', icon: LogOut },
     { id: 'recover', label: 'Recover', icon: History },
     { id: 'audit', label: 'Audit', icon: Search },
@@ -66,6 +69,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   const migrateTabs: { id: MigrateSubTab; label: string; icon: React.FC<any> }[] = [
     { id: 'projects', label: 'Projects', icon: Kanban },
+    { id: 'workload_wizard', label: 'New Migration Job', icon: PlusCircle },
     { id: 'active_directory', label: 'Active Directory', icon: Cloud },
     { id: 'ad_express', label: 'AD Express', icon: Triangle },
     { id: 'mailboxes', label: 'Mailboxes', icon: Mail },
@@ -77,20 +81,22 @@ export const Sidebar: React.FC<SidebarProps> = ({
   ];
 
   const discoveryTabs = [
-    { id: 'users', label: 'Entra ID Users', icon: Users },
-    { id: 'groups', label: 'Groups', icon: Layers },
-    { id: 'onedrive', label: 'OneDrive Sites', icon: HardDrive },
+    { id: 'dashboard', label: 'Workloads Overview', icon: LayoutDashboard },
     { id: 'exchange', label: 'Mailboxes', icon: Mail },
-    { id: 'sharepoint', label: 'SharePoint Sites', icon: Globe },
-    { id: 'teams', label: 'Microsoft Teams', icon: MessageSquare },
+    { id: 'users', label: 'User Accounts', icon: Users },
+    { id: 'groups', label: 'Groups', icon: Layers },
     { id: 'distributionlists', label: 'Distribution Lists', icon: ListTree },
+    { id: 'onedrive', label: 'OneDrive Accounts', icon: HardDrive },
+    { id: 'sharepoint', label: 'SharePoint Sites', icon: Globe },
+    { id: 'teams', label: 'Teams Data', icon: MessageSquare },
+    { id: 'reports', label: 'Reports', icon: FileText },
   ];
 
 
   return (
-    <div className="flex h-screen sticky top-0 z-40 bg-slate-800">
+    <div className="flex h-screen sticky top-0 z-40 bg-slate-50 dark:bg-slate-900">
       {/* Primary Sidebar (Thin) */}
-      <aside className="w-24 bg-[#323232] flex flex-col items-center border-r border-[#404040] py-2 shrink-0">
+      <aside className="w-24 bg-slate-100 dark:bg-[#323232] flex flex-col items-center border-r border-slate-200 dark:border-[#404040] py-2 shrink-0">
         <nav className="flex-1 w-full space-y-1">
           {primaryTabs.map((tab) => {
             const isActive = activeTab === tab.id;
@@ -99,14 +105,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={`w-full flex flex-col items-center justify-center py-4 relative group transition-colors ${
-                  isActive ? 'bg-[#2b2b2b] text-white' : 'text-slate-400 hover:text-slate-200 hover:bg-[#3a3a3a]'
+                  isActive ? 'bg-blue-50 dark:bg-[#2b2b2b] text-slate-900 dark:text-white' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-200 dark:hover:bg-[#3a3a3a]'
                 }`}
               >
                 {/* Active Indicator Line */}
                 {isActive && (
                   <div className="absolute left-0 top-0 bottom-0 w-1 bg-orange-500" />
                 )}
-                <tab.icon className={`h-6 w-6 mb-1 ${isActive ? 'text-white' : 'text-slate-400 group-hover:text-slate-200'}`} />
+                <tab.icon className={`h-6 w-6 mb-1 ${isActive ? 'text-slate-900 dark:text-white' : 'text-slate-500 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-slate-200'}`} />
                 <span className="text-[11px] font-medium tracking-wide">
                   {tab.label}
                 </span>
@@ -118,9 +124,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       {/* Secondary Sidebar (Expandable based on context) */}
       {activeTab === 'discovery' && (
-        <aside className="w-56 bg-[#3a3a3a] border-r border-[#454545] flex flex-col shrink-0 animate-fadeIn">
+        <aside className="w-56 bg-white dark:bg-[#3a3a3a] border-r border-slate-200 dark:border-[#454545] flex flex-col shrink-0 animate-fadeIn">
           <div className="px-3 pt-4 pb-1">
-            <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
+            <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
               Discovered Workloads
             </span>
           </div>
@@ -134,8 +140,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   onClick={() => setDiscoverySubTab && setDiscoverySubTab(tab.id)}
                   className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded text-sm transition-colors ${
                     isActive
-                      ? 'bg-[#2b2b2b] text-white font-medium shadow-sm'
-                      : 'text-slate-300 hover:bg-[#454545] hover:text-white'
+                      ? 'bg-blue-50 dark:bg-[#2b2b2b] text-slate-900 dark:text-white font-medium shadow-sm'
+                      : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-[#454545] hover:text-slate-900 dark:text-white'
                   }`}
                 >
                   <tab.icon className="h-4 w-4 shrink-0 text-blue-400" />
@@ -146,27 +152,27 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </nav>
           
           {/* Footer Area - Role Switcher & System Health */}
-          <div className="p-3 border-t border-[#2b2b2b] space-y-3 bg-[#323232]">
+          <div className="p-3 border-t border-slate-200 dark:border-[#2b2b2b] space-y-3 bg-slate-100 dark:bg-[#323232]">
             {/* System Health */}
-            <div className="flex items-center justify-between text-[11px] bg-[#2b2b2b] px-2 py-1.5 rounded border border-[#404040]">
+            <div className="flex items-center justify-between text-[11px] bg-blue-50 dark:bg-[#2b2b2b] px-2 py-1.5 rounded border border-slate-200 dark:border-[#404040]">
               <div className="flex items-center space-x-1.5">
                 <span
                   className={`h-1.5 w-1.5 rounded-full ${
                     wsConnected ? 'bg-emerald-400 animate-pulse' : 'bg-amber-400'
                   }`}
                 />
-                <span className="text-slate-300">
+                <span className="text-slate-600 dark:text-slate-300">
                   {wsConnected ? 'WS Live' : 'Polling'}
                 </span>
               </div>
-              <span className="text-slate-400 font-mono">
+              <span className="text-slate-500 dark:text-slate-400 font-mono">
                 {metrics?.currentLatencyMs || 42}ms
               </span>
             </div>
 
             {/* Role Switcher RBAC */}
             <div className="relative group">
-              <div className="flex items-center justify-between text-[11px] bg-[#2b2b2b] hover:bg-[#404040] px-2 py-1.5 rounded border border-[#404040] cursor-pointer transition-colors">
+              <div className="flex items-center justify-between text-[11px] bg-blue-50 dark:bg-[#2b2b2b] hover:bg-slate-200 dark:hover:bg-[#404040] px-2 py-1.5 rounded border border-slate-200 dark:border-[#404040] cursor-pointer transition-colors">
                 <div className="flex flex-col">
                   <span className="text-slate-500 text-[9px] uppercase tracking-wider font-semibold">Active Role</span>
                   <span
@@ -185,17 +191,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       : 'Auditor'}
                   </span>
                 </div>
-                <ChevronDown className="h-3 w-3 text-slate-400" />
+                <ChevronDown className="h-3 w-3 text-slate-500 dark:text-slate-400" />
               </div>
 
               {/* Dropdown menu */}
-              <div className="absolute bottom-full mb-1 left-0 w-full bg-[#2b2b2b] border border-[#404040] rounded shadow-xl p-1 hidden group-hover:block z-50">
+              <div className="absolute bottom-full mb-1 left-0 w-full bg-blue-50 dark:bg-[#2b2b2b] border border-slate-200 dark:border-[#404040] rounded shadow-xl p-1 hidden group-hover:block z-50">
                 <button
                   onClick={() => setCurrentRole('GLOBAL_ADMIN')}
                   className={`w-full text-left px-2 py-1.5 rounded text-[11px] transition-colors ${
                     currentRole === 'GLOBAL_ADMIN'
                       ? 'bg-purple-950/40 text-purple-200 border-l-2 border-purple-500'
-                      : 'text-slate-300 hover:bg-[#404040]'
+                      : 'text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-[#404040]'
                   }`}
                 >
                   <span className="font-semibold">Global Admin</span>
@@ -205,7 +211,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   className={`w-full text-left px-2 py-1.5 rounded text-[11px] transition-colors ${
                     currentRole === 'MIGRATION_OPERATOR'
                       ? 'bg-blue-950/40 text-blue-200 border-l-2 border-blue-500'
-                      : 'text-slate-300 hover:bg-[#404040]'
+                      : 'text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-[#404040]'
                   }`}
                 >
                   <span className="font-semibold">Operator</span>
@@ -215,7 +221,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   className={`w-full text-left px-2 py-1.5 rounded text-[11px] transition-colors ${
                     currentRole === 'AUDITOR'
                       ? 'bg-emerald-950/40 text-emerald-200 border-l-2 border-emerald-500'
-                      : 'text-slate-300 hover:bg-[#404040]'
+                      : 'text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-[#404040]'
                   }`}
                 >
                   <span className="font-semibold">Auditor</span>
@@ -228,7 +234,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       {/* Secondary Sidebar (Expandable based on context) */}
       {activeTab === 'migrate' && (
-        <aside className="w-56 bg-[#3a3a3a] border-r border-[#454545] flex flex-col shrink-0 animate-fadeIn">
+        <aside className="w-56 bg-white dark:bg-[#3a3a3a] border-r border-slate-200 dark:border-[#454545] flex flex-col shrink-0 animate-fadeIn">
           <nav className="flex-1 px-2 py-4 space-y-1">
             {migrateTabs.map((tab) => {
               const isActive = migrateSubTab === tab.id;
@@ -238,8 +244,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   onClick={() => setMigrateSubTab(tab.id)}
                   className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded text-sm transition-colors ${
                     isActive
-                      ? 'bg-[#2b2b2b] text-white font-medium shadow-sm'
-                      : 'text-slate-300 hover:bg-[#454545] hover:text-white'
+                      ? 'bg-blue-50 dark:bg-[#2b2b2b] text-slate-900 dark:text-white font-medium shadow-sm'
+                      : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-[#454545] hover:text-slate-900 dark:text-white'
                   }`}
                 >
                   <tab.icon className="h-4 w-4 shrink-0" />
@@ -256,27 +262,27 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </nav>
           
           {/* Footer Area - Role Switcher & System Health */}
-          <div className="p-3 border-t border-[#2b2b2b] space-y-3 bg-[#323232]">
+          <div className="p-3 border-t border-slate-200 dark:border-[#2b2b2b] space-y-3 bg-slate-100 dark:bg-[#323232]">
             {/* System Health */}
-            <div className="flex items-center justify-between text-[11px] bg-[#2b2b2b] px-2 py-1.5 rounded border border-[#404040]">
+            <div className="flex items-center justify-between text-[11px] bg-blue-50 dark:bg-[#2b2b2b] px-2 py-1.5 rounded border border-slate-200 dark:border-[#404040]">
               <div className="flex items-center space-x-1.5">
                 <span
                   className={`h-1.5 w-1.5 rounded-full ${
                     wsConnected ? 'bg-emerald-400 animate-pulse' : 'bg-amber-400'
                   }`}
                 />
-                <span className="text-slate-300">
+                <span className="text-slate-600 dark:text-slate-300">
                   {wsConnected ? 'WS Live' : 'Polling'}
                 </span>
               </div>
-              <span className="text-slate-400 font-mono">
+              <span className="text-slate-500 dark:text-slate-400 font-mono">
                 {metrics?.currentLatencyMs || 42}ms
               </span>
             </div>
 
             {/* Role Switcher RBAC */}
             <div className="relative group">
-              <div className="flex items-center justify-between text-[11px] bg-[#2b2b2b] hover:bg-[#404040] px-2 py-1.5 rounded border border-[#404040] cursor-pointer transition-colors">
+              <div className="flex items-center justify-between text-[11px] bg-blue-50 dark:bg-[#2b2b2b] hover:bg-slate-200 dark:hover:bg-[#404040] px-2 py-1.5 rounded border border-slate-200 dark:border-[#404040] cursor-pointer transition-colors">
                 <div className="flex flex-col">
                   <span className="text-slate-500 text-[9px] uppercase tracking-wider font-semibold">Active Role</span>
                   <span
@@ -295,17 +301,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       : 'Auditor'}
                   </span>
                 </div>
-                <ChevronDown className="h-3 w-3 text-slate-400" />
+                <ChevronDown className="h-3 w-3 text-slate-500 dark:text-slate-400" />
               </div>
 
               {/* Dropdown menu */}
-              <div className="absolute bottom-full mb-1 left-0 w-full bg-[#2b2b2b] border border-[#404040] rounded shadow-xl p-1 hidden group-hover:block z-50">
+              <div className="absolute bottom-full mb-1 left-0 w-full bg-blue-50 dark:bg-[#2b2b2b] border border-slate-200 dark:border-[#404040] rounded shadow-xl p-1 hidden group-hover:block z-50">
                 <button
                   onClick={() => setCurrentRole('GLOBAL_ADMIN')}
                   className={`w-full text-left px-2 py-1.5 rounded text-[11px] transition-colors ${
                     currentRole === 'GLOBAL_ADMIN'
                       ? 'bg-purple-950/40 text-purple-200 border-l-2 border-purple-500'
-                      : 'text-slate-300 hover:bg-[#404040]'
+                      : 'text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-[#404040]'
                   }`}
                 >
                   <span className="font-semibold">Global Admin</span>
@@ -315,7 +321,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   className={`w-full text-left px-2 py-1.5 rounded text-[11px] transition-colors ${
                     currentRole === 'MIGRATION_OPERATOR'
                       ? 'bg-blue-950/40 text-blue-200 border-l-2 border-blue-500'
-                      : 'text-slate-300 hover:bg-[#404040]'
+                      : 'text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-[#404040]'
                   }`}
                 >
                   <span className="font-semibold">Operator</span>
@@ -325,7 +331,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   className={`w-full text-left px-2 py-1.5 rounded text-[11px] transition-colors ${
                     currentRole === 'AUDITOR'
                       ? 'bg-emerald-950/40 text-emerald-200 border-l-2 border-emerald-500'
-                      : 'text-slate-300 hover:bg-[#404040]'
+                      : 'text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-[#404040]'
                   }`}
                 >
                   <span className="font-semibold">Auditor</span>

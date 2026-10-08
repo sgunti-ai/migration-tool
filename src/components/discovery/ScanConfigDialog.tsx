@@ -96,21 +96,21 @@ export const ScanConfigDialog: React.FC<ScanConfigDialogProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
-      <div className="w-full max-w-xl bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden p-6 space-y-5">
+      <div className="w-full max-w-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden p-6 space-y-5">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+        <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
           <div className="flex items-center space-x-2.5">
             <div className="p-2 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20">
               <Settings2 className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-white">Configure Source Tenant Scan</h3>
-              <p className="text-xs text-slate-400">Microsoft Graph API, SharePoint PnP & Exchange PowerShell</p>
+              <h3 className="text-base font-bold text-slate-900 dark:text-white">Configure Source Tenant Scan</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Microsoft Graph API, SharePoint PnP & Exchange PowerShell</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition"
+            className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white hover:bg-white dark:bg-slate-800 rounded-lg transition"
           >
             <X className="w-4 h-4" />
           </button>
@@ -119,7 +119,7 @@ export const ScanConfigDialog: React.FC<ScanConfigDialogProps> = ({
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Scan Type Selection */}
           <div className="space-y-2">
-            <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider">
+            <label className="text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
               Scan Mode
             </label>
             <div className="grid grid-cols-2 gap-3">
@@ -129,15 +129,15 @@ export const ScanConfigDialog: React.FC<ScanConfigDialogProps> = ({
                 onClick={() => setScanType('FULL')}
                 className={`p-3 rounded-xl border text-left transition ${
                   scanType === 'FULL'
-                    ? 'bg-blue-600/10 border-blue-500 text-white'
-                    : 'bg-slate-800/40 border-slate-800 text-slate-400 hover:text-slate-200'
+                    ? 'bg-blue-600/10 border-blue-500 text-slate-900 dark:text-white'
+                    : 'bg-white dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 hover:text-slate-200'
                 }`}
               >
                 <div className="text-sm font-semibold flex items-center justify-between">
                   <span>Full Comprehensive</span>
                   <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300">Default</span>
                 </div>
-                <div className="text-[11px] text-slate-400 mt-1">
+                <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
                   Full re-index of all tenant workload objects, attributes, and permissions.
                 </div>
               </button>
@@ -148,15 +148,15 @@ export const ScanConfigDialog: React.FC<ScanConfigDialogProps> = ({
                 onClick={() => setScanType('INCREMENTAL')}
                 className={`p-3 rounded-xl border text-left transition ${
                   scanType === 'INCREMENTAL'
-                    ? 'bg-blue-600/10 border-blue-500 text-white'
-                    : 'bg-slate-800/40 border-slate-800 text-slate-400 hover:text-slate-200'
+                    ? 'bg-blue-600/10 border-blue-500 text-slate-900 dark:text-white'
+                    : 'bg-white dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 hover:text-slate-200'
                 }`}
               >
                 <div className="text-sm font-semibold flex items-center justify-between">
                   <span>Incremental Delta</span>
                   <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300">Fast</span>
                 </div>
-                <div className="text-[11px] text-slate-400 mt-1">
+                <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
                   Uses Microsoft Graph delta tokens; updates only modified or newly created entities.
                 </div>
               </button>
@@ -166,7 +166,7 @@ export const ScanConfigDialog: React.FC<ScanConfigDialogProps> = ({
           {/* Workload Checkboxes */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider">
+              <label className="text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
                 Workloads to Scan ({selectedCount}/{workloadItems.length})
               </label>
               <div className="flex items-center space-x-2 text-xs">
@@ -181,7 +181,7 @@ export const ScanConfigDialog: React.FC<ScanConfigDialogProps> = ({
                 <button
                   type="button"
                   onClick={() => handleSelectAll(false)}
-                  className="text-slate-400 hover:underline"
+                  className="text-slate-500 dark:text-slate-400 hover:underline"
                 >
                   Clear All
                 </button>
@@ -198,8 +198,8 @@ export const ScanConfigDialog: React.FC<ScanConfigDialogProps> = ({
                     onClick={() => handleToggleWorkload(item.id)}
                     className={`p-2.5 rounded-lg border cursor-pointer flex items-start space-x-3 transition ${
                       isChecked
-                        ? 'bg-slate-800/80 border-slate-700'
-                        : 'bg-slate-900/40 border-slate-800/60 opacity-60 hover:opacity-80'
+                        ? 'bg-white dark:bg-slate-800/80 border-slate-200 dark:border-slate-700'
+                        : 'bg-slate-50 dark:bg-slate-900/40 border-slate-200 dark:border-slate-800/60 opacity-60 hover:opacity-80'
                     }`}
                   >
                     <div className="pt-0.5">
@@ -210,8 +210,8 @@ export const ScanConfigDialog: React.FC<ScanConfigDialogProps> = ({
                       )}
                     </div>
                     <div className="min-w-0">
-                      <div className="text-xs font-semibold text-white">{item.label}</div>
-                      <div className="text-[11px] text-slate-400 truncate">{item.desc}</div>
+                      <div className="text-xs font-semibold text-slate-900 dark:text-white">{item.label}</div>
+                      <div className="text-[11px] text-slate-500 dark:text-slate-400 truncate">{item.desc}</div>
                     </div>
                   </div>
                 );
@@ -220,8 +220,8 @@ export const ScanConfigDialog: React.FC<ScanConfigDialogProps> = ({
           </div>
 
           {/* Footer */}
-          <div className="pt-3 border-t border-slate-800 flex items-center justify-between">
-            <span className="text-xs text-slate-400 font-mono">
+          <div className="pt-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+            <span className="text-xs text-slate-500 dark:text-slate-400 font-mono">
               Auto-retry on HTTP 429 Enabled
             </span>
 
@@ -229,7 +229,7 @@ export const ScanConfigDialog: React.FC<ScanConfigDialogProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 text-xs font-medium text-slate-400 hover:text-white transition"
+                className="px-4 py-2 text-xs font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white transition"
               >
                 Cancel
               </button>

@@ -99,7 +99,7 @@ export const SettingsDashboard = () => {
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1 flex items-center justify-between">
                       Email Notification Templates
-                      <HelpCircle className="w-4 h-4 text-slate-400" title="Choose the template used for automated emails" />
+                      <span title="Choose the template used for automated emails"><HelpCircle className="w-4 h-4 text-slate-500 dark:text-slate-400" /></span>
                     </label>
                     <select value={notificationState.emailTemplates} onChange={e => setNotificationState({...notificationState, emailTemplates: e.target.value})} className="w-full border border-slate-300 rounded p-2 text-sm bg-white">
                       <option value="default">Default Template</option>
@@ -110,7 +110,7 @@ export const SettingsDashboard = () => {
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1 flex items-center justify-between">
                       Global Webhook URL
-                      <HelpCircle className="w-4 h-4 text-slate-400" title="Endpoint to receive JSON payloads for migration events" />
+                      <span title="Endpoint to receive JSON payloads for migration events"><HelpCircle className="w-4 h-4 text-slate-500 dark:text-slate-400" /></span>
                     </label>
                     <input type="text" value={notificationState.webhookUrl} onChange={e => setNotificationState({...notificationState, webhookUrl: e.target.value})} className="w-full border border-slate-300 rounded p-2 text-sm" />
                   </div>
@@ -144,14 +144,14 @@ export const SettingsDashboard = () => {
                 <div className="flex-1">
                   <label className="block text-sm font-medium text-slate-700 mb-1 flex items-center justify-between">
                     Critical Error Threshold (%)
-                    <HelpCircle className="w-4 h-4 text-slate-400" title="Trigger alerts when critical failures exceed this percentage of total jobs" />
+                    <span title="Trigger alerts when critical failures exceed this percentage of total jobs"><HelpCircle className="w-4 h-4 text-slate-500 dark:text-slate-400" /></span>
                   </label>
                   <input type="number" value={notificationState.alertThresholdCritical} onChange={e => setNotificationState({...notificationState, alertThresholdCritical: Number(e.target.value)})} className="w-full border border-slate-300 rounded p-2 text-sm" />
                 </div>
                 <div className="flex-1">
                   <label className="block text-sm font-medium text-slate-700 mb-1 flex items-center justify-between">
                     Warning Threshold (%)
-                    <HelpCircle className="w-4 h-4 text-slate-400" title="Trigger alerts when warning limits exceed this percentage" />
+                    <span title="Trigger alerts when warning limits exceed this percentage"><HelpCircle className="w-4 h-4 text-slate-500 dark:text-slate-400" /></span>
                   </label>
                   <input type="number" value={notificationState.alertThresholdWarning} onChange={e => setNotificationState({...notificationState, alertThresholdWarning: Number(e.target.value)})} className="w-full border border-slate-300 rounded p-2 text-sm" />
                 </div>
@@ -169,7 +169,7 @@ export const SettingsDashboard = () => {
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1 flex items-center justify-between">
                       Data Encryption Standards
-                      <HelpCircle className="w-4 h-4 text-slate-400" title="Standard used for data at rest" />
+                      <span title="Standard used for data at rest"><HelpCircle className="w-4 h-4 text-slate-500 dark:text-slate-400" /></span>
                     </label>
                     <select value={securityState.dataEncryption} onChange={e => setSecurityState({...securityState, dataEncryption: e.target.value})} className="w-full border border-slate-300 rounded p-2 text-sm bg-white">
                       <option value="AES-256">AES-256-GCM</option>
@@ -180,7 +180,7 @@ export const SettingsDashboard = () => {
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1 flex items-center justify-between">
                       Audit Log Retention (Days)
-                      <HelpCircle className="w-4 h-4 text-slate-400" title="Number of days to keep migration audit logs before auto-pruning" />
+                      <span title="Number of days to keep migration audit logs before auto-pruning"><HelpCircle className="w-4 h-4 text-slate-500 dark:text-slate-400" /></span>
                     </label>
                     <select value={securityState.auditRetention} onChange={e => setSecurityState({...securityState, auditRetention: e.target.value})} className="w-full border border-slate-300 rounded p-2 text-sm bg-white">
                       <option value="30">30 Days</option>
@@ -206,7 +206,7 @@ export const SettingsDashboard = () => {
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1 flex items-center justify-between">
                       Compliance Reporting Mode
-                      <HelpCircle className="w-4 h-4 text-slate-400" title="Generates specific report formats tailored to compliance frameworks" />
+                      <span title="Generates specific report formats tailored to compliance frameworks"><HelpCircle className="w-4 h-4 text-slate-500 dark:text-slate-400" /></span>
                     </label>
                     <select value={securityState.complianceReport} onChange={e => setSecurityState({...securityState, complianceReport: e.target.value})} className="w-full border border-slate-300 rounded p-2 text-sm bg-white">
                       <option value="GDPR">GDPR - Right to Erasure / Portability</option>
@@ -230,11 +230,11 @@ export const SettingsDashboard = () => {
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1 flex items-center justify-between">
                     API Key Management
-                    <HelpCircle className="w-4 h-4 text-slate-400" title="Key used for authorizing programmatic REST API access" />
+                    <span title="Key used for authorizing programmatic REST API access"><HelpCircle className="w-4 h-4 text-slate-500 dark:text-slate-400" /></span>
                   </label>
                   <div className="flex space-x-2">
                     <div className="relative flex-1">
-                      <Key className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                      <Key className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 dark:text-slate-400" />
                       <input type="password" value={apiState.apiKey} onChange={e => setApiState({...apiState, apiKey: e.target.value})} className="pl-9 w-full border border-slate-300 rounded p-2 text-sm font-mono" />
                     </div>
                     <button className="px-4 py-2 bg-slate-100 text-slate-700 border border-slate-200 rounded text-sm font-medium hover:bg-slate-200">Rotate Key</button>
@@ -245,10 +245,10 @@ export const SettingsDashboard = () => {
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1 flex items-center justify-between">
                       PowerShell Module Version
-                      <HelpCircle className="w-4 h-4 text-slate-400" title="Target version of the migration PS modules" />
+                      <span title="Target version of the migration PS modules"><HelpCircle className="w-4 h-4 text-slate-500 dark:text-slate-400" /></span>
                     </label>
                     <div className="relative">
-                      <Terminal className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                      <Terminal className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 dark:text-slate-400" />
                       <select value={apiState.powerShellModule} onChange={e => setApiState({...apiState, powerShellModule: e.target.value})} className="pl-9 w-full border border-slate-300 rounded p-2 text-sm bg-white">
                         <option value="v2.4.1">v2.4.1 (Latest Stable)</option>
                         <option value="v2.3.0">v2.3.0 (Legacy Support)</option>
@@ -280,7 +280,7 @@ export const SettingsDashboard = () => {
       </div>
 
       {showConfirm && (
-        <div className="fixed inset-0 bg-slate-900/50 flex items-center justify-center z-50 animate-fadeIn">
+        <div className="fixed inset-0 bg-slate-50/50 dark:bg-slate-900/50 flex items-center justify-center z-50 animate-fadeIn">
           <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
             <h3 className="text-lg font-bold text-slate-800 mb-2">
               {showConfirm === 'save' ? 'Save Settings' : 'Reset Defaults'}
@@ -292,7 +292,7 @@ export const SettingsDashboard = () => {
             </p>
             <div className="flex justify-end space-x-3">
               <button onClick={() => setShowConfirm(null)} className="px-4 py-2 border border-slate-300 rounded text-slate-700 font-medium text-sm hover:bg-slate-50 transition-colors">Cancel</button>
-              <button onClick={showConfirm === 'save' ? handleSave : handleReset} className={`px-4 py-2 rounded text-white font-medium text-sm transition-colors ${showConfirm === 'save' ? 'bg-blue-600 hover:bg-blue-700' : 'bg-red-600 hover:bg-red-700'}`}>
+              <button onClick={showConfirm === 'save' ? handleSave : handleReset} className={`px-4 py-2 rounded text-slate-900 dark:text-white font-medium text-sm transition-colors ${showConfirm === 'save' ? 'bg-blue-600 hover:bg-blue-700' : 'bg-red-600 hover:bg-red-700'}`}>
                 {showConfirm === 'save' ? 'Confirm Save' : 'Confirm Reset'}
               </button>
             </div>
