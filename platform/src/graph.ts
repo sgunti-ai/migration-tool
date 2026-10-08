@@ -1,4 +1,4 @@
-import {config} from './config.js';
+import type {TenantAuth} from './credentials.js';
 export class GraphError extends Error {constructor(public readonly status:number, public readonly path:string){super(`Graph HTTP ${status} at ${path}`);}}
 const wait=(ms:number)=>new Promise(resolve=>setTimeout(resolve,ms));
 export function allowGraphUrl(value:string){
@@ -7,11 +7,12 @@ export function allowGraphUrl(value:string){
  return url.toString();
 }
 export class TokenProvider {
+ constructor(private readonly identity:TenantAuth){}
  private current?:{token:string;expires:number};
  async get(force=false){
   if(!force&&this.current&&this.current.expires-Date.now()>300000)return this.current.token;
-  const endpoint=`https://login.microsoftonline.com/${config.SOURCE_TENANT_ID}/oauth2/v2.0/token`;
-  const response=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({client_id:config.SOURCE_DISCOVERY_CLIENT_ID,client_secret:config.SOURCE_DISCOVERY_CLIENT_SECRET,scope:'https://graph.microsoft.com/.default',grant_type:'client_credentials'}),signal:AbortSignal.timeout(30000)});
+  const endpoint=`https://login.microsoftonline.com/${this.identity.tenantId}/oauth2/v2.0/token`;
+  const response=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({client_id:this.identity.clientId,client_secret:this.identity.clientSecret,scope:'https://graph.microsoft.com/.default',grant_type:'client_credentials'}),signal:AbortSignal.timeout(30000)});
   if(!response.ok)throw new Error(`Microsoft Entra token exchange failed: ${response.status}`);
   const body=await response.json() as {access_token:string;expires_in:number};
   if(!body.access_token)throw new Error('Empty Entra token');
