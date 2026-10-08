@@ -13,7 +13,7 @@ SQLite should be replaced with PostgreSQL for concurrent production workers.
 Legacy unscoped inventory tables and legacy demo dashboards remain in the schema. Live mode blocks their discovery API endpoints, but other legacy endpoints may expose demonstration data. Do not use legacy assessment or reporting as evidence of real inventory.
 The server requires migration of the Prisma schema (prisma db push for development, proper Prisma migrations for deployments).
 Source discovery credentials remain configured through environment variables; secret vault storage and automated secret rotation are not implemented.
-OneDrive, mailbox and detailed Teams channels/permissions/storage assessment are not implemented by this change.
+OneDrive drive inventory (including API-reported quota when available) and Teams channel listings have initial adapters. Exchange mailbox inventory, item-level ACLs, Teams membership counts, full storage assessments, advanced reporting and thorough tenant-wide validation remain pending. Graph API 403/404 failures currently fail the workload scan instead of silently reporting success.
 External durable worker, restart recovery, cancellation and real tenant automated tests remain pending.
 
 ## Using new endpoints
