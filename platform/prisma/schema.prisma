@@ -56,3 +56,15 @@ model InventoryItem {
   @@unique([scanId,workload,sourceId])
   @@index([organizationId,projectId,scanId,workload])
 }
+
+model TenantCredential {
+ id String @id @default(cuid())
+ organizationId String
+ projectId String @unique
+ tenantId String
+ clientId String
+ encryptedSecret String
+ keyVersion Int @default(1)
+ updatedAt DateTime @updatedAt
+ @@index([organizationId,tenantId])
+}
