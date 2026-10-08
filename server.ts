@@ -59,7 +59,7 @@ async function startServer() {
   app.use('/api', requireAuth, requireSameOrigin);
   app.use('/api', (req,res,next) => {
     if (process.env.DEMO_MODE === 'true') return next();
-    if (/^\/(jobs|migration|discovery|tenants\/policies|mailbox)/.test(req.path) && ['POST','PUT','PATCH','DELETE'].includes(req.method)) return res.status(503).json({error:'Live migration features are disabled. Only simulated demo operations exist. Set DEMO_MODE=true for isolated demos.'});
+    if (['POST','PUT','PATCH','DELETE'].includes(req.method)) return res.status(503).json({error:'Live migration features are disabled. Only simulated demo operations exist. Set DEMO_MODE=true for isolated demos.'});
     next();
   });
 
