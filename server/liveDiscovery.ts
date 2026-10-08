@@ -1,8 +1,8 @@
 import { prisma } from './db.js';
 import { recordAuditLog } from './audit.js';
 
-type Workload = 'Users' | 'Groups' | 'SharePoint' | 'Teams';
-const supported: Workload[] = ['Users','Groups','SharePoint','Teams'];
+type Workload = 'Users' | 'Groups' | 'SharePoint' | 'Teams' | 'OneDrive';
+const supported: Workload[] = ['Users','Groups','SharePoint','Teams','OneDrive'];
 const GRAPH = 'https://graph.microsoft.com/v1.0';
 const timeoutMs = 30000;
 const sleep = (ms:number) => new Promise(r=>setTimeout(r,ms));
@@ -65,7 +65,7 @@ export async function startLiveDiscovery(requested:unknown,actor:string,projectI
   if(process.env.DEMO_MODE==='true')throw new Error('Disable DEMO_MODE before live discovery');
   if(running)throw new Error('A live discovery scan is already running in this process');
   const workloads=Array.isArray(requested)?requested:supported;
-  if(!workloads.length||workloads.some(x=>!supported.includes(x)))throw new Error('Supported live workloads: Users, Groups, SharePoint, Teams. Mailboxes, OneDrive and distribution lists require separate verified adapters.');
+  if(!workloads.length||workloads.some(x=>!supported.includes(x)))throw new Error('Supported live workloads: Users, Groups, SharePoint, Teams, OneDrive. Mailbox statistics and distribution lists require separate verified adapters.');
   const accessToken=await token();
   const org=await graphGet('/organization?$select=id,displayName,verifiedDomains',accessToken);
   const actualId=org.value?.[0]?.id;
@@ -78,7 +78,7 @@ export async function startLiveDiscovery(requested:unknown,actor:string,projectI
   return {...scan,sourceTenantId:actualId,mode:'LIVE'};
 }
 async function execute(scanId:string,projectId:string,tenantId:string,workloads:Workload[],accessToken:string,actor:string){
-  const counts={usersDiscovered:0,groupsDiscovered:0,sharePointSitesDiscovered:0,teamsDiscovered:0};
+  const counts={usersDiscovered:0,groupsDiscovered:0,sharePointSitesDiscovered:0,teamsDiscovered:0,oneDrivesDiscovered:0,channelsDiscovered:0};
   try {
     for(let index=0;index<workloads.length;index++){
       const w=workloads[index];
@@ -87,9 +87,26 @@ async function execute(scanId:string,projectId:string,tenantId:string,workloads:
         Users:'/users?$select=id,userPrincipalName,displayName,department,jobTitle,accountEnabled,usageLocation&$top=100',
         Groups:'/groups?$select=id,displayName,mail,mailEnabled,securityEnabled,groupTypes&$top=100',
         SharePoint:'/sites/getAllSites?$select=id,displayName,webUrl,lastModifiedDateTime&$top=100',
-        Teams:"/groups?$filter=resourceProvisioningOptions/Any(x:x eq 'Team')&$select=id,displayName,description,visibility&$top=100"
+        Teams:"/groups?$filter=resourceProvisioningOptions/Any(x:x eq 'Team')&$select=id,displayName,description,visibility&$top=100",
+        OneDrive:'/users?$select=id,userPrincipalName&$top=100'
       };
       for await(const item of pages(paths[w],accessToken)){
+        if(w==='OneDrive'){
+          for await (const drive of pages(`/users/${encodeURIComponent(item.id)}/drives`,accessToken)) {
+            if(drive.driveType!=='personal')continue;
+            await prisma.scopedDiscoveryItem.upsert({where:{scanId_workload_sourceId:{scanId,workload:'OneDrive',sourceId:drive.id}},create:{scanId,projectId,tenantId,workload:'OneDrive',sourceId:drive.id,displayName:drive.name||item.userPrincipalName,rawMetadata:JSON.stringify({driveId:drive.id,ownerUPN:item.userPrincipalName,webUrl:drive.webUrl,quota:drive.quota||null})},update:{displayName:drive.name||item.userPrincipalName,rawMetadata:JSON.stringify({driveId:drive.id,ownerUPN:item.userPrincipalName,webUrl:drive.webUrl,quota:drive.quota||null})}});
+            counts.oneDrivesDiscovered++;
+          }
+          continue;
+        }
+        if(w==='Teams') {
+          for await(const channel of pages(`/teams/${encodeURIComponent(item.id)}/allChannels?$select=id,displayName,membershipType`,accessToken)) {
+            if(!channel.id) continue;
+            const channelId=`${item.id}:${channel.id}`;
+            await prisma.scopedDiscoveryItem.upsert({where:{scanId_workload_sourceId:{scanId,workload:'TeamsChannel',sourceId:channelId}},create:{scanId,projectId,tenantId,workload:'TeamsChannel',sourceId:channelId,displayName:channel.displayName||channel.id,rawMetadata:JSON.stringify({teamId:item.id,channelId:channel.id,membershipType:channel.membershipType})},update:{displayName:channel.displayName||channel.id,rawMetadata:JSON.stringify({teamId:item.id,channelId:channel.id,membershipType:channel.membershipType})}});
+            counts.channelsDiscovered++;
+          }
+        }
         const sourceId=String(item.id||'');
         if(!sourceId)continue;
         const displayName=String(item.displayName||item.userPrincipalName||item.webUrl||sourceId);
