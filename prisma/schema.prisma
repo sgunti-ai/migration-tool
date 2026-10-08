@@ -327,3 +327,51 @@ model AppSession {
   createdAt DateTime @default(now())
   @@index([expiresAt])
 }
+
+model DiscoveryOrganization {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  projects  DiscoveryProject[]
+}
+
+model DiscoveryProject {
+  id             String   @id @default(cuid())
+  organizationId String
+  name           String
+  sourceTenantId String
+  createdAt      DateTime @default(now())
+  organization   DiscoveryOrganization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  scans          ScopedDiscoveryScan[]
+  @@index([organizationId, sourceTenantId])
+}
+
+model ScopedDiscoveryScan {
+  id           String   @id @default(cuid())
+  projectId    String
+  tenantId     String
+  status       String   @default("RUNNING")
+  workloads    String
+  currentStage String?
+  completedAt  DateTime?
+  startedAt    DateTime @default(now())
+  errorMessage String?
+  project      DiscoveryProject @relation(fields: [projectId], references: [id], onDelete: Restrict)
+  items        ScopedDiscoveryItem[]
+  @@index([projectId, tenantId, startedAt])
+}
+
+model ScopedDiscoveryItem {
+  id           String   @id @default(cuid())
+  scanId       String
+  projectId    String
+  tenantId     String
+  workload     String
+  sourceId     String
+  displayName  String?
+  rawMetadata  String
+  discoveredAt DateTime @default(now())
+  scan         ScopedDiscoveryScan @relation(fields: [scanId], references: [id], onDelete: Cascade)
+  @@unique([scanId, workload, sourceId])
+  @@index([projectId, tenantId, workload])
+}
