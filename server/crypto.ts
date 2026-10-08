@@ -5,7 +5,8 @@ const IV_LENGTH = 16;
 const SALT_LENGTH = 32;
 const TAG_LENGTH = 16;
 
-const SECRET_KEY = process.env.ENCRYPTION_SECRET || 'm365-tenant-migration-secure-encryption-key-32b';
+const SECRET_KEY = process.env.ENCRYPTION_SECRET;
+if (!SECRET_KEY || SECRET_KEY.length < 32) throw new Error('ENCRYPTION_SECRET must be configured with at least 32 random characters');
 
 function getDerivedKey(salt: Buffer): Buffer {
   return crypto.pbkdf2Sync(SECRET_KEY, salt, 100000, 32, 'sha512');
