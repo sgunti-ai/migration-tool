@@ -8,7 +8,13 @@ export async function startScan(organizationId:string,projectId:string,requested
  const project=await db.project.findFirst({where:{id:projectId,organizationId}});
  if(!project)throw new Error('Project not found');
  if(!requested.length||requested.some(w=>!workloads.includes(w)))throw new Error('Unsupported workload');
- const scan=await db.scan.create({data:{projectId,organizationId,sourceTenantId:project.sourceTenantId,workloads:JSON.stringify(requested),status:'QUEUED',mode:'LIVE',scanType:'FULL',apiProvider:'MICROSOFT_GRAPH_V1'}});
+ const existing=await db.scan.findFirst({where:{projectId,organizationId,status:{in:['QUEUED','RUNNING','RETRYING']}}});
+ if(existing)throw new Error('Project already has an active scan');
+ const delta=requested.filter(w=>w==='Users'||w==='Groups');
+ const cursors=await db.discoveryCursor.findMany({where:{organizationId,projectId,sourceTenantId:project.sourceTenantId,workload:{in:delta}}});
+ const existingDelta=delta.filter(w=>cursors.some(c=>c.workload===w && !!c.deltaLink)).length;
+ const scanType=delta.length===0?'FULL':existingDelta===0?'INITIAL_FULL':existingDelta===delta.length?'INCREMENTAL':'MIXED';
+ const scan=await db.scan.create({data:{projectId,organizationId,sourceTenantId:project.sourceTenantId,workloads:JSON.stringify(requested),status:'QUEUED',mode:'LIVE',scanType,apiProvider:'MICROSOFT_GRAPH_V1'}});
  try{await discoveryQueue.add('scan',{scanId:scan.id,organizationId},{jobId:scan.id});}
  catch(error){await db.scan.update({where:{id:scan.id},data:{status:'FAILED',errorCode:'QUEUE_UNAVAILABLE',errorMessage:'Could not enqueue discovery job'}});throw error;}
  return scan;
@@ -31,7 +37,10 @@ export async function executeScan(scanId:string) {
    } else {
     await db.discoveryScanWorkload.upsert({where:{scanId_workload:{scanId,workload:adapter.workload}},create:{scanId,organizationId:scan.organizationId,projectId:scan.projectId,sourceTenantId:scan.sourceTenantId,workload:adapter.workload,status:'RUNNING',startedAt:new Date()},update:{status:'RUNNING',startedAt:new Date()}});
     for await(const item of adapter.discover(graph)){
-    await db.inventoryItem.upsert({where:{scanId_workload_sourceId:{scanId,workload:item.workload,sourceId:item.sourceId}},create:{scanId,organizationId:scan.organizationId,projectId:scan.projectId,sourceTenantId:scan.sourceTenantId,workload:item.workload,sourceId:item.sourceId,name:item.name,metadata:item.metadata as any},update:{name:item.name,metadata:item.metadata as any}});
+    await db.$transaction(async tx=>{
+      await tx.inventoryItem.upsert({where:{scanId_workload_sourceId:{scanId,workload:item.workload,sourceId:item.sourceId}},create:{scanId,organizationId:scan.organizationId,projectId:scan.projectId,sourceTenantId:scan.sourceTenantId,workload:item.workload,sourceId:item.sourceId,name:item.name,metadata:item.metadata as any},update:{name:item.name,metadata:item.metadata as any}});
+      await tx.currentInventoryItem.upsert({where:{projectId_sourceTenantId_workload_sourceId:{projectId:scan.projectId,sourceTenantId:scan.sourceTenantId,workload:item.workload,sourceId:item.sourceId}},create:{organizationId:scan.organizationId,projectId:scan.projectId,sourceTenantId:scan.sourceTenantId,workload:item.workload,sourceId:item.sourceId,name:item.name,metadata:item.metadata as any,lastScanId:scanId,isDeleted:false},update:{name:item.name,metadata:item.metadata as any,lastScanId:scanId,isDeleted:false,observedAt:new Date()}});
+    });
     }
     await db.discoveryScanWorkload.update({where:{scanId_workload:{scanId,workload:adapter.workload}},data:{status:'COMPLETED',completedAt:new Date()}});
    }
