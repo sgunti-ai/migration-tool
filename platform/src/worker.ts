@@ -6,6 +6,7 @@ import {db} from './db.js';
 import {redis} from './queue.js';
 const worker=new Worker('discovery-v2',async job=>{
  if(typeof job.data.scanId!=='string')throw new Error('Invalid scan ID');
+ await db.scan.updateMany({where:{id:job.data.scanId,status:'FAILED'},data:{status:'RETRYING'}});
  await executeScan(job.data.scanId);
 },{connection:new IORedis(config.REDIS_URL,{maxRetriesPerRequest:null}),concurrency:2});
 worker.on('failed',(job,error)=>console.error('Discovery failed',job?.id,error.message));
