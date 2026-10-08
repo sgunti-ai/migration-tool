@@ -103,3 +103,19 @@ model DiscoveryScanWorkload {
  @@unique([scanId,workload])
  @@index([organizationId,projectId,scanId])
 }
+
+model CurrentInventoryItem {
+ id String @id @default(cuid())
+ organizationId String
+ projectId String
+ sourceTenantId String
+ workload String
+ sourceId String
+ name String?
+ metadata Json
+ isDeleted Boolean @default(false)
+ lastScanId String
+ observedAt DateTime @default(now())
+ @@unique([projectId,sourceTenantId,workload,sourceId])
+ @@index([organizationId,projectId,sourceTenantId,workload,isDeleted])
+}
