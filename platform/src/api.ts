@@ -4,6 +4,7 @@ import {config} from './config.js';
 import {db} from './db.js';
 import {requireIdentity,requireRole} from './auth.js';
 import {startScan} from './service.js';
+import {setProjectCredential} from './credentials.js';
 import {workloads,type Workload} from './adapters.js';
 const app=express();
 app.disable('x-powered-by');
@@ -18,6 +19,12 @@ app.post('/api/v2/projects',requireRole('ADMIN'),async(req,res)=>{
  if(!body.success)return res.status(400).json({error:'Invalid project'});
  const record=await db.project.create({data:{organizationId:req.principal!.organizationId,...body.data}});
  res.status(201).json(record);
+});
+app.put('/api/v2/projects/:projectId/credentials',requireRole('ADMIN'),async(req,res)=>{
+ const body=z.object({tenantId:z.string().uuid(),clientId:z.string().uuid(),clientSecret:z.string().min(1)}).safeParse(req.body);
+ if(!body.success)return res.status(400).json({error:'Invalid source tenant credential'});
+ try {const result=await setProjectCredential(req.principal!.organizationId,req.params.projectId,body.data.tenantId,body.data.clientId,body.data.clientSecret);res.json(result);}
+ catch{res.status(400).json({error:'Unable to save source tenant credentials for this project'});}
 });
 app.post('/api/v2/projects/:projectId/scans',requireRole('ADMIN','OPERATOR'),async(req,res)=>{
  const body=z.object({workloads:z.array(z.enum(['Users','Groups','SharePoint','Teams','OneDrive'])).nonempty()}).safeParse(req.body);
