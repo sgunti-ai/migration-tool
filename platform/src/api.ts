@@ -45,6 +45,17 @@ app.get('/api/v2/projects/:projectId/scans/:scanId/provenance',async(req,res)=>{
  // Never return deltaLink: opaque Graph tokens can expose tenant discovery state.
  res.json({scanId:scan.id,organizationId,projectId:scan.projectId,sourceTenantId:scan.sourceTenantId,mode:scan.mode,scanType:scan.scanType,apiProvider:scan.apiProvider,status:scan.status,startedAt:scan.startedAt,finishedAt:scan.finishedAt,workloads});
 });
+app.get('/api/v2/projects/:projectId/inventory/current',async(req,res)=>{
+ const organizationId=req.principal!.organizationId;
+ const project=await db.project.findFirst({where:{id:req.params.projectId,organizationId}});
+ if(!project)return res.sendStatus(404);
+ const page=Math.max(0,Math.min(100000,Number(req.query.page)||0));
+ const workload=typeof req.query.workload==='string'&&workloads.includes(req.query.workload as Workload)?req.query.workload:undefined;
+ const includeDeleted=req.query.includeDeleted==='true';
+ const where={organizationId,projectId:project.id,sourceTenantId:project.sourceTenantId,...(workload?{workload}:{}),...(!includeDeleted?{isDeleted:false}:{})};
+ const [count,items]=await Promise.all([db.currentInventoryItem.count({where}),db.currentInventoryItem.findMany({where,skip:page*100,take:100,orderBy:{sourceId:'asc'},select:{workload:true,sourceId:true,name:true,isDeleted:true,lastScanId:true,observedAt:true}})]);
+ res.json({count,page,pageSize:100,items,scope:{projectId:project.id,sourceTenantId:project.sourceTenantId},source:'LIVE_MICROSOFT_GRAPH'});
+});
 app.get('/api/v2/projects/:projectId/scans/:scanId/items',async(req,res)=>{
  const scan=await db.scan.findFirst({where:{id:req.params.scanId,projectId:req.params.projectId,organizationId:req.principal!.organizationId}});
  if(!scan)return res.sendStatus(404);
