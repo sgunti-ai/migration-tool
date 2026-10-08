@@ -1,3 +1,4 @@
+import { startLiveDiscovery } from './server/liveDiscovery.js';
 import { authRoutes, requireAuth, requireSameOrigin } from './server/auth.js';
 import { GoogleGenAI } from '@google/genai';
 import express from 'express';
@@ -58,6 +59,7 @@ async function startServer() {
   app.use('/api/auth', (req, res) => res.status(501).json({error:'Legacy synthetic tenant auth disabled. Real tenant consent is not yet implemented.'}));
   app.use('/api', requireAuth, requireSameOrigin);
   app.use('/api', (req,res,next) => {
+    if (req.method === 'POST' && req.path === '/discovery/start' && process.env.DEMO_MODE !== 'true') return next();
     if (process.env.DEMO_MODE === 'true') return next();
     if (['POST','PUT','PATCH','DELETE'].includes(req.method)) return res.status(503).json({error:'Live migration features are disabled. Only simulated demo operations exist. Set DEMO_MODE=true for isolated demos.'});
     next();
@@ -1401,11 +1403,11 @@ async function startServer() {
   app.post('/api/discovery/start', async (req, res) => {
     try {
       const { scanType, workloads } = req.body;
-      const scan = await startDiscoveryScan({ scanType, workloads });
+      const scan = process.env.DEMO_MODE === 'true' ? await startDiscoveryScan({ scanType, workloads }) : await startLiveDiscovery(workloads, (req as any).user.email);
       res.json({ success: true, scan });
     } catch (err: any) {
       console.error('[API] Failed to start discovery scan:', err);
-      res.status(500).json({ error: err.message || 'Failed to start discovery scan' });
+      res.status(/already running|unfinished scan/i.test(err.message)?409:400).json({ error: err.message || 'Failed to start discovery scan' });
     }
   });
 
