@@ -1,3 +1,4 @@
+import { authRoutes, requireAuth, requireSameOrigin } from './server/auth.js';
 import { GoogleGenAI } from '@google/genai';
 import express from 'express';
 import path from 'path';
@@ -51,16 +52,36 @@ async function startServer() {
   app.use(express.json({ limit: '10mb' }));
   app.use(express.urlencoded({ extended: true }));
   app.use(cookieParser());
+  if (process.env.NODE_ENV === 'production' && (!process.env.APP_URL?.startsWith('https://') || !process.env.ADMIN_EMAILS)) throw new Error('Production requires HTTPS APP_URL and ADMIN_EMAILS');
+  authRoutes(app);
+  // Deny legacy synthetic tenant OAuth, and prevent production from executing simulated workflows.
+  app.use('/api/auth', (req, res) => res.status(501).json({error:'Legacy synthetic tenant auth disabled. Real tenant consent is not yet implemented.'}));
+  app.use('/api', requireAuth, requireSameOrigin);
+  app.use('/api', (req,res,next) => {
+    if (process.env.DEMO_MODE === 'true') return next();
+    if (/^\/(jobs|migration|discovery|tenants\/policies|mailbox)/.test(req.path) && ['POST','PUT','PATCH','DELETE'].includes(req.method)) return res.status(503).json({error:'Live migration features are disabled. Only simulated demo operations exist. Set DEMO_MODE=true for isolated demos.'});
+    next();
+  });
 
   // Ensure initial discovery seed data is populated
-  await ensureDiscoveryDataSeeded();
-  await ensureMailboxTemplatesSeeded();
-  await ensureSampleMigrationJobWithFailures();
+  if (process.env.DEMO_MODE === 'true') {
+    await ensureDiscoveryDataSeeded();
+    await ensureMailboxTemplatesSeeded();
+    await ensureSampleMigrationJobWithFailures();
+  }
 
   // WebSocket Server Setup on the same HTTP server
   const wss = new WebSocketServer({ server, path: '/ws' });
 
-  wss.on('connection', (ws: WebSocket) => {
+  wss.on('connection', async (ws: WebSocket, req) => {
+    // WebSockets must not bypass authenticated API access.
+    const cookie = req.headers.cookie?.split(';').map(x=>x.trim()).find(x=>x.startsWith('migration_session='))?.split('=')[1];
+    if (!cookie) { ws.close(1008,'Authentication required'); return; }
+    const tokenHash = (await import('node:crypto')).default.createHash('sha256').update(cookie).digest('hex');
+    const session = await prisma.appSession.findUnique({where:{tokenHash}}).catch(()=>null);
+    if (!session || session.expiresAt.getTime() < Date.now() || !(process.env.ADMIN_EMAILS||'').split(',').map(x=>x.trim().toLowerCase()).includes(session.email.toLowerCase())) { ws.close(1008,'Unauthorized'); return; }
+    const origin=req.headers.origin;
+    if (!process.env.APP_URL || origin !== new URL(process.env.APP_URL).origin) { ws.close(1008,'Origin forbidden'); return; }
     wsClients.add(ws);
     // Send initial handshake
     ws.send(JSON.stringify({ type: 'CONNECTED', data: { timestamp: new Date().toISOString() } }));
@@ -425,21 +446,10 @@ async function startServer() {
     }
   }
 
-  // Active user session simulation / header
-  app.use(async (req, res, next) => {
-    const roleHeader = req.headers['x-admin-role'] as string;
-    const emailHeader = req.headers['x-admin-email'] as string;
-    (req as any).user = {
-      email: emailHeader || 'admin@contoso.onmicrosoft.com',
-      role: roleHeader || 'GLOBAL_ADMIN',
-    };
-    next();
-  });
-
   // RBAC Middleware Helper
   const requireRole = (allowedRoles: string[]) => {
     return (req: any, res: any, next: any) => {
-      const userRole = req.user?.role || 'GLOBAL_ADMIN';
+      const userRole = req.user?.role || 'UNAUTHORIZED';
       if (allowedRoles.includes(userRole) || userRole === 'GLOBAL_ADMIN') {
         return next();
       }
