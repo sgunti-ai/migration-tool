@@ -38,6 +38,23 @@ export class GraphClient {
   }
   throw new Error('Graph retry budget exhausted');
  }
+ async *listPages(path:string):AsyncGenerator<{items:any[];deltaLink?:string;nextLink?:string}>{
+  let next:string|undefined=path;
+  const visited=new Set<string>();
+  while(next){
+   const url=allowGraphUrl(next);
+   if(visited.has(url)||visited.size>=100000)throw new Error('Invalid Graph paging cycle/limit');
+   visited.add(url);
+   const page=await this.get(url);
+   if(!Array.isArray(page.value))throw new Error('Invalid Graph list payload');
+   const nextLink=page['@odata.nextLink'] as string|undefined;
+   const deltaLink=page['@odata.deltaLink'] as string|undefined;
+   if(nextLink)allowGraphUrl(nextLink);
+   if(deltaLink)allowGraphUrl(deltaLink);
+   yield {items:page.value, nextLink,deltaLink};
+   next=nextLink;
+  }
+ }
  async *list(path:string):AsyncGenerator<any>{
   let next:string|undefined=path;
   const visited=new Set<string>();
