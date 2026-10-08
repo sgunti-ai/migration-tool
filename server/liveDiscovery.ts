@@ -10,7 +10,9 @@ const env = (name:string) => { const value=process.env[name]; if(!value)throw ne
 const tenant = () => env('SOURCE_TENANT_ID');
 const validateTenant = () => { const v=tenant();if(!/^[a-f0-9-]{36}$/i.test(v))throw new Error('SOURCE_TENANT_ID must be a GUID');return v; };
 
+let cachedToken: {value:string; expiresAt:number} | null=null;
 async function token() {
+  if(cachedToken && cachedToken.expiresAt > Date.now()+300000) return cachedToken.value;
   const tid=validateTenant();
   const response=await fetch(`https://login.microsoftonline.com/${tid}/oauth2/v2.0/token`,{
     method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},
@@ -18,18 +20,20 @@ async function token() {
     signal:AbortSignal.timeout(timeoutMs)
   });
   if(!response.ok)throw new Error(`Microsoft identity token request failed (${response.status})`);
-  const result=await response.json() as {access_token?:string};
+  const result=await response.json() as {access_token?:string;expires_in?:number};
   if(!result.access_token)throw new Error('Microsoft identity returned no access token');
-  return result.access_token;
+  cachedToken={value:result.access_token,expiresAt:Date.now()+Math.max(300,Math.min(3600,Number(result.expires_in)||3600))*1000};
+  return cachedToken.value;
 }
 
-async function graphGet(url:string,accessToken:string) {
+async function graphGet(url:string,_accessToken?:string) {
   let next=url.startsWith('/')?GRAPH+url:url;
   for(let attempt=0;attempt<6;attempt++){
     const parsed=new URL(next);
     if(parsed.protocol!=='https:' || parsed.hostname!=='graph.microsoft.com' || !parsed.pathname.startsWith('/v1.0/'))throw new Error('Graph pagination URL rejected');
-    const response=await fetch(next,{headers:{Authorization:`Bearer ${accessToken}`,Accept:'application/json'},signal:AbortSignal.timeout(timeoutMs)});
+    const response=await fetch(next,{headers:{Authorization:`Bearer ${await token()}`,Accept:'application/json'},signal:AbortSignal.timeout(timeoutMs)});
     if(response.ok)return await response.json() as any;
+    if(response.status===401 && attempt<1) { cachedToken=null; continue; }
     if((response.status===429||response.status===503||response.status===504)&&attempt<5){
       const header=response.headers.get('Retry-After');
       const sec=header&&/^\d+$/.test(header)?Number(header):Math.pow(2,attempt+1);
