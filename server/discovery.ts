@@ -576,6 +576,7 @@ export const SEED_DISCOVERY_DISTRIBUTION_LISTS = [
  * Initialize database with seed discovery data if tables are empty
  */
 export async function ensureDiscoveryDataSeeded() {
+  if (process.env.DEMO_MODE !== 'true' || process.env.NODE_ENV === 'production') throw new Error('Seeded discovery is strictly restricted to non-production DEMO_MODE');
   try {
     const userCount = await prisma.discoveryUser.count();
     if (userCount === 0) {
@@ -633,6 +634,7 @@ export async function ensureDiscoveryDataSeeded() {
  * Starts a discovery scan across requested workloads on the source tenant
  */
 export async function startDiscoveryScan(options: DiscoveryScanOptions = {}) {
+  if (process.env.DEMO_MODE !== 'true' || process.env.NODE_ENV === 'production') throw new Error('Legacy simulated discovery is disabled outside non-production demo mode');
   const scanType = options.scanType || 'FULL';
   
   // Find configured source tenant domain or default
