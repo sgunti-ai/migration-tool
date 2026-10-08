@@ -54,7 +54,10 @@ function graphDate(value:any){if(!value)return null;const parsed=new Date(value)
 let running=false;
 
 /** Explicit real-only discovery. Never mixes seeded demo data with live records. */
-export async function startLiveDiscovery(requested:unknown,actor:string) {
+export async function startLiveDiscovery(requested:unknown,actor:string,projectId:string) {
+  if(!projectId) throw new Error('projectId is required');
+  const project=await prisma.discoveryProject.findUnique({where:{id:projectId},include:{organization:true}});
+  if(!project || project.sourceTenantId.toLowerCase()!==validateTenant().toLowerCase())throw new Error('Project not found or source tenant mismatch');
   if(process.env.DEMO_MODE==='true')throw new Error('Disable DEMO_MODE before live discovery');
   if(running)throw new Error('A live discovery scan is already running in this process');
   const workloads=Array.isArray(requested)?requested:supported;
@@ -63,51 +66,45 @@ export async function startLiveDiscovery(requested:unknown,actor:string) {
   const org=await graphGet('/organization?$select=id,displayName,verifiedDomains',accessToken);
   const actualId=org.value?.[0]?.id;
   if(!actualId||actualId.toLowerCase()!==tenant().toLowerCase())throw new Error('Connected Graph organization does not match SOURCE_TENANT_ID');
-  const previous=await prisma.discoveryScan.findFirst({where:{status:'RUNNING'},orderBy:{startedAt:'desc'}});
+  const previous=await prisma.scopedDiscoveryScan.findFirst({where:{projectId,status:'RUNNING'},orderBy:{startedAt:'desc'}});
   if(previous)throw new Error('An unfinished scan exists. Resolve it before starting another.');
-  const scan=await prisma.discoveryScan.create({data:{scanType:'FULL',status:'RUNNING',workloads:JSON.stringify(workloads),currentStage:'LIVE: Verified source organization',progress:0}});
+  const scan=await prisma.scopedDiscoveryScan.create({data:{projectId,tenantId:actualId,status:'RUNNING',workloads:JSON.stringify(workloads),currentStage:'LIVE: Verified source organization'}});
   running=true;
-  void execute(scan.id,workloads as Workload[],accessToken,actor).finally(()=>{running=false;});
+  void execute(scan.id,projectId,actualId,workloads as Workload[],accessToken,actor).finally(()=>{running=false;});
   return {...scan,sourceTenantId:actualId,mode:'LIVE'};
 }
-async function execute(scanId:string,workloads:Workload[],accessToken:string,actor:string){
+async function execute(scanId:string,projectId:string,tenantId:string,workloads:Workload[],accessToken:string,actor:string){
   const counts={usersDiscovered:0,groupsDiscovered:0,sharePointSitesDiscovered:0,teamsDiscovered:0};
   try {
     for(let index=0;index<workloads.length;index++){
       const w=workloads[index];
-      await prisma.discoveryScan.update({where:{id:scanId},data:{currentStage:`LIVE: Discovering ${w}`,progress:Math.floor(index/workloads.length*100)}});
-      const now=new Date();
-      if(w==='Users'){
-        for await(const u of pages('/users?$select=id,userPrincipalName,displayName,department,jobTitle,accountEnabled,usageLocation,assignedLicenses&$top=100',accessToken)){
-          if(!u.userPrincipalName)continue;
-          await prisma.discoveryUser.upsert({where:{upn:u.userPrincipalName},create:{upn:u.userPrincipalName,displayName:u.displayName||u.userPrincipalName,department:u.department,jobTitle:u.jobTitle,accountEnabled:u.accountEnabled??true,usageLocation:u.usageLocation||null,licenses:JSON.stringify((u.assignedLicenses||[]).map((x:any)=>x.skuId)),lastScannedAt:now},update:{displayName:u.displayName||u.userPrincipalName,department:u.department,jobTitle:u.jobTitle,accountEnabled:u.accountEnabled??true,usageLocation:u.usageLocation||null,licenses:JSON.stringify((u.assignedLicenses||[]).map((x:any)=>x.skuId)),lastScannedAt:now}});
-          counts.usersDiscovered++;
-        }
-      }else if(w==='Groups'){
-        for await(const g of pages('/groups?$select=id,displayName,mail,mailEnabled,securityEnabled,groupTypes&$top=100',accessToken)){
-          if(!g.id)continue;
-          await prisma.discoveryGroup.upsert({where:{groupId:g.id},create:{groupId:g.id,name:g.displayName||g.id,email:g.mail,groupType:g.groupTypes?.includes('Unified')?'Microsoft 365':'Security',isMailEnabled:!!g.mailEnabled,isSecurityEnabled:!!g.securityEnabled,lastScannedAt:now},update:{name:g.displayName||g.id,email:g.mail,groupType:g.groupTypes?.includes('Unified')?'Microsoft 365':'Security',isMailEnabled:!!g.mailEnabled,isSecurityEnabled:!!g.securityEnabled,lastScannedAt:now}});
-          counts.groupsDiscovered++;
-        }
-      }else if(w==='SharePoint'){
-        for await(const s of pages('/sites/getAllSites?$select=id,displayName,webUrl,lastModifiedDateTime&$top=100',accessToken)){
-          if(!s.webUrl)continue;
-          await prisma.discoverySharePointSite.upsert({where:{siteUrl:s.webUrl},create:{siteUrl:s.webUrl,siteTitle:s.displayName||s.webUrl,lastModified:graphDate(s.lastModifiedDateTime),lastScannedAt:now},update:{siteTitle:s.displayName||s.webUrl,lastModified:graphDate(s.lastModifiedDateTime),lastScannedAt:now}});
-          counts.sharePointSitesDiscovered++;
-        }
-      }else if(w==='Teams'){
-        for await(const t of pages('/groups?$filter=resourceProvisioningOptions/Any(x:x eq \'Team\')&$select=id,displayName,description,visibility&$top=100',accessToken)){
-          if(!t.id)continue;
-          await prisma.discoveryTeam.upsert({where:{teamId:t.id},create:{teamId:t.id,teamName:t.displayName||t.id,description:t.description,visibility:t.visibility||'Private',lastScannedAt:now},update:{teamName:t.displayName||t.id,description:t.description,visibility:t.visibility||'Private',lastScannedAt:now}});
-          counts.teamsDiscovered++;
-        }
+      await prisma.scopedDiscoveryScan.update({where:{id:scanId},data:{currentStage:`LIVE: Discovering ${w}`}});
+      const paths: Record<Workload,string> = {
+        Users:'/users?$select=id,userPrincipalName,displayName,department,jobTitle,accountEnabled,usageLocation&$top=100',
+        Groups:'/groups?$select=id,displayName,mail,mailEnabled,securityEnabled,groupTypes&$top=100',
+        SharePoint:'/sites/getAllSites?$select=id,displayName,webUrl,lastModifiedDateTime&$top=100',
+        Teams:"/groups?$filter=resourceProvisioningOptions/Any(x:x eq 'Team')&$select=id,displayName,description,visibility&$top=100"
+      };
+      for await(const item of pages(paths[w],accessToken)){
+        const sourceId=String(item.id||'');
+        if(!sourceId)continue;
+        const displayName=String(item.displayName||item.userPrincipalName||item.webUrl||sourceId);
+        // Inventory is a per-scan snapshot. Nothing can overwrite another project's entries.
+        await prisma.scopedDiscoveryItem.upsert({
+          where:{scanId_workload_sourceId:{scanId,workload:w,sourceId}},
+          create:{scanId,projectId,tenantId,workload:w,sourceId,displayName,rawMetadata:JSON.stringify(item)},
+          update:{displayName,rawMetadata:JSON.stringify(item)}
+        });
+        if(w==='Users')counts.usersDiscovered++;
+        if(w==='Groups')counts.groupsDiscovered++;
+        if(w==='SharePoint')counts.sharePointSitesDiscovered++;
+        if(w==='Teams')counts.teamsDiscovered++;
       }
-      await prisma.discoveryScan.update({where:{id:scanId},data:{...counts,totalItemsDiscovered:Object.values(counts).reduce((a,b)=>a+b,0),progress:Math.floor((index+1)/workloads.length*100)}});
     }
-    await prisma.discoveryScan.update({where:{id:scanId},data:{status:'COMPLETED',currentStage:'LIVE: Discovery completed (inventory only; advanced workload metrics not verified)',completedAt:new Date(),progress:100}});
-    await recordAuditLog({actorEmail:actor,actorRole:'GLOBAL_ADMIN',action:'LIVE_DISCOVERY_COMPLETED',resource:`DiscoveryScan:${scanId}`,status:'SUCCESS',details:JSON.stringify(counts)});
+    await prisma.scopedDiscoveryScan.update({where:{id:scanId},data:{status:'COMPLETED',currentStage:'LIVE: Inventory snapshot completed; advanced metrics not assessed',completedAt:new Date()}});
+    await recordAuditLog({actorEmail:actor,actorRole:'GLOBAL_ADMIN',action:'LIVE_DISCOVERY_COMPLETED',resource:`DiscoveryScan:${scanId}`,status:'SUCCESS',details:JSON.stringify({projectId,tenantId,...counts})});
   }catch(e:any){
-    await prisma.discoveryScan.update({where:{id:scanId},data:{status:'FAILED',errorMessage:e?.message||'Discovery failed',currentStage:'LIVE: Failed',completedAt:new Date()}}).catch(console.error);
+    await prisma.scopedDiscoveryScan.update({where:{id:scanId},data:{status:'FAILED',errorMessage:e?.message||'Discovery failed',currentStage:'LIVE: Failed',completedAt:new Date()}}).catch(console.error);
     await recordAuditLog({actorEmail:actor,actorRole:'GLOBAL_ADMIN',action:'LIVE_DISCOVERY_FAILED',resource:`DiscoveryScan:${scanId}`,status:'FAILED',details:String(e?.message||e)});
   }
 }
