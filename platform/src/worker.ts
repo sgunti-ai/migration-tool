@@ -8,6 +8,8 @@ import {listRecoverable} from './leases.js';
 const connection=new Redis(config.REDIS_URL,{maxRetriesPerRequest:null});
 const worker=new Worker('discovery-v2',async job=>{
  if(typeof job.data.scanId!=='string')throw new Error('Invalid scan ID');
+ // BullMQ retries a failed attempt: transition it back into a claimable state.
+ if(job.attemptsMade > 0)await db.scan.updateMany({where:{id:job.data.scanId,status:'FAILED'},data:{status:'RETRYING'}});
  await executeScan(job.data.scanId);
 },{connection,concurrency:2});
 worker.on('failed',(job,error)=>console.error('Discovery failed',job?.id,error.message));
