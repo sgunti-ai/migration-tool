@@ -38,6 +38,9 @@ model Scan {
   workloads String
   status String @default("QUEUED")
   progress Int @default(0)
+  leaseOwner String?
+  leaseExpiresAt DateTime?
+  leaseEpoch Int @default(0)
   mode String @default("LIVE")
   scanType String @default("FULL")
   apiProvider String @default("MICROSOFT_GRAPH_V1")
