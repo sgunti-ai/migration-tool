@@ -21,6 +21,15 @@ export type Principal={sub:string;email:string;organizationId:string;role:string
 declare global { namespace Express { interface Request { principal?:Principal } } }
 export async function requireIdentity(req:Request,res:Response,next:NextFunction) {
  try {
+  // Local development preview only. Never bypass identity in production or over a network.
+  const remote=req.socket.remoteAddress||'';
+  const loopback=remote==='127.0.0.1'||remote==='::1'||remote==='::ffff:127.0.0.1';
+  if(config.NODE_ENV==='development'&&loopback) {
+   const org=await db.organization.upsert({where:{id:'local-development'},update:{},create:{id:'local-development',name:'Local Development'}});
+   await db.membership.upsert({where:{organizationId_subject:{organizationId:org.id,subject:localSubject}},update:{role:'ADMIN'},create:{organizationId:org.id,subject:localSubject,role:'ADMIN'}});
+   req.principal={sub:localSubject,email:'local-admin@localhost',organizationId:org.id,role:'ADMIN'};
+   return next();
+  }
   const match=/^Bearer (.+)$/i.exec(req.headers.authorization||'');
   if(!match)return res.status(401).json({error:'Bearer access token required'});
   const isLocal=config.NODE_ENV!=='production'&&match[1].split('.')[0]!==undefined;
