@@ -8,6 +8,8 @@ const schema=z.object({
  OIDC_AUDIENCE:z.string().min(1),
  OIDC_JWKS_URL:z.string().url(),
  CREDENTIAL_ENCRYPTION_KEY:z.string().regex(/^[a-fA-F0-9]{64}$/),
+ LOCAL_ADMIN_USERNAME:z.string().min(1).optional(),
+ LOCAL_ADMIN_PASSWORD:z.string().min(16).optional(),
  DEMO_MODE:z.enum(['false']).default('false')
 });
 export const config=schema.parse(process.env);
