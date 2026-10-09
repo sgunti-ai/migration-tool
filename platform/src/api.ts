@@ -2,7 +2,7 @@ import express from 'express';
 import {z} from 'zod';
 import {config} from './config.js';
 import {db} from './db.js';
-import {requireIdentity,requireRole} from './auth.js';
+import {requireIdentity,requireRole,localAdminLogin} from './auth.js';
 import {startScan} from './service.js';
 import {setProjectCredential} from './credentials.js';
 import {workloads,type Workload} from './adapters.js';
@@ -10,6 +10,16 @@ const app=express();
 app.disable('x-powered-by');
 app.use(express.json({limit:'128kb'}));
 app.get('/health/live',(_req,res)=>res.json({status:'up'}));
+app.post('/api/v2/auth/local/login',async(req,res)=>{
+ const body=z.object({username:z.string(),password:z.string()}).safeParse(req.body);
+ if(!body.success)return res.status(400).json({error:'Invalid login request'});
+ try {
+  const result=await localAdminLogin(body.data.username,body.data.password);
+  if(!result)return res.status(401).json({error:'Invalid credentials or local login disabled'});
+  res.setHeader('Cache-Control','no-store');
+  res.json(result);
+ }catch{res.status(500).json({error:'Login unavailable'});}
+});
 app.use('/api/v2',requireIdentity);
 app.get('/api/v2/projects',async(req,res)=>{
  res.json(await db.project.findMany({where:{organizationId:req.principal!.organizationId},select:{id:true,name:true,sourceTenantId:true}}));
