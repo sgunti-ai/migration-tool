@@ -1,0 +1,28 @@
+-- Initial Platform v2 PostgreSQL schema. Reviewed against platform/prisma/schema.prisma.
+CREATE TABLE "Organization" ("id" TEXT NOT NULL, "name" TEXT NOT NULL, "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP, CONSTRAINT "Organization_pkey" PRIMARY KEY ("id"));
+CREATE TABLE "Membership" ("id" TEXT NOT NULL, "organizationId" TEXT NOT NULL, "subject" TEXT NOT NULL, "role" TEXT NOT NULL, CONSTRAINT "Membership_pkey" PRIMARY KEY ("id"));
+CREATE TABLE "Project" ("id" TEXT NOT NULL, "organizationId" TEXT NOT NULL, "sourceTenantId" TEXT NOT NULL, "name" TEXT NOT NULL, CONSTRAINT "Project_pkey" PRIMARY KEY ("id"));
+CREATE TABLE "Scan" ("id" TEXT NOT NULL, "projectId" TEXT NOT NULL, "organizationId" TEXT NOT NULL, "sourceTenantId" TEXT NOT NULL, "workloads" TEXT NOT NULL, "status" TEXT NOT NULL DEFAULT 'QUEUED', "progress" INTEGER NOT NULL DEFAULT 0, "mode" TEXT NOT NULL DEFAULT 'LIVE', "scanType" TEXT NOT NULL DEFAULT 'FULL', "apiProvider" TEXT NOT NULL DEFAULT 'MICROSOFT_GRAPH_V1', "initiatedBy" TEXT, "errorCode" TEXT, "errorMessage" TEXT, "startedAt" TIMESTAMP(3), "finishedAt" TIMESTAMP(3), "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP, CONSTRAINT "Scan_pkey" PRIMARY KEY ("id"));
+CREATE TABLE "InventoryItem" ("id" TEXT NOT NULL, "scanId" TEXT NOT NULL, "organizationId" TEXT NOT NULL, "projectId" TEXT NOT NULL, "sourceTenantId" TEXT NOT NULL, "workload" TEXT NOT NULL, "sourceId" TEXT NOT NULL, "name" TEXT, "metadata" JSONB NOT NULL, "isDeleted" BOOLEAN NOT NULL DEFAULT false, "observedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP, CONSTRAINT "InventoryItem_pkey" PRIMARY KEY ("id"));
+CREATE TABLE "TenantCredential" ("id" TEXT NOT NULL, "organizationId" TEXT NOT NULL, "projectId" TEXT NOT NULL, "tenantId" TEXT NOT NULL, "clientId" TEXT NOT NULL, "encryptedSecret" TEXT NOT NULL, "keyVersion" INTEGER NOT NULL DEFAULT 1, "updatedAt" TIMESTAMP(3) NOT NULL, CONSTRAINT "TenantCredential_pkey" PRIMARY KEY ("id"));
+CREATE TABLE "DiscoveryCursor" ("id" TEXT NOT NULL, "organizationId" TEXT NOT NULL, "projectId" TEXT NOT NULL, "sourceTenantId" TEXT NOT NULL, "workload" TEXT NOT NULL, "deltaLink" TEXT, "updatedAt" TIMESTAMP(3) NOT NULL, CONSTRAINT "DiscoveryCursor_pkey" PRIMARY KEY ("id"));
+CREATE TABLE "DiscoveryScanWorkload" ("id" TEXT NOT NULL, "scanId" TEXT NOT NULL, "organizationId" TEXT NOT NULL, "projectId" TEXT NOT NULL, "sourceTenantId" TEXT NOT NULL, "workload" TEXT NOT NULL, "status" TEXT NOT NULL DEFAULT 'PENDING', "itemsSeen" INTEGER NOT NULL DEFAULT 0, "itemsDeleted" INTEGER NOT NULL DEFAULT 0, "pagesRead" INTEGER NOT NULL DEFAULT 0, "startedAt" TIMESTAMP(3), "completedAt" TIMESTAMP(3), "errorMessage" TEXT, CONSTRAINT "DiscoveryScanWorkload_pkey" PRIMARY KEY ("id"));
+CREATE TABLE "CurrentInventoryItem" ("id" TEXT NOT NULL, "organizationId" TEXT NOT NULL, "projectId" TEXT NOT NULL, "sourceTenantId" TEXT NOT NULL, "workload" TEXT NOT NULL, "sourceId" TEXT NOT NULL, "name" TEXT, "metadata" JSONB NOT NULL, "isDeleted" BOOLEAN NOT NULL DEFAULT false, "lastScanId" TEXT NOT NULL, "observedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP, CONSTRAINT "CurrentInventoryItem_pkey" PRIMARY KEY ("id"));
+CREATE UNIQUE INDEX "Membership_organizationId_subject_key" ON "Membership"("organizationId","subject");
+CREATE UNIQUE INDEX "Project_organizationId_id_key" ON "Project"("organizationId","id");
+CREATE INDEX "Project_organizationId_sourceTenantId_idx" ON "Project"("organizationId","sourceTenantId");
+CREATE INDEX "Scan_organizationId_projectId_status_idx" ON "Scan"("organizationId","projectId","status");
+CREATE UNIQUE INDEX "InventoryItem_scanId_workload_sourceId_key" ON "InventoryItem"("scanId","workload","sourceId");
+CREATE INDEX "InventoryItem_organizationId_projectId_scanId_workload_idx" ON "InventoryItem"("organizationId","projectId","scanId","workload");
+CREATE UNIQUE INDEX "TenantCredential_projectId_key" ON "TenantCredential"("projectId");
+CREATE INDEX "TenantCredential_organizationId_tenantId_idx" ON "TenantCredential"("organizationId","tenantId");
+CREATE UNIQUE INDEX "DiscoveryCursor_projectId_sourceTenantId_workload_key" ON "DiscoveryCursor"("projectId","sourceTenantId","workload");
+CREATE INDEX "DiscoveryCursor_organizationId_projectId_idx" ON "DiscoveryCursor"("organizationId","projectId");
+CREATE UNIQUE INDEX "DiscoveryScanWorkload_scanId_workload_key" ON "DiscoveryScanWorkload"("scanId","workload");
+CREATE INDEX "DiscoveryScanWorkload_organizationId_projectId_scanId_idx" ON "DiscoveryScanWorkload"("organizationId","projectId","scanId");
+CREATE UNIQUE INDEX "CurrentInventoryItem_projectId_sourceTenantId_workload_sourceId_key" ON "CurrentInventoryItem"("projectId","sourceTenantId","workload","sourceId");
+CREATE INDEX "CurrentInventoryItem_organizationId_projectId_sourceTenantId_workload_isDeleted_idx" ON "CurrentInventoryItem"("organizationId","projectId","sourceTenantId","workload","isDeleted");
+ALTER TABLE "Membership" ADD CONSTRAINT "Membership_organizationId_fkey" FOREIGN KEY ("organizationId") REFERENCES "Organization"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Project" ADD CONSTRAINT "Project_organizationId_fkey" FOREIGN KEY ("organizationId") REFERENCES "Organization"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Scan" ADD CONSTRAINT "Scan_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "InventoryItem" ADD CONSTRAINT "InventoryItem_scanId_fkey" FOREIGN KEY ("scanId") REFERENCES "Scan"("id") ON DELETE CASCADE ON UPDATE CASCADE;
