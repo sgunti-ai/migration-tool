@@ -20,8 +20,8 @@ CREATE UNIQUE INDEX "DiscoveryCursor_projectId_sourceTenantId_workload_key" ON "
 CREATE INDEX "DiscoveryCursor_organizationId_projectId_idx" ON "DiscoveryCursor"("organizationId","projectId");
 CREATE UNIQUE INDEX "DiscoveryScanWorkload_scanId_workload_key" ON "DiscoveryScanWorkload"("scanId","workload");
 CREATE INDEX "DiscoveryScanWorkload_organizationId_projectId_scanId_idx" ON "DiscoveryScanWorkload"("organizationId","projectId","scanId");
-CREATE UNIQUE INDEX "CurrentInventoryItem_projectId_sourceTenantId_workload_sourceId_key" ON "CurrentInventoryItem"("projectId","sourceTenantId","workload","sourceId");
-CREATE INDEX "CurrentInventoryItem_organizationId_projectId_sourceTenantId_workload_isDeleted_idx" ON "CurrentInventoryItem"("organizationId","projectId","sourceTenantId","workload","isDeleted");
+CREATE UNIQUE INDEX "CurrentInventoryItem_projectId_sourceTenantId_workload_sour_key" ON "CurrentInventoryItem"("projectId","sourceTenantId","workload","sourceId");
+CREATE INDEX "CurrentInventoryItem_organizationId_projectId_sourceTenantI_idx" ON "CurrentInventoryItem"("organizationId","projectId","sourceTenantId","workload","isDeleted");
 ALTER TABLE "Membership" ADD CONSTRAINT "Membership_organizationId_fkey" FOREIGN KEY ("organizationId") REFERENCES "Organization"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 ALTER TABLE "Project" ADD CONSTRAINT "Project_organizationId_fkey" FOREIGN KEY ("organizationId") REFERENCES "Organization"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 ALTER TABLE "Scan" ADD CONSTRAINT "Scan_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
