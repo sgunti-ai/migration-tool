@@ -1,6 +1,7 @@
 import type {GraphClient} from './graph.js';
 import {db} from './db.js';
 import {allowGraphUrl} from './graph.js';
+import {assertLease,type Lease} from './leases.js';
 
 export type DeltaWorkload='Users'|'Groups';
 const endpoints:Record<DeltaWorkload,string>={
@@ -9,7 +10,7 @@ const endpoints:Record<DeltaWorkload,string>={
 };
 export const deltaMode=(cursor:string|null|undefined)=>cursor?'INCREMENTAL':'INITIAL_FULL';
 export type DeltaContext={scanId:string;organizationId:string;projectId:string;sourceTenantId:string};
-export async function executeDeltaScan(ctx:DeltaContext,workload:DeltaWorkload,graph:Pick<GraphClient,'listPages'>){
+export async function executeDeltaScan(ctx:DeltaContext,workload:DeltaWorkload,graph:Pick<GraphClient,'listPages'>,lease:Lease){
  const {scanId,organizationId,projectId,sourceTenantId}=ctx;
  const cursor=await db.discoveryCursor.findUnique({where:{projectId_sourceTenantId_workload:{projectId,sourceTenantId,workload}}});
  if(cursor && cursor.organizationId!==organizationId)throw new Error('Discovery cursor organization mismatch');
@@ -28,6 +29,7 @@ export async function executeDeltaScan(ctx:DeltaContext,workload:DeltaWorkload,g
    pages++;
    // A page and its observations commit together; the delta cursor advances only on a complete session.
    await db.$transaction(async tx=>{
+    await assertLease(tx,lease);
     for(const entry of page.items){
      if(!entry.id)throw new Error('Graph delta item missing ID');
      const sourceId=String(entry.id);
@@ -53,6 +55,7 @@ export async function executeDeltaScan(ctx:DeltaContext,workload:DeltaWorkload,g
   if(!finalLink)throw new Error('Graph delta session ended without final deltaLink');
   // Successful initial baseline or incremental reconciliation is the only point where the cursor advances.
   await db.$transaction(async tx=>{
+   await assertLease(tx,lease);
    await tx.discoveryCursor.upsert({
     where:{projectId_sourceTenantId_workload:{projectId,sourceTenantId,workload}},
     create:{organizationId,projectId,sourceTenantId,workload,deltaLink:finalLink},
