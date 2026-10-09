@@ -1,5 +1,5 @@
 import {Worker} from 'bullmq';
-import IORedis from 'ioredis';
+import { Redis } from 'ioredis';
 import {config} from './config.js';
 import {executeScan} from './service.js';
 import {db} from './db.js';
@@ -8,7 +8,7 @@ const worker=new Worker('discovery-v2',async job=>{
  if(typeof job.data.scanId!=='string')throw new Error('Invalid scan ID');
  await db.scan.updateMany({where:{id:job.data.scanId,status:'FAILED'},data:{status:'RETRYING'}});
  await executeScan(job.data.scanId);
-},{connection:new IORedis(config.REDIS_URL,{maxRetriesPerRequest:null}),concurrency:2});
+},{connection:new Redis(config.REDIS_URL,{maxRetriesPerRequest:null}),concurrency:2});
 worker.on('failed',(job,error)=>console.error('Discovery failed',job?.id,error.message));
 worker.on('error',error=>console.error('Worker error',error.message));
 // Jobs active during a process failure are retried by BullMQ stall recovery.
