@@ -17,8 +17,8 @@ export async function renewLease(lease:Lease):Promise<boolean>{
  return update.count===1;
 }
 export async function assertLease(tx:Prisma.TransactionClient,lease:Lease):Promise<void>{
- const record=await tx.scan.findFirst({where:{id:lease.scanId,leaseOwner:lease.owner,leaseEpoch:lease.epoch,status:'RUNNING',leaseExpiresAt:{gt:new Date()}},select:{id:true}});
- if(!record)throw new Error('SCAN_LEASE_LOST');
+ const updated=await tx.scan.updateMany({where:{id:lease.scanId,leaseOwner:lease.owner,leaseEpoch:lease.epoch,status:'RUNNING',leaseExpiresAt:{gt:new Date()}},data:{leaseOwner:lease.owner}});
+ if(updated.count!==1)throw new Error('SCAN_LEASE_LOST');
 }
 export async function finalizeLease(lease:Lease,status:'COMPLETED'|'FAILED',error?:string){
  return db.scan.updateMany({where:{id:lease.scanId,leaseOwner:lease.owner,leaseEpoch:lease.epoch,status:'RUNNING',leaseExpiresAt:{gt:new Date()}},data:{status,leaseOwner:null,leaseExpiresAt:null,finishedAt:new Date(),...(status==='COMPLETED'?{progress:100,errorMessage:null,errorCode:null}:{errorCode:'DISCOVERY_ERROR',errorMessage:error||'Discovery failed'})}});
