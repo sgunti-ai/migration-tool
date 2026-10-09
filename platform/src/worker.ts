@@ -23,8 +23,8 @@ async function reconcile(){
   for(const scan of await listRecoverable()){
    // Recovery IDs are unique so existing completed/failed BullMQ job IDs cannot suppress replay.
    if(scan.status==='RUNNING'){
-    const changed=await db.scan.updateMany({where:{id:scan.id,status:'RUNNING',leaseEpoch:scan.leaseEpoch,OR:[{leaseExpiresAt:{lt:new Date()}},{leaseExpiresAt:null}]},data:{status:'RETRYING',leaseOwner:null,leaseExpiresAt:null}});
-    if(!changed.count)continue;
+	const changed=await db.scan.updateMany({where:{id:scan.id,status:'RUNNING',leaseEpoch:scan.leaseEpoch,OR:[{leaseExpiresAt:{lt:new Date()}},{leaseExpiresAt:null}]},data:{status:'RETRYING',leaseOwner:null,leaseExpiresAt:null}});
+	if(!changed.count)continue;
    }
    await discoveryQueue.add('scan',{scanId:scan.id,organizationId:scan.organizationId},{jobId:`resume-${scan.id}-${scan.leaseEpoch}`});
   }

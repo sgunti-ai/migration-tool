@@ -1,130 +1,145 @@
 generator client {
   provider = "prisma-client-js"
 }
+
 datasource db {
   provider = "postgresql"
-  url = env("DATABASE_URL")
+  url      = env("DATABASE_URL")
 }
+
 model Organization {
-  id String @id @default(cuid())
-  name String
-  createdAt DateTime @default(now())
-  members Membership[]
-  projects Project[]
+  id        String       @id @default(cuid())
+  name      String
+  createdAt DateTime     @default(now())
+  members   Membership[]
+  projects  Project[]
 }
+
 model Membership {
-  id String @id @default(cuid())
+  id             String       @id @default(cuid())
   organizationId String
-  subject String
-  role String
-  organization Organization @relation(fields:[organizationId],references:[id],onDelete:Restrict)
-  @@unique([organizationId,subject])
+  subject        String
+  role           String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+
+  @@unique([organizationId, subject])
 }
+
 model Project {
-  id String @id @default(cuid())
+  id             String       @id @default(cuid())
   organizationId String
   sourceTenantId String
-  name String
-  organization Organization @relation(fields:[organizationId],references:[id],onDelete:Restrict)
-  scans Scan[]
-  @@unique([organizationId,id])
-  @@index([organizationId,sourceTenantId])
+  name           String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  scans          Scan[]
+
+  @@unique([organizationId, id])
+  @@index([organizationId, sourceTenantId])
 }
+
 model Scan {
-  id String @id @default(cuid())
-  projectId String
+  id             String          @id @default(cuid())
+  projectId      String
   organizationId String
   sourceTenantId String
-  workloads String
-  status String @default("QUEUED")
-  progress Int @default(0)
-  leaseOwner String?
+  workloads      String
+  status         String          @default("QUEUED")
+  progress       Int             @default(0)
+  leaseOwner     String?
   leaseExpiresAt DateTime?
-  leaseEpoch Int @default(0)
-  mode String @default("LIVE")
-  scanType String @default("FULL")
-  apiProvider String @default("MICROSOFT_GRAPH_V1")
-  initiatedBy String?
-  errorCode String?
-  errorMessage String?
-  startedAt DateTime?
-  finishedAt DateTime?
-  createdAt DateTime @default(now())
-  project Project @relation(fields:[projectId],references:[id],onDelete:Restrict)
-  items InventoryItem[]
-  @@index([organizationId,projectId,status])
-  @@index([status,leaseExpiresAt])
+  leaseEpoch     Int             @default(0)
+  mode           String          @default("LIVE")
+  scanType       String          @default("FULL")
+  apiProvider    String          @default("MICROSOFT_GRAPH_V1")
+  initiatedBy    String?
+  errorCode      String?
+  errorMessage   String?
+  startedAt      DateTime?
+  finishedAt     DateTime?
+  createdAt      DateTime        @default(now())
+  project        Project         @relation(fields: [projectId], references: [id], onDelete: Restrict)
+  items          InventoryItem[]
+
+  @@index([organizationId, projectId, status])
+  @@index([status, leaseExpiresAt])
 }
+
 model InventoryItem {
-  id String @id @default(cuid())
-  scanId String
+  id             String   @id @default(cuid())
+  scanId         String
   organizationId String
-  projectId String
+  projectId      String
   sourceTenantId String
-  workload String
-  sourceId String
-  name String?
-  metadata Json
-  isDeleted Boolean @default(false)
-  observedAt DateTime @default(now())
-  scan Scan @relation(fields:[scanId],references:[id],onDelete:Cascade)
-  @@unique([scanId,workload,sourceId])
-  @@index([organizationId,projectId,scanId,workload])
+  workload       String
+  sourceId       String
+  name           String?
+  metadata       Json
+  isDeleted      Boolean  @default(false)
+  observedAt     DateTime @default(now())
+  scan           Scan     @relation(fields: [scanId], references: [id], onDelete: Cascade)
+
+  @@unique([scanId, workload, sourceId])
+  @@index([organizationId, projectId, scanId, workload])
 }
 
 model TenantCredential {
- id String @id @default(cuid())
- organizationId String
- projectId String @unique
- tenantId String
- clientId String
- encryptedSecret String
- keyVersion Int @default(1)
- updatedAt DateTime @updatedAt
- @@index([organizationId,tenantId])
+  id              String   @id @default(cuid())
+  organizationId  String
+  projectId       String   @unique
+  tenantId        String
+  clientId        String
+  encryptedSecret String
+  keyVersion      Int      @default(1)
+  updatedAt       DateTime @updatedAt
+
+  @@index([organizationId, tenantId])
 }
 
 model DiscoveryCursor {
- id String @id @default(cuid())
- organizationId String
- projectId String
- sourceTenantId String
- workload String
- deltaLink String?
- updatedAt DateTime @updatedAt
- @@unique([projectId,sourceTenantId,workload])
- @@index([organizationId,projectId])
+  id             String   @id @default(cuid())
+  organizationId String
+  projectId      String
+  sourceTenantId String
+  workload       String
+  deltaLink      String?
+  updatedAt      DateTime @updatedAt
+
+  @@unique([projectId, sourceTenantId, workload])
+  @@index([organizationId, projectId])
 }
+
 model DiscoveryScanWorkload {
- id String @id @default(cuid())
- scanId String
+  id             String   @id @default(cuid())
+  scanId         String
  organizationId String
- projectId String
+  projectId      String
  sourceTenantId String
- workload String
- status String @default("PENDING")
- itemsSeen Int @default(0)
- itemsDeleted Int @default(0)
- pagesRead Int @default(0)
- startedAt DateTime?
- completedAt DateTime?
- errorMessage String?
- @@unique([scanId,workload])
- @@index([organizationId,projectId,scanId])
+  workload       String
+  status         String   @default("PENDING")
+  itemsSeen      Int      @default(0)
+  itemsDeleted   Int      @default(0)
+  pagesRead      Int      @default(0)
+  startedAt      DateTime?
+  completedAt    DateTime?
+  errorMessage   String?
+
+  @@unique([scanId, workload])
+  @@index([organizationId, projectId, scanId])
 }
 
 model CurrentInventoryItem {
- id String @id @default(cuid())
- organizationId String
- projectId String
- sourceTenantId String
- workload String
- sourceId String
- name String?
- metadata Json
- isDeleted Boolean @default(false)
- lastScanId String
- observedAt DateTime @default(now())
- @@unique([projectId,sourceTenantId,workload,sourceId])
- @@index([organizationId,projectId,sourceTenantId,workload,isDeleted])
+  id             String   @id @default(cuid())
+  organizationId String
+  projectId      String
+  sourceTenantId String
+  workload       String
+  sourceId       String
+  name           String?
+  metadata       Json
+  isDeleted      Boolean  @default(false)
+  lastScanId     String
+  observedAt     DateTime @default(now())
+
+  @@unique([projectId, sourceTenantId, workload, sourceId])
+  @@index([organizationId, projectId, sourceTenantId, workload, isDeleted])
 }
