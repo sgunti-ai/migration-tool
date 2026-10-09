@@ -1,6 +1,5 @@
 import {Worker} from 'bullmq';
 import {Redis} from 'ioredis';
-import {randomUUID} from 'node:crypto';
 import {config} from './config.js';
 import {executeScan} from './service.js';
 import {db} from './db.js';
@@ -25,7 +24,7 @@ async function reconcile(){
     const changed=await db.scan.updateMany({where:{id:scan.id,status:'RUNNING',leaseEpoch:scan.leaseEpoch,OR:[{leaseExpiresAt:{lt:new Date()}},{leaseExpiresAt:null}]},data:{status:'RETRYING',leaseOwner:null,leaseExpiresAt:null}});
     if(!changed.count)continue;
    }
-   await discoveryQueue.add('scan',{scanId:scan.id,organizationId:scan.organizationId},{jobId:`resume-${scan.id}-${randomUUID()}`});
+   await discoveryQueue.add('scan',{scanId:scan.id,organizationId:scan.organizationId},{jobId:`resume-${scan.id}-${scan.leaseEpoch}`});
   }
  }catch(error){console.error('Scan recovery error',error);}
  finally{reconciling=false;}
