@@ -75,4 +75,4 @@ app.get('/api/v2/projects/:projectId/scans/:scanId/items',async(req,res)=>{
  res.json({count,page,take,items});
 });
 app.use((error:unknown,_req:express.Request,res:express.Response,_next:express.NextFunction)=>{console.error(error);res.status(500).json({error:'Internal server error'});});
-app.listen(config.PORT,()=>console.log(`Migration v2 API on port ${config.PORT}`));
+app.listen(config.PORT,config.NODE_ENV==='development'?'127.0.0.1':'0.0.0.0',()=>console.log(`Migration v2 API on port ${config.PORT}`));
