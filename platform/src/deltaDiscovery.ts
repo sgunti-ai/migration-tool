@@ -49,11 +49,6 @@ export async function executeDeltaScan(ctx:DeltaContext,workload:DeltaWorkload,g
       create:{scanId,organizationId,projectId,sourceTenantId,workload,sourceId,name,metadata,isDeleted,observedAt:new Date()},
       update:{name,metadata,isDeleted,observedAt:new Date()}
      });
-     await tx.currentInventoryItem.upsert({
-      where:{projectId_sourceTenantId_workload_sourceId:{projectId,sourceTenantId,workload,sourceId}},
-      create:{organizationId,projectId,sourceTenantId,workload,sourceId,name,metadata,isDeleted,lastScanId:scanId,observedAt:new Date()},
-      update:{name,metadata,isDeleted,lastScanId:scanId,observedAt:new Date()}
-     });
      seen++;if(isDeleted)deleted++;
     }
     await tx.discoveryScanWorkload.update({where:{id:record.id},data:{itemsSeen:seen,itemsDeleted:deleted,pagesRead:pages}});
@@ -82,6 +77,14 @@ export async function executeDeltaScan(ctx:DeltaContext,workload:DeltaWorkload,g
    // This also cleans up objects retained after an expired delta token.
    if(mode==='INITIAL_FULL') {
     await tx.currentInventoryItem.updateMany({where:{organizationId,projectId,sourceTenantId,workload,isDeleted:false,lastScanId:{not:scanId}},data:{isDeleted:true,observedAt:new Date(),lastScanId:scanId}});
+   }
+   const staged=await tx.inventoryItem.findMany({where:{scanId,workload}});
+   for(const item of staged){
+    await tx.currentInventoryItem.upsert({
+     where:{projectId_sourceTenantId_workload_sourceId:{projectId,sourceTenantId,workload,sourceId:item.sourceId}},
+     create:{organizationId,projectId,sourceTenantId,workload,sourceId:item.sourceId,name:item.name,metadata:item.metadata,isDeleted:item.isDeleted,lastScanId:scanId,observedAt:item.observedAt},
+     update:{name:item.name,metadata:item.metadata,isDeleted:item.isDeleted,lastScanId:scanId,observedAt:item.observedAt}
+    });
    }
    await tx.discoveryCursor.upsert({
     where:{projectId_sourceTenantId_workload:{projectId,sourceTenantId,workload}},
