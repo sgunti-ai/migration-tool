@@ -20,6 +20,15 @@ const config = (provider: Provider) => provider === 'google'
   : { id: process.env.MICROSOFT_CLIENT_ID, secret: process.env.MICROSOFT_CLIENT_SECRET, issuer: 'https://login.microsoftonline.com/common/v2.0', authorization: 'https://login.microsoftonline.com/organizations/oauth2/v2.0/authorize', token: 'https://login.microsoftonline.com/organizations/oauth2/v2.0/token', jwks: '' };
 const redirect = (provider: Provider) => `${baseUrl()}/auth/${provider}/callback`;
 const cookieOpts = { httpOnly: true, secure: isProd, sameSite: 'lax' as const, path: '/' };
+/** Local preview access is never available in production or from a non-loopback client. */
+export function isLocalDevelopmentRequest(req: Request): boolean {
+  const remote = req.socket.remoteAddress || '';
+  const loopback = remote === '127.0.0.1' || remote === '::1' || remote === '::ffff:127.0.0.1';
+  const host = (req.headers.host || '').split(':')[0].toLowerCase();
+  return !isProd && process.env.NODE_ENV === 'development' && loopback &&
+    (host === 'localhost' || host === '127.0.0.1' || host === '[::1]');
+}
+
 
 export function authRoutes(app: import('express').Express) {
   app.get('/auth/:provider/start', (req, res) => {
@@ -84,6 +93,10 @@ export function authRoutes(app: import('express').Express) {
 }
 export async function requireAuth(req: Request,res:Response,next:NextFunction) {
   try {
+    if (isLocalDevelopmentRequest(req)) {
+      (req as any).user = { email: 'local-admin@localhost', role: 'GLOBAL_ADMIN' };
+      return next();
+    }
     const token = req.cookies?.[cookieName];
     if(typeof token!=='string'||token.length<30)return res.status(401).json({error:'Sign in required'});
     const session=await prisma.appSession.findUnique({where:{tokenHash:hash(token)}});
@@ -95,6 +108,7 @@ export async function requireAuth(req: Request,res:Response,next:NextFunction) {
 export function requireSameOrigin(req:Request,res:Response,next:NextFunction) {
   if(!['POST','PATCH','PUT','DELETE'].includes(req.method))return next();
   const origin=req.headers.origin;
+  if (isLocalDevelopmentRequest(req) && origin === 'http://' + req.headers.host) return next();
   const expected=process.env.APP_URL ? new URL(process.env.APP_URL).origin : '';
   if(!expected||origin!==expected)return res.status(403).json({error:'Invalid request origin'});
   next();
