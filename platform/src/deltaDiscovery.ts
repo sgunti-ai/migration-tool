@@ -62,7 +62,7 @@ export async function executeDeltaScan(ctx:DeltaContext,workload:DeltaWorkload,g
     }
     break;
    } catch(error) {
-    if(!prior || resetAttempted || !isExpiredDeltaCursor(error)) throw error;
+    if(!prior || resetAttempted || pages!==0 || !isExpiredDeltaCursor(error)) throw error;
     resetAttempted=true;
     mode='INITIAL_FULL';
     start=endpoints[workload];
