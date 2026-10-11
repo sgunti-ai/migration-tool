@@ -25,6 +25,10 @@ export async function executeDeltaScan(ctx:DeltaContext,workload:DeltaWorkload,g
   create:{scanId,organizationId,projectId,sourceTenantId,workload,status:'RUNNING',startedAt:new Date()},
   update:{status:'RUNNING',startedAt:new Date(),errorMessage:null,itemsSeen:0,itemsDeleted:0,pagesRead:0}
  });
+ await db.$transaction(async tx=>{
+  await assertLease(tx,lease);
+  await tx.inventoryItem.deleteMany({where:{scanId,workload}});
+ });
  let pages=0,seen=0,deleted=0;
  let finalLink:string|undefined;
  try{
