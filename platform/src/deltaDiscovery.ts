@@ -92,7 +92,7 @@ export async function executeDeltaScan(ctx:DeltaContext,workload:DeltaWorkload,g
     update:{deltaLink:finalLink}
    });
    await tx.discoveryScanWorkload.update({where:{id:record.id},data:{status:'COMPLETED',completedAt:new Date()}});
-  });
+  },{timeout:120000});
   return {seen,deleted,pages,mode};
  }catch(error){
   await db.discoveryScanWorkload.update({where:{id:record.id},data:{status:'FAILED',errorMessage:error instanceof Error?error.message:'Unknown error',completedAt:new Date()}});
