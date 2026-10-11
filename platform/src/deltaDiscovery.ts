@@ -86,8 +86,8 @@ export async function executeDeltaScan(ctx:DeltaContext,workload:DeltaWorkload,g
    for(const item of staged){
     await tx.currentInventoryItem.upsert({
      where:{projectId_sourceTenantId_workload_sourceId:{projectId,sourceTenantId,workload,sourceId:item.sourceId}},
-     create:{organizationId,projectId,sourceTenantId,workload,sourceId:item.sourceId,name:item.name,metadata:item.metadata,isDeleted:item.isDeleted,lastScanId:scanId,observedAt:item.observedAt},
-     update:{name:item.name,metadata:item.metadata,isDeleted:item.isDeleted,lastScanId:scanId,observedAt:item.observedAt}
+     create:{organizationId,projectId,sourceTenantId,workload,sourceId:item.sourceId,name:item.name,metadata:item.metadata as any,isDeleted:item.isDeleted,lastScanId:scanId,observedAt:item.observedAt},
+     update:{name:item.name,metadata:item.metadata as any,isDeleted:item.isDeleted,lastScanId:scanId,observedAt:item.observedAt}
     });
    }
    await tx.discoveryCursor.upsert({
