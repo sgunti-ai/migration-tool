@@ -70,7 +70,7 @@ export async function executeScan(scanId:string) {
      const workloadTypes=adapter.workload==='Teams'?['Teams','TeamsChannel']:[adapter.workload];
      await tx.currentInventoryItem.updateMany({where:{organizationId:scan.organizationId,projectId:scan.projectId,sourceTenantId:scan.sourceTenantId,workload:{in:workloadTypes},lastScanId:{not:scanId},isDeleted:false},data:{isDeleted:true,lastScanId:scanId,observedAt:new Date()}});
      await tx.discoveryScanWorkload.update({where:{scanId_workload:{scanId,workload:adapter.workload}},data:{status:'COMPLETED',completedAt:new Date()}});
-    });
+    },{timeout:120000});
    }
    await guard();
    await db.scan.updateMany({where:{id:scanId,leaseOwner:lease.owner,leaseEpoch:lease.epoch,status:'RUNNING'},data:{progress:Math.floor((index+1)/selected.length*100)}});
