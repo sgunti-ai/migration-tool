@@ -1,5 +1,5 @@
 import { startLiveDiscovery } from './server/liveDiscovery.js';
-import { authRoutes, requireAuth, requireSameOrigin } from './server/auth.js';
+import { authRoutes, requireAuth, requireSameOrigin, isLocalDevelopmentRequest } from './server/auth.js';
 import { GoogleGenAI } from '@google/genai';
 import express from 'express';
 import path from 'path';
@@ -82,6 +82,16 @@ async function startServer() {
   wss.on('connection', async (ws: WebSocket, req) => {
     // WebSockets must not bypass authenticated API access.
     const cookie = req.headers.cookie?.split(';').map(x=>x.trim()).find(x=>x.startsWith('migration_session='))?.split('=')[1];
+    if (isLocalDevelopmentRequest(req as any)) {
+      wsClients.add(ws);
+      ws.send(JSON.stringify({ type: 'CONNECTED', data: { timestamp: new Date().toISOString() } }));
+      ws.on('message', message => {
+        try { if (JSON.parse(message.toString()).type === 'PING') ws.send(JSON.stringify({type:'PONG'})); } catch {}
+      });
+      ws.on('close', () => wsClients.delete(ws));
+      ws.on('error', () => wsClients.delete(ws));
+      return;
+    }
     if (!cookie) { ws.close(1008,'Authentication required'); return; }
     const tokenHash = (await import('node:crypto')).default.createHash('sha256').update(cookie).digest('hex');
     const session = await prisma.appSession.findUnique({where:{tokenHash}}).catch(()=>null);
@@ -1808,8 +1818,9 @@ async function startServer() {
     });
   }
 
-  server.listen(PORT, '0.0.0.0', () => {
-    console.log(`[M365 Migration Server] Running on http://0.0.0.0:${PORT}`);
+  const listenHost = process.env.NODE_ENV === 'production' ? '0.0.0.0' : '127.0.0.1';
+  server.listen(PORT, listenHost, () => {
+    console.log(`[M365 Migration Server] Running on http://${listenHost}:${PORT}`);
   });
 }
 
