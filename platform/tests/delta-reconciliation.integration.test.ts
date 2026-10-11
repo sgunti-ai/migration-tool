@@ -42,6 +42,7 @@ test('delta reconciliation persists updates and tombstones; a failed page never 
   await assert.rejects(executeDeltaScan(context(failed.scan.id),'Users',graph([{id:'u3',displayName:'Partial'}],undefined,true),failed.lease),/Simulated interrupted pagination/);
   const cursor=await db.discoveryCursor.findUniqueOrThrow({where:{projectId_sourceTenantId_workload:{projectId:project.id,sourceTenantId:project.sourceTenantId,workload:'Users'}}});
   assert.equal(cursor.deltaLink,b);
+  assert.equal(await db.currentInventoryItem.count({where:{projectId:project.id,sourceId:'u3'}}),0,'failed scan must not publish partial data');
   const third=await makeScan();
   await executeDeltaScan(context(third.scan.id),'Users',graph([{id:'u3',displayName:'Partial'}],b),third.lease);
   assert.equal(await db.currentInventoryItem.count({where:{projectId:project.id,sourceId:'u3'}}),1);
