@@ -63,8 +63,8 @@ export async function executeScan(scanId:string) {
      for(const item of staged.filter(item=>item.workload===adapter.workload|| (adapter.workload==='Teams'&&item.workload==='TeamsChannel'))){
       await tx.currentInventoryItem.upsert({
        where:{projectId_sourceTenantId_workload_sourceId:{projectId:scan.projectId,sourceTenantId:scan.sourceTenantId,workload:item.workload,sourceId:item.sourceId}},
-       create:{organizationId:scan.organizationId,projectId:scan.projectId,sourceTenantId:scan.sourceTenantId,workload:item.workload,sourceId:item.sourceId,name:item.name,metadata:item.metadata,lastScanId:scanId,isDeleted:false},
-       update:{name:item.name,metadata:item.metadata,lastScanId:scanId,isDeleted:false,observedAt:new Date()}
+       create:{organizationId:scan.organizationId,projectId:scan.projectId,sourceTenantId:scan.sourceTenantId,workload:item.workload,sourceId:item.sourceId,name:item.name,metadata:item.metadata as any,lastScanId:scanId,isDeleted:false},
+       update:{name:item.name,metadata:item.metadata as any,lastScanId:scanId,isDeleted:false,observedAt:new Date()}
       });
      }
      const workloadTypes=adapter.workload==='Teams'?['Teams','TeamsChannel']:[adapter.workload];
