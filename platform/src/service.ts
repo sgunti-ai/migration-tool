@@ -44,6 +44,10 @@ export async function executeScan(scanId:string) {
     await executeDeltaScan({scanId,organizationId:scan.organizationId,projectId:scan.projectId,sourceTenantId:scan.sourceTenantId},adapter.workload,graph,lease);
    } else {
     await db.discoveryScanWorkload.upsert({where:{scanId_workload:{scanId,workload:adapter.workload}},create:{scanId,organizationId:scan.organizationId,projectId:scan.projectId,sourceTenantId:scan.sourceTenantId,workload:adapter.workload,status:'RUNNING',startedAt:new Date()},update:{status:'RUNNING',startedAt:new Date()}});
+    await db.$transaction(async tx=>{
+     await assertLease(tx,lease);
+     await tx.inventoryItem.deleteMany({where:{scanId,workload:{in:adapter.workload==='Teams'?['Teams','TeamsChannel']:[adapter.workload]}}});
+    });
     for await(const item of adapter.discover(graph)){
      if(lost)throw new Error('SCAN_LEASE_LOST');
      await db.$transaction(async tx=>{
@@ -55,7 +59,7 @@ export async function executeScan(scanId:string) {
     await guard();
     await db.$transaction(async tx=>{
      await assertLease(tx,lease);
-     const staged=await tx.inventoryItem.findMany({where:{scanId}});
+     const staged=await tx.inventoryItem.findMany({where:{scanId,workload:{in:adapter.workload==='Teams'?['Teams','TeamsChannel']:[adapter.workload]}}});
      for(const item of staged.filter(item=>item.workload===adapter.workload|| (adapter.workload==='Teams'&&item.workload==='TeamsChannel'))){
       await tx.currentInventoryItem.upsert({
        where:{projectId_sourceTenantId_workload_sourceId:{projectId:scan.projectId,sourceTenantId:scan.sourceTenantId,workload:item.workload,sourceId:item.sourceId}},
