@@ -6,6 +6,7 @@ import {executeDeltaScan} from './deltaDiscovery.js';
 import { getProjectCredential } from './credentials.js';
 import {acquireLease,renewLease,assertLease,finalizeLease} from './leases.js';
 import {inventoryTypesFor,isDeltaWorkload,normalizeWorkloads} from './discoveryWorkloads.js';
+import {publishStagedInventory} from './reconciliation.js';
 export async function startScan(organizationId:string,projectId:string,requested:Workload[]){
  const project=await db.project.findFirst({where:{id:projectId,organizationId}});
  if(!project)throw new Error('Project not found');
@@ -61,20 +62,11 @@ export async function executeScan(scanId:string) {
      itemsSeen++;
     }
     await guard();
-    await db.$transaction(async tx=>{
-     await assertLease(tx,lease);
-     const staged=await tx.inventoryItem.findMany({where:{scanId,workload:{in:adapter.workload==='Teams'?['Teams','TeamsChannel']:[adapter.workload]}}});
-     for(const item of staged.filter(item=>item.workload===adapter.workload|| (adapter.workload==='Teams'&&item.workload==='TeamsChannel'))){
-      await tx.currentInventoryItem.upsert({
-       where:{projectId_sourceTenantId_workload_sourceId:{projectId:scan.projectId,sourceTenantId:scan.sourceTenantId,workload:item.workload,sourceId:item.sourceId}},
-       create:{organizationId:scan.organizationId,projectId:scan.projectId,sourceTenantId:scan.sourceTenantId,workload:item.workload,sourceId:item.sourceId,name:item.name,metadata:item.metadata as any,lastScanId:scanId,isDeleted:false},
-       update:{name:item.name,metadata:item.metadata as any,lastScanId:scanId,isDeleted:false,observedAt:new Date()}
-      });
-     }
-     const workloadTypes=inventoryTypesFor(adapter.workload);
-     await tx.currentInventoryItem.updateMany({where:{organizationId:scan.organizationId,projectId:scan.projectId,sourceTenantId:scan.sourceTenantId,workload:{in:workloadTypes},lastScanId:{not:scanId},isDeleted:false},data:{isDeleted:true,lastScanId:scanId,observedAt:new Date()}});
-     await tx.discoveryScanWorkload.update({where:{scanId_workload:{scanId,workload:adapter.workload}},data:{status:'COMPLETED',itemsSeen,completedAt:new Date()}});
-    },{timeout:120000});
+    await publishStagedInventory({scanId,organizationId:scan.organizationId,projectId:scan.projectId,sourceTenantId:scan.sourceTenantId},inventoryTypesFor(adapter.workload),lease,{baseline:true});
+    await db.discoveryScanWorkload.update({
+     where:{scanId_workload:{scanId,workload:adapter.workload}},
+     data:{status:'COMPLETED',itemsSeen,completedAt:new Date()}
+    });
    }
    await guard();
    await db.scan.updateMany({where:{id:scanId,leaseOwner:lease.owner,leaseEpoch:lease.epoch,status:'RUNNING'},data:{progress:Math.floor((index+1)/selected.length*100)}});
