@@ -174,7 +174,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <div className="relative group">
               <div className="flex items-center justify-between text-[11px] bg-blue-50 dark:bg-[#2b2b2b] hover:bg-slate-200 dark:hover:bg-[#404040] px-2 py-1.5 rounded border border-slate-200 dark:border-[#404040] cursor-pointer transition-colors">
                 <div className="flex flex-col">
-                  <span className="text-slate-500 text-[9px] uppercase tracking-wider font-semibold">Active Role</span>
+                  <span className="text-slate-500 text-[9px] uppercase tracking-wider font-semibold dark:text-slate-400">Active Role</span>
                   <span
                     className={`font-semibold ${
                       currentRole === 'GLOBAL_ADMIN'
@@ -284,7 +284,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <div className="relative group">
               <div className="flex items-center justify-between text-[11px] bg-blue-50 dark:bg-[#2b2b2b] hover:bg-slate-200 dark:hover:bg-[#404040] px-2 py-1.5 rounded border border-slate-200 dark:border-[#404040] cursor-pointer transition-colors">
                 <div className="flex flex-col">
-                  <span className="text-slate-500 text-[9px] uppercase tracking-wider font-semibold">Active Role</span>
+                  <span className="text-slate-500 text-[9px] uppercase tracking-wider font-semibold dark:text-slate-400">Active Role</span>
                   <span
                     className={`font-semibold ${
                       currentRole === 'GLOBAL_ADMIN'
