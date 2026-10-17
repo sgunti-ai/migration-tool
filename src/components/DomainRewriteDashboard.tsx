@@ -360,36 +360,36 @@ export const DomainRewriteDashboard: React.FC<DomainRewriteDashboardProps> = ({
         {/* Live Operational Telemetry Bar */}
         <div className="mt-4 pt-3.5 border-t border-slate-100 dark:border-slate-800 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3 text-xs">
           <div className="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/60">
-            <span className="text-[10px] text-slate-400 block font-medium">Vanity Brand Domain</span>
+            <span className="text-[10px] text-slate-400 block font-medium dark:text-slate-500">Vanity Brand Domain</span>
             <span className="font-bold text-slate-900 dark:text-white font-mono truncate block">@{config.brandedDomain}</span>
           </div>
 
           <div className="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/60">
-            <span className="text-[10px] text-slate-400 block font-medium">Outbound TLS Connector</span>
+            <span className="text-[10px] text-slate-400 block font-medium dark:text-slate-500">Outbound TLS Connector</span>
             <span className="font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
               <CheckCircle2 className="w-3 h-3" /> TLS 1.3 Active
             </span>
           </div>
 
           <div className="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/60">
-            <span className="text-[10px] text-slate-400 block font-medium">DKIM 2048 Signing</span>
+            <span className="text-[10px] text-slate-400 block font-medium dark:text-slate-500">DKIM 2048 Signing</span>
             <span className="font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
               <ShieldCheck className="w-3 h-3" /> 100% Aligned
             </span>
           </div>
 
           <div className="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/60">
-            <span className="text-[10px] text-slate-400 block font-medium">DMARC Policy Status</span>
+            <span className="text-[10px] text-slate-400 block font-medium dark:text-slate-500">DMARC Policy Status</span>
             <span className="font-bold text-blue-600 dark:text-blue-400 font-mono">p={config.dmarcPolicy.toLowerCase()}</span>
           </div>
 
           <div className="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/60">
-            <span className="text-[10px] text-slate-400 block font-medium">Calendar ICS Rewriting</span>
+            <span className="text-[10px] text-slate-400 block font-medium dark:text-slate-500">Calendar ICS Rewriting</span>
             <span className="font-bold text-purple-600 dark:text-purple-400">ORGANIZER Ready</span>
           </div>
 
           <div className="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/60">
-            <span className="text-[10px] text-slate-400 block font-medium">Rewrite Latency</span>
+            <span className="text-[10px] text-slate-400 block font-medium dark:text-slate-500">Rewrite Latency</span>
             <span className="font-bold text-teal-600 dark:text-teal-400 font-mono">~44ms average</span>
           </div>
         </div>
@@ -462,7 +462,7 @@ export const DomainRewriteDashboard: React.FC<DomainRewriteDashboardProps> = ({
                       onChange={(e) => setConfig({ ...config, brandedDomain: e.target.value })}
                       className="w-full px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg font-mono text-slate-900 dark:text-white font-bold"
                     />
-                    <p className="text-[11px] text-slate-500">
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400">
                       Emails sent by source pilot users will appear to outside recipients as <code>@ {config.brandedDomain}</code>.
                     </p>
                   </div>
@@ -480,7 +480,7 @@ export const DomainRewriteDashboard: React.FC<DomainRewriteDashboardProps> = ({
                       <option value="DAY_2_POST_CUTOVER">Day 2 Post-Cutover (Migrated users send/receive as legacy source brand)</option>
                       <option value="BIDIRECTIONAL">Bidirectional Coexistence (Full two-way substitution)</option>
                     </select>
-                    <p className="text-[11px] text-slate-500">
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400">
                       Permits newly acquired subsidiary staff to instantly present the unified brand on Day 1.
                     </p>
                   </div>
@@ -531,7 +531,7 @@ export const DomainRewriteDashboard: React.FC<DomainRewriteDashboardProps> = ({
                       </span>
                     </div>
                     <div>
-                      <span className="text-[11px] text-slate-500">Connector Name:</span>
+                      <span className="text-[11px] text-slate-500 dark:text-slate-400">Connector Name:</span>
                       <input
                         type="text"
                         value={config.outboundConnectorName}
@@ -540,7 +540,7 @@ export const DomainRewriteDashboard: React.FC<DomainRewriteDashboardProps> = ({
                       />
                     </div>
                     <div>
-                      <span className="text-[11px] text-slate-500">Dedicated Smart Host:</span>
+                      <span className="text-[11px] text-slate-500 dark:text-slate-400">Dedicated Smart Host:</span>
                       <input
                         type="text"
                         value={config.smartHostFqdn}
@@ -549,7 +549,7 @@ export const DomainRewriteDashboard: React.FC<DomainRewriteDashboardProps> = ({
                       />
                     </div>
                     <div>
-                      <span className="text-[11px] text-slate-500">Certificate Subject Match (TlsCertificateName):</span>
+                      <span className="text-[11px] text-slate-500 dark:text-slate-400">Certificate Subject Match (TlsCertificateName):</span>
                       <input
                         type="text"
                         value={config.certificateSubjectName}
@@ -560,7 +560,7 @@ export const DomainRewriteDashboard: React.FC<DomainRewriteDashboardProps> = ({
                   </div>
 
                   {/* PowerShell Export Card */}
-                  <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-900 text-slate-200 space-y-3">
+                  <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-900 text-slate-200 space-y-3 dark:bg-slate-100 dark:text-slate-700">
                     <div className="flex items-center justify-between">
                       <span className="font-bold font-mono text-purple-400">PowerShell Cmdlets (Exchange Online)</span>
                       <button
@@ -570,7 +570,7 @@ export const DomainRewriteDashboard: React.FC<DomainRewriteDashboardProps> = ({
                             'ps-connectors'
                           )
                         }
-                        className="flex items-center gap-1 text-[11px] text-slate-400 hover:text-white transition cursor-pointer"
+                        className="flex items-center gap-1 text-[11px] text-slate-400 hover:text-white transition cursor-pointer dark:text-slate-500"
                       >
                         {copiedKey === 'ps-connectors' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                         <span>{copiedKey === 'ps-connectors' ? 'Copied' : 'Copy'}</span>
@@ -623,7 +623,7 @@ New-InboundConnector -Name "${config.inboundConnectorName}" \`
                       />
                       <div>
                         <span className="font-semibold text-slate-900 dark:text-white">Route External Recipients Only</span>
-                        <p className="text-[11px] text-slate-500">Internal company communications within the source tenant remain unchanged.</p>
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400">Internal company communications within the source tenant remain unchanged.</p>
                       </div>
                     </label>
 
@@ -636,7 +636,7 @@ New-InboundConnector -Name "${config.inboundConnectorName}" \`
                       />
                       <div>
                         <span className="font-semibold text-slate-900 dark:text-white">Bypass Cross-Tenant Migration Routing Traffic</span>
-                        <p className="text-[11px] text-slate-500">Excludes direct cross-tenant coexistence forwarding rules from secondary rewriting loops.</p>
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400">Excludes direct cross-tenant coexistence forwarding rules from secondary rewriting loops.</p>
                       </div>
                     </label>
 
@@ -649,12 +649,12 @@ New-InboundConnector -Name "${config.inboundConnectorName}" \`
                       />
                       <div>
                         <span className="font-semibold text-slate-900 dark:text-white">Stamp Diagnostic Audit Header</span>
-                        <p className="text-[11px] text-slate-500">Injects <code>{config.trackingHeaderName}</code> for complete message trace visibility.</p>
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400">Injects <code>{config.trackingHeaderName}</code> for complete message trace visibility.</p>
                       </div>
                     </label>
                   </div>
 
-                  <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-900 text-slate-200 space-y-3">
+                  <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-900 text-slate-200 space-y-3 dark:bg-slate-100 dark:text-slate-700">
                     <div className="flex items-center justify-between">
                       <span className="font-bold font-mono text-purple-400">Exchange Online Transport Rule</span>
                       <button
@@ -664,7 +664,7 @@ New-InboundConnector -Name "${config.inboundConnectorName}" \`
                             'ps-transport'
                           )
                         }
-                        className="flex items-center gap-1 text-[11px] text-slate-400 hover:text-white transition cursor-pointer"
+                        className="flex items-center gap-1 text-[11px] text-slate-400 hover:text-white transition cursor-pointer dark:text-slate-500"
                       >
                         {copiedKey === 'ps-transport' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                         <span>{copiedKey === 'ps-transport' ? 'Copied' : 'Copy'}</span>
@@ -792,7 +792,7 @@ New-InboundConnector -Name "${config.inboundConnectorName}" \`
                         Valid
                       </span>
                     </div>
-                    <p className="text-slate-500 text-[11px]">Include the rewrite cluster smart host in public DNS:</p>
+                    <p className="text-slate-500 text-[11px] dark:text-slate-400">Include the rewrite cluster smart host in public DNS:</p>
                     <pre className="p-2 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-mono text-[10px] text-blue-600 dark:text-blue-400 whitespace-pre-wrap">
 v=spf1 include:spf.protection.outlook.com include:_spf.rewrite.stream.net ~all
                     </pre>
@@ -806,7 +806,7 @@ v=spf1 include:spf.protection.outlook.com include:_spf.rewrite.stream.net ~all
                         2048-Bit
                       </span>
                     </div>
-                    <p className="text-slate-500 text-[11px]">Dual-sign rewritten messages with target vanity key:</p>
+                    <p className="text-slate-500 text-[11px] dark:text-slate-400">Dual-sign rewritten messages with target vanity key:</p>
                     <pre className="p-2 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-mono text-[10px] text-purple-600 dark:text-purple-400 whitespace-pre-wrap">
 d={config.brandedDomain}; s=selector1-fabrikam-com; a=rsa-sha256;
                     </pre>
@@ -820,7 +820,7 @@ d={config.brandedDomain}; s=selector1-fabrikam-com; a=rsa-sha256;
                         Aligned
                       </span>
                     </div>
-                    <p className="text-slate-500 text-[11px]">Strict alignment achieved via DKIM signing:</p>
+                    <p className="text-slate-500 text-[11px] dark:text-slate-400">Strict alignment achieved via DKIM signing:</p>
                     <pre className="p-2 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-mono text-[10px] text-teal-600 dark:text-teal-400 whitespace-pre-wrap">
 v=DMARC1; p={config.dmarcPolicy.toLowerCase()}; rua=mailto:dmarc@{config.brandedDomain}
                     </pre>
@@ -847,7 +847,7 @@ v=DMARC1; p={config.dmarcPolicy.toLowerCase()}; rua=mailto:dmarc@{config.branded
                     <h4 className="font-semibold text-slate-900 dark:text-white">Target Coexistence Routing Architecture</h4>
                     
                     <div>
-                      <span className="text-[11px] text-slate-500 block mb-1">Target Inbound Forwarding Mechanism:</span>
+                      <span className="text-[11px] text-slate-500 block mb-1 dark:text-slate-400">Target Inbound Forwarding Mechanism:</span>
                       <select
                         value={config.targetForwardingMode}
                         onChange={(e) => setConfig({ ...config, targetForwardingMode: e.target.value })}
@@ -860,7 +860,7 @@ v=DMARC1; p={config.dmarcPolicy.toLowerCase()}; rua=mailto:dmarc@{config.branded
                     </div>
 
                     <div>
-                      <span className="text-[11px] text-slate-500 block mb-1">Source Tenant Routing Domain Suffix (MOERA):</span>
+                      <span className="text-[11px] text-slate-500 block mb-1 dark:text-slate-400">Source Tenant Routing Domain Suffix (MOERA):</span>
                       <input
                         type="text"
                         value={config.targetRoutingAddressSuffix}
@@ -894,7 +894,7 @@ v=DMARC1; p={config.dmarcPolicy.toLowerCase()}; rua=mailto:dmarc@{config.branded
                     </label>
                   </div>
 
-                  <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-900 text-slate-200 space-y-3">
+                  <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-900 text-slate-200 space-y-3 dark:bg-slate-100 dark:text-slate-700">
                     <div className="flex items-center justify-between">
                       <span className="font-bold font-mono text-purple-400">Target Tenant PowerShell (Exchange Online)</span>
                       <button
@@ -904,7 +904,7 @@ v=DMARC1; p={config.dmarcPolicy.toLowerCase()}; rua=mailto:dmarc@{config.branded
                             'ps-inbound-reply'
                           )
                         }
-                        className="flex items-center gap-1 text-[11px] text-slate-400 hover:text-white transition cursor-pointer"
+                        className="flex items-center gap-1 text-[11px] text-slate-400 hover:text-white transition cursor-pointer dark:text-slate-500"
                       >
                         {copiedKey === 'ps-inbound-reply' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                         <span>{copiedKey === 'ps-inbound-reply' ? 'Copied' : 'Copy'}</span>
@@ -950,7 +950,7 @@ New-OutboundConnector -Name "Target-To-Source-Relay" \`
                     <h4 className="font-semibold text-slate-900 dark:text-white">Organization Relationship Settings</h4>
 
                     <div>
-                      <span className="text-[11px] text-slate-500 block mb-1">Free/Busy Calendar Access Level:</span>
+                      <span className="text-[11px] text-slate-500 block mb-1 dark:text-slate-400">Free/Busy Calendar Access Level:</span>
                       <select
                         value={config.freeBusyAccessLevel}
                         onChange={(e) => setConfig({ ...config, freeBusyAccessLevel: e.target.value })}
@@ -963,7 +963,7 @@ New-OutboundConnector -Name "Target-To-Source-Relay" \`
                     </div>
 
                     <div>
-                      <span className="text-[11px] text-slate-500 block mb-1">Target Autodiscover EPR Endpoint:</span>
+                      <span className="text-[11px] text-slate-500 block mb-1 dark:text-slate-400">Target Autodiscover EPR Endpoint:</span>
                       <input
                         type="text"
                         value={config.targetAutodiscoverEpr}
@@ -973,7 +973,7 @@ New-OutboundConnector -Name "Target-To-Source-Relay" \`
                     </div>
 
                     <div>
-                      <span className="text-[11px] text-slate-500 block mb-1">Target Sharing Web Services (EWS) EPR:</span>
+                      <span className="text-[11px] text-slate-500 block mb-1 dark:text-slate-400">Target Sharing Web Services (EWS) EPR:</span>
                       <input
                         type="text"
                         value={config.targetSharingEpr}
@@ -995,7 +995,7 @@ New-OutboundConnector -Name "Target-To-Source-Relay" \`
                     </label>
                   </div>
 
-                  <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-900 text-slate-200 space-y-3">
+                  <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-900 text-slate-200 space-y-3 dark:bg-slate-100 dark:text-slate-700">
                     <div className="flex items-center justify-between">
                       <span className="font-bold font-mono text-teal-400">PowerShell Organization Relationship</span>
                       <button
@@ -1005,7 +1005,7 @@ New-OutboundConnector -Name "Target-To-Source-Relay" \`
                             'ps-org-rel'
                           )
                         }
-                        className="flex items-center gap-1 text-[11px] text-slate-400 hover:text-white transition cursor-pointer"
+                        className="flex items-center gap-1 text-[11px] text-slate-400 hover:text-white transition cursor-pointer dark:text-slate-500"
                       >
                         {copiedKey === 'ps-org-rel' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                         <span>{copiedKey === 'ps-org-rel' ? 'Copied' : 'Copy'}</span>
@@ -1054,7 +1054,7 @@ New-OrganizationRelationship \`
                     <h4 className="font-semibold text-slate-900 dark:text-white">Canary Test Suite Parameters</h4>
 
                     <div>
-                      <span className="text-[11px] text-slate-500 block mb-1">External Canary Recipient Mailbox:</span>
+                      <span className="text-[11px] text-slate-500 block mb-1 dark:text-slate-400">External Canary Recipient Mailbox:</span>
                       <input
                         type="text"
                         value={config.canaryRecipient}
@@ -1100,14 +1100,14 @@ New-OrganizationRelationship \`
                   <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col justify-between space-y-4">
                     <div>
                       <h4 className="font-semibold text-slate-900 dark:text-white mb-1">Live Canary Dispatch Simulator</h4>
-                      <p className="text-slate-500 text-xs leading-relaxed">
+                      <p className="text-slate-500 text-xs leading-relaxed dark:text-slate-400">
                         Execute an automated test flight that dispatches a simulated RFC-5322 payload and an attached iCalendar meeting invitation to test delivery headers.
                       </p>
                       
                       <div className="mt-4 p-3 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-1.5 text-xs font-mono">
-                        <div className="text-slate-500">Test Sender: <span className="text-slate-900 dark:text-white">alex.wilber@{config.sourceTenant}</span></div>
-                        <div className="text-slate-500">Rewritten Outbound: <span className="text-blue-600 dark:text-blue-400 font-bold">alex.wilber@{config.brandedDomain}</span></div>
-                        <div className="text-slate-500">Diagnostic Header: <span className="text-purple-600 dark:text-purple-300 font-bold">{config.trackingHeaderName}</span></div>
+                        <div className="text-slate-500 dark:text-slate-400">Test Sender: <span className="text-slate-900 dark:text-white">alex.wilber@{config.sourceTenant}</span></div>
+                        <div className="text-slate-500 dark:text-slate-400">Rewritten Outbound: <span className="text-blue-600 dark:text-blue-400 font-bold">alex.wilber@{config.brandedDomain}</span></div>
+                        <div className="text-slate-500 dark:text-slate-400">Diagnostic Header: <span className="text-purple-600 dark:text-purple-300 font-bold">{config.trackingHeaderName}</span></div>
                       </div>
                     </div>
 
@@ -1152,7 +1152,7 @@ New-OrganizationRelationship \`
                       />
                       <div>
                         <span className="font-semibold text-slate-900 dark:text-white text-xs">Automated Circuit-Breaker Rollback</span>
-                        <p className="text-[11px] text-slate-500">Automatically bypasses the rewrite pipeline if smart host bounce/NDR rates exceed 1.5% in a rolling 15-minute window.</p>
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400">Automatically bypasses the rewrite pipeline if smart host bounce/NDR rates exceed 1.5% in a rolling 15-minute window.</p>
                       </div>
                     </label>
 
@@ -1165,7 +1165,7 @@ New-OrganizationRelationship \`
                       />
                       <div>
                         <span className="font-semibold text-slate-900 dark:text-white text-xs">Post-Cutover Auto-Decommission</span>
-                        <p className="text-[11px] text-slate-500">Automatically removes transport rules and purges temporary forwarding contacts when final mailbox moves complete.</p>
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400">Automatically removes transport rules and purges temporary forwarding contacts when final mailbox moves complete.</p>
                       </div>
                     </label>
 
@@ -1208,7 +1208,7 @@ New-OrganizationRelationship \`
 
                       <button
                         onClick={() => setActiveTab('simulator')}
-                        className="px-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-semibold rounded-lg hover:bg-slate-100 transition cursor-pointer text-xs"
+                        className="px-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-semibold rounded-lg hover:bg-slate-100 transition cursor-pointer text-xs dark:hover:bg-slate-800"
                       >
                         Test in Synthetic Tester
                       </button>
@@ -1230,7 +1230,7 @@ New-OrganizationRelationship \`
               <span>Back</span>
             </button>
 
-            <span className="text-xs text-slate-400">
+            <span className="text-xs text-slate-400 dark:text-slate-500">
               Step {currentStep} of {STEPS.length}: {STEPS[currentStep - 1].title}
             </span>
 
@@ -1262,7 +1262,7 @@ New-OrganizationRelationship \`
         <div className="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm overflow-hidden space-y-4 p-5">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
             <div className="flex items-center space-x-2">
-              <Search className="w-4 h-4 text-slate-400 absolute ml-3 pointer-events-none" />
+              <Search className="w-4 h-4 text-slate-400 absolute ml-3 pointer-events-none dark:text-slate-500" />
               <input
                 type="text"
                 placeholder="Search mapped users by name or email..."
@@ -1304,7 +1304,7 @@ New-OrganizationRelationship \`
                   a.download = `domain_rewrite_users_${config.brandedDomain}.csv`;
                   a.click();
                 }}
-                className="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-200 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 transition flex items-center gap-1.5 cursor-pointer"
+                className="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-700 dark:text-slate-200 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 transition flex items-center gap-1.5 cursor-pointer dark:hover:bg-slate-700"
               >
                 <Download className="w-3.5 h-3.5" />
                 <span>Export CSV</span>
@@ -1315,7 +1315,7 @@ New-OrganizationRelationship \`
           {/* Directory Table */}
           <div className="overflow-x-auto border border-slate-200 dark:border-slate-800 rounded-lg">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 dark:bg-slate-800/60 text-slate-500 font-semibold border-b border-slate-200 dark:border-slate-700">
+              <thead className="bg-slate-50 dark:bg-slate-800/60 text-slate-500 font-semibold border-b border-slate-200 dark:border-slate-700 dark:text-slate-400">
                 <tr>
                   <th className="py-2.5 px-4">User</th>
                   <th className="py-2.5 px-4">Source Internal UPN (Origin)</th>
@@ -1330,7 +1330,7 @@ New-OrganizationRelationship \`
                   <tr key={row.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition">
                     <td className="py-3 px-4 font-semibold text-slate-900 dark:text-white">
                       {row.displayName}
-                      <span className="block text-[10px] text-slate-400 font-normal">{row.department}</span>
+                      <span className="block text-[10px] text-slate-400 font-normal dark:text-slate-500">{row.department}</span>
                     </td>
                     <td className="py-3 px-4 font-mono text-[11px] text-slate-600 dark:text-slate-400">
                       {row.sourceUPN}
@@ -1344,7 +1344,7 @@ New-OrganizationRelationship \`
                           <Check className="w-3.5 h-3.5 mr-0.5" /> Rewritten
                         </span>
                       ) : (
-                        <span className="text-slate-400 text-[10px]">Bypassed</span>
+                        <span className="text-slate-400 text-[10px] dark:text-slate-500">Bypassed</span>
                       )}
                     </td>
                     <td className="py-3 px-4">
@@ -1380,7 +1380,7 @@ New-OrganizationRelationship \`
                             )
                           );
                         }}
-                        className="text-xs text-slate-500 hover:text-slate-900 dark:hover:text-white cursor-pointer"
+                        className="text-xs text-slate-500 hover:text-slate-900 dark:hover:text-white cursor-pointer dark:text-slate-400"
                       >
                         {row.status === 'ACTIVE' ? 'Pause' : 'Activate'}
                       </button>
@@ -1486,7 +1486,7 @@ New-OrganizationRelationship \`
               {simulationResult ? (
                 <div className="space-y-3 animate-in fade-in duration-150">
                   <div className="p-3.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40 space-y-1.5">
-                    <span className="font-bold text-[11px] text-slate-400 uppercase tracking-wider block">Raw Outbound Envelope (Source Origin)</span>
+                    <span className="font-bold text-[11px] text-slate-400 uppercase tracking-wider block dark:text-slate-500">Raw Outbound Envelope (Source Origin)</span>
                     <div className="font-mono text-[11px] text-slate-600 dark:text-slate-400 space-y-1">
                       <div>MAIL FROM: {simulationResult.originalEnvelope.mailFrom}</div>
                       <div>From: {simulationResult.originalEnvelope.p2From}</div>
@@ -1538,8 +1538,8 @@ New-OrganizationRelationship \`
                   </div>
                 </div>
               ) : (
-                <div className="p-8 text-center border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-xl bg-slate-50/50 dark:bg-slate-800/20 text-slate-500 space-y-2">
-                  <Mail className="w-8 h-8 text-slate-400 mx-auto" />
+                <div className="p-8 text-center border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-xl bg-slate-50/50 dark:bg-slate-800/20 text-slate-500 space-y-2 dark:text-slate-400">
+                  <Mail className="w-8 h-8 text-slate-400 mx-auto dark:text-slate-500" />
                   <p className="font-medium text-slate-700 dark:text-slate-300">No simulation executed yet</p>
                   <p className="text-xs">Click "Simulate In-Flight Address Rewrite" to inspect live envelope modifications.</p>
                 </div>
@@ -1560,7 +1560,7 @@ New-OrganizationRelationship \`
               </h3>
               <button
                 onClick={() => setIsAddUserModalOpen(false)}
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-white"
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-white dark:text-slate-500"
               >
                 ✕
               </button>
@@ -1636,7 +1636,7 @@ New-OrganizationRelationship \`
                 <button
                   type="button"
                   onClick={() => setIsAddUserModalOpen(false)}
-                  className="px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100"
+                  className="px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
                 >
                   Cancel
                 </button>
