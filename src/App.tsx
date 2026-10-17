@@ -18,7 +18,7 @@ import { SecurityComplianceDashboard } from './components/SecurityComplianceDash
 import { AuditTrailViewer } from './components/AuditTrailViewer';
 import { SettingsDashboard } from './components/SettingsDashboard';
 import { ReportGenerationEngine } from './components/ReportGenerationEngine';
-import { DiscoveryDashboard } from './components/discovery/DiscoveryDashboard';
+import { DiscoveryServiceDashboard } from './components/discovery/DiscoveryServiceDashboard';
 import { MailboxMigrationDashboard } from './components/mailboxes/MailboxMigrationDashboard';
 import { MigrationToolDashboard } from './components/dashboard/MigrationToolDashboard';
 import { MigrationAdvisorWidget } from './components/advisor/MigrationAdvisorWidget';
@@ -349,15 +349,7 @@ export default function App() {
         {/* DISCOVERY */}
         {activeTab === 'discovery' && (
           <div className="animate-fadeIn">
-            <DiscoveryDashboard
-              currentRole={currentRole}
-              selectedWorkloadTab={discoverySubTab}
-              onSelectWorkloadTab={(tab) => setDiscoverySubTab(tab)}
-              onNavigateToMigrate={(selectedUsers) => {
-                setActiveTab('migrate');
-                setMigrateSubTab('ad_express');
-              }}
-            />
+            <DiscoveryServiceDashboard />
           </div>
         )}
 
