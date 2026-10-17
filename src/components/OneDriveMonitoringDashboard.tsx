@@ -201,19 +201,19 @@ export const OneDriveMonitoringDashboard: React.FC<OneDriveMonitoringDashboardPr
   // === RENDER DRILL-DOWN VIEW ===
   if (selectedJobId && selectedJob) {
     return (
-      <div className="w-full bg-slate-50 min-h-screen text-slate-800 font-sans border border-slate-200 rounded-md overflow-hidden flex flex-col">
+      <div className="w-full bg-slate-50 min-h-screen text-slate-800 font-sans border border-slate-200 rounded-md overflow-hidden flex flex-col dark:bg-slate-950 dark:text-slate-100 dark:border-slate-700">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between px-6 py-4 bg-white border-b border-slate-200">
+        <div className="flex flex-col md:flex-row md:items-center justify-between px-6 py-4 bg-white border-b border-slate-200 dark:bg-slate-900 dark:border-slate-700">
           <div className="flex items-center space-x-4 mb-4 md:mb-0">
-            <button onClick={() => setSelectedJobId(null)} className="p-2 bg-slate-100 hover:bg-slate-200 rounded-md transition-colors text-slate-600">
+            <button onClick={() => setSelectedJobId(null)} className="p-2 bg-slate-100 hover:bg-slate-200 rounded-md transition-colors text-slate-600 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700">
               <ArrowLeft className="h-5 w-5" />
             </button>
             <div>
               <div className="flex items-center space-x-3">
-                <h2 className="text-xl font-semibold text-slate-800">{selectedJob.id}</h2>
+                <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100">{selectedJob.id}</h2>
                 <StatusBadge status={selectedJob.status} pulse />
               </div>
-              <p className="text-sm text-slate-500">{selectedJob.user}</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">{selectedJob.user}</p>
             </div>
           </div>
           <div className="flex space-x-2">
@@ -238,34 +238,34 @@ export const OneDriveMonitoringDashboard: React.FC<OneDriveMonitoringDashboardPr
         <div className="p-6 space-y-6 flex-1 overflow-y-auto">
           {/* Top Performance Metrics */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm flex items-center justify-between">
+            <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm flex items-center justify-between dark:bg-slate-900 dark:border-slate-700">
               <div>
-                <p className="text-sm font-medium text-slate-500 mb-1">Transfer Speed</p>
+                <p className="text-sm font-medium text-slate-500 mb-1 dark:text-slate-400">Transfer Speed</p>
                 <div className="flex items-end space-x-2">
-                  <span className="text-2xl font-bold text-slate-800">{selectedJob.transferSpeed}</span>
-                  <span className="text-sm font-medium text-slate-500 mb-1">MB/s</span>
+                  <span className="text-2xl font-bold text-slate-800 dark:text-slate-100">{selectedJob.transferSpeed}</span>
+                  <span className="text-sm font-medium text-slate-500 mb-1 dark:text-slate-400">MB/s</span>
                 </div>
               </div>
               <div className="p-3 bg-blue-50 rounded-full text-blue-600">
                 <Activity className="h-5 w-5" />
               </div>
             </div>
-            <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm flex items-center justify-between">
+            <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm flex items-center justify-between dark:bg-slate-900 dark:border-slate-700">
               <div>
-                <p className="text-sm font-medium text-slate-500 mb-1">Time Remaining</p>
-                <div className="text-2xl font-bold text-slate-800">{selectedJob.timeRemaining}</div>
+                <p className="text-sm font-medium text-slate-500 mb-1 dark:text-slate-400">Time Remaining</p>
+                <div className="text-2xl font-bold text-slate-800 dark:text-slate-100">{selectedJob.timeRemaining}</div>
               </div>
               <div className="p-3 bg-indigo-50 rounded-full text-indigo-600">
                 <Clock className="h-5 w-5" />
               </div>
             </div>
-            <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm flex flex-col justify-center">
-              <p className="text-sm font-medium text-slate-500 mb-2">Overall Progress</p>
+            <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm flex flex-col justify-center dark:bg-slate-900 dark:border-slate-700">
+              <p className="text-sm font-medium text-slate-500 mb-2 dark:text-slate-400">Overall Progress</p>
               <div className="flex items-center justify-between mb-1 text-sm">
-                <span className="font-bold text-slate-800">{selectedJob.progress.toFixed(1)}%</span>
-                <span className="text-slate-500">{selectedJob.dataSize} Total</span>
+                <span className="font-bold text-slate-800 dark:text-slate-100">{selectedJob.progress.toFixed(1)}%</span>
+                <span className="text-slate-500 dark:text-slate-400">{selectedJob.dataSize} Total</span>
               </div>
-              <div className="w-full bg-slate-100 rounded-full h-2">
+              <div className="w-full bg-slate-100 rounded-full h-2 dark:bg-slate-800">
                 <div className="bg-blue-500 h-2 rounded-full transition-all duration-500" style={{ width: `${selectedJob.progress}%` }}></div>
               </div>
             </div>
@@ -287,8 +287,8 @@ export const OneDriveMonitoringDashboard: React.FC<OneDriveMonitoringDashboardPr
             <div className="lg:col-span-2 space-y-6">
               
               {/* Transfer Rate Chart */}
-              <div className="bg-white border border-slate-200 rounded-lg shadow-sm p-5">
-                <h3 className="text-lg font-medium text-slate-800 mb-4">Transfer Rate</h3>
+              <div className="bg-white border border-slate-200 rounded-lg shadow-sm p-5 dark:bg-slate-900 dark:border-slate-700">
+                <h3 className="text-lg font-medium text-slate-800 mb-4 dark:text-slate-100">Transfer Rate</h3>
                 <div className="h-64 w-full">
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={selectedJob.transferHistory} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
@@ -309,11 +309,11 @@ export const OneDriveMonitoringDashboard: React.FC<OneDriveMonitoringDashboardPr
               </div>
 
               {/* Error Logs */}
-              <div className="bg-white border border-slate-200 rounded-lg shadow-sm p-5">
+              <div className="bg-white border border-slate-200 rounded-lg shadow-sm p-5 dark:bg-slate-900 dark:border-slate-700">
                 <div className="flex justify-between items-center mb-4">
                   <div className="flex items-center space-x-3">
-                    <h3 className="text-lg font-medium text-slate-800">Error Log</h3>
-                    <span className="bg-slate-100 text-slate-600 px-2.5 py-0.5 rounded-full text-xs font-semibold">{selectedJob.errors.length} Issues</span>
+                    <h3 className="text-lg font-medium text-slate-800 dark:text-slate-100">Error Log</h3>
+                    <span className="bg-slate-100 text-slate-600 px-2.5 py-0.5 rounded-full text-xs font-semibold dark:bg-slate-800 dark:text-slate-300">{selectedJob.errors.length} Issues</span>
                   </div>
                   {selectedJob.errors.length > 0 && (
                     <button 
@@ -331,18 +331,18 @@ export const OneDriveMonitoringDashboard: React.FC<OneDriveMonitoringDashboardPr
                     <table className="min-w-full divide-y divide-slate-200">
                       <thead>
                         <tr>
-                          <th className="px-3 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Time</th>
-                          <th className="px-3 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Code</th>
-                          <th className="px-3 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Message</th>
-                          <th className="px-3 py-2 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Action</th>
+                          <th className="px-3 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider dark:text-slate-400">Time</th>
+                          <th className="px-3 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider dark:text-slate-400">Code</th>
+                          <th className="px-3 py-2 text-left text-xs font-medium text-slate-500 uppercase tracking-wider dark:text-slate-400">Message</th>
+                          <th className="px-3 py-2 text-right text-xs font-medium text-slate-500 uppercase tracking-wider dark:text-slate-400">Action</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-200 text-sm">
                         {selectedJob.errors.map((err, i) => (
-                          <tr key={i} className="hover:bg-slate-50 transition-colors">
-                            <td className="px-3 py-2 text-slate-500 whitespace-nowrap">{new Date(err.time).toLocaleTimeString()}</td>
+                          <tr key={i} className="hover:bg-slate-50 transition-colors dark:hover:bg-slate-950">
+                            <td className="px-3 py-2 text-slate-500 whitespace-nowrap dark:text-slate-400">{new Date(err.time).toLocaleTimeString()}</td>
                             <td className="px-3 py-2 font-mono text-xs text-red-600">{err.code}</td>
-                            <td className="px-3 py-2 text-slate-700">{err.message}</td>
+                            <td className="px-3 py-2 text-slate-700 dark:text-slate-200">{err.message}</td>
                             <td className="px-3 py-2 text-right">
                               <button className="text-blue-600 hover:text-blue-800 font-medium text-xs">Retry Item</button>
                             </td>
@@ -352,7 +352,7 @@ export const OneDriveMonitoringDashboard: React.FC<OneDriveMonitoringDashboardPr
                     </table>
                   </div>
                 ) : (
-                  <div className="text-center py-8 text-slate-500 text-sm flex flex-col items-center">
+                  <div className="text-center py-8 text-slate-500 text-sm flex flex-col items-center dark:text-slate-400">
                     <CheckCircle2 className="h-8 w-8 text-emerald-400 mb-2 opacity-50" />
                     No errors recorded for this job.
                   </div>
@@ -364,40 +364,40 @@ export const OneDriveMonitoringDashboard: React.FC<OneDriveMonitoringDashboardPr
             <div className="space-y-6">
               
               {/* File-level Details */}
-              <div className="bg-white border border-slate-200 rounded-lg shadow-sm p-5">
-                <h3 className="text-lg font-medium text-slate-800 mb-4">File Details</h3>
+              <div className="bg-white border border-slate-200 rounded-lg shadow-sm p-5 dark:bg-slate-900 dark:border-slate-700">
+                <h3 className="text-lg font-medium text-slate-800 mb-4 dark:text-slate-100">File Details</h3>
                 <div className="space-y-4 text-sm">
-                  <div className="flex justify-between items-center border-b border-slate-100 pb-2">
-                    <span className="text-slate-500">Total Files</span>
-                    <span className="font-semibold text-slate-800">{(selectedJob.totalFiles ?? 0).toLocaleString()}</span>
+                  <div className="flex justify-between items-center border-b border-slate-100 pb-2 dark:border-slate-800">
+                    <span className="text-slate-500 dark:text-slate-400">Total Files</span>
+                    <span className="font-semibold text-slate-800 dark:text-slate-100">{(selectedJob.totalFiles ?? 0).toLocaleString()}</span>
                   </div>
-                  <div className="flex justify-between items-center border-b border-slate-100 pb-2">
+                  <div className="flex justify-between items-center border-b border-slate-100 pb-2 dark:border-slate-800">
                     <div className="flex items-center text-emerald-600">
                       <div className="w-2 h-2 rounded-full bg-emerald-500 mr-2"></div>
                       Completed
                     </div>
-                    <span className="font-semibold text-slate-800">{(selectedJob.completedFiles ?? 0).toLocaleString()}</span>
+                    <span className="font-semibold text-slate-800 dark:text-slate-100">{(selectedJob.completedFiles ?? 0).toLocaleString()}</span>
                   </div>
-                  <div className="flex justify-between items-center border-b border-slate-100 pb-2">
+                  <div className="flex justify-between items-center border-b border-slate-100 pb-2 dark:border-slate-800">
                     <div className="flex items-center text-red-600">
                       <div className="w-2 h-2 rounded-full bg-red-500 mr-2"></div>
                       Failed
                     </div>
-                    <span className="font-semibold text-slate-800">{(selectedJob.failedFiles ?? 0).toLocaleString()}</span>
+                    <span className="font-semibold text-slate-800 dark:text-slate-100">{(selectedJob.failedFiles ?? 0).toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between items-center pb-1">
-                    <div className="flex items-center text-slate-500">
-                      <div className="w-2 h-2 rounded-full bg-slate-300 mr-2"></div>
+                    <div className="flex items-center text-slate-500 dark:text-slate-400">
+                      <div className="w-2 h-2 rounded-full bg-slate-300 mr-2 dark:bg-slate-600"></div>
                       Skipped
                     </div>
-                    <span className="font-semibold text-slate-800">{(selectedJob.skippedFiles ?? 0).toLocaleString()}</span>
+                    <span className="font-semibold text-slate-800 dark:text-slate-100">{(selectedJob.skippedFiles ?? 0).toLocaleString()}</span>
                   </div>
                 </div>
               </div>
 
               {/* Resource Utilization */}
-              <div className="bg-white border border-slate-200 rounded-lg shadow-sm p-5">
-                <h3 className="text-lg font-medium text-slate-800 mb-4">Agent Resources</h3>
+              <div className="bg-white border border-slate-200 rounded-lg shadow-sm p-5 dark:bg-slate-900 dark:border-slate-700">
+                <h3 className="text-lg font-medium text-slate-800 mb-4 dark:text-slate-100">Agent Resources</h3>
                 <div className="h-48 w-full">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={selectedJob.transferHistory} margin={{ top: 5, right: 5, left: -25, bottom: 0 }}>
@@ -414,9 +414,9 @@ export const OneDriveMonitoringDashboard: React.FC<OneDriveMonitoringDashboardPr
               </div>
 
               {/* Timeline */}
-              <div className="bg-white border border-slate-200 rounded-lg shadow-sm p-5">
-                <h3 className="text-lg font-medium text-slate-800 mb-4">Job Timeline</h3>
-                <div className="relative border-l border-slate-200 ml-3 space-y-6">
+              <div className="bg-white border border-slate-200 rounded-lg shadow-sm p-5 dark:bg-slate-900 dark:border-slate-700">
+                <h3 className="text-lg font-medium text-slate-800 mb-4 dark:text-slate-100">Job Timeline</h3>
+                <div className="relative border-l border-slate-200 ml-3 space-y-6 dark:border-slate-700">
                   {selectedJob.timeline.map((stage, idx) => (
                     <div key={idx} className="relative pl-6">
                       <div className={`absolute -left-[5px] top-1 h-2.5 w-2.5 rounded-full border-2 border-white ${
@@ -424,9 +424,9 @@ export const OneDriveMonitoringDashboard: React.FC<OneDriveMonitoringDashboardPr
                         stage.status === 'in_progress' ? 'bg-blue-500 animate-pulse' : 
                         stage.status === 'failed' ? 'bg-red-500' : 'bg-slate-300'
                       }`}></div>
-                      <p className="text-sm font-medium text-slate-800 leading-none">{stage.stage}</p>
+                      <p className="text-sm font-medium text-slate-800 leading-none dark:text-slate-100">{stage.stage}</p>
                       {stage.time && (
-                        <p className="text-xs text-slate-500 mt-1">{new Date(stage.time).toLocaleString()}</p>
+                        <p className="text-xs text-slate-500 mt-1 dark:text-slate-400">{new Date(stage.time).toLocaleString()}</p>
                       )}
                     </div>
                   ))}
@@ -442,13 +442,13 @@ export const OneDriveMonitoringDashboard: React.FC<OneDriveMonitoringDashboardPr
 
   // === RENDER LIST VIEW ===
   return (
-    <div className="w-full bg-white min-h-[800px] text-slate-800 font-sans border border-slate-200 rounded-md shadow-sm flex flex-col">
+    <div className="w-full bg-white min-h-[800px] text-slate-800 font-sans border border-slate-200 rounded-md shadow-sm flex flex-col dark:bg-slate-900 dark:text-slate-100 dark:border-slate-700">
       {/* Header & Controls */}
-      <div className="p-6 border-b border-slate-200">
+      <div className="p-6 border-b border-slate-200 dark:border-slate-700">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-slate-800">OneDrive Migration Monitor</h1>
-            <p className="text-sm text-slate-500 mt-1">Real-time tracking and control for personal drive migrations.</p>
+            <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">OneDrive Migration Monitor</h1>
+            <p className="text-sm text-slate-500 mt-1 dark:text-slate-400">Real-time tracking and control for personal drive migrations.</p>
           </div>
           <div className="flex items-center space-x-2.5">
             <button
@@ -459,7 +459,7 @@ export const OneDriveMonitoringDashboard: React.FC<OneDriveMonitoringDashboardPr
               <Plus className="h-4 w-4" />
               <span>Create OneDrive Migration Job</span>
             </button>
-            <button className="flex items-center space-x-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-md transition-colors text-sm" onClick={handleExport}>
+            <button className="flex items-center space-x-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-md transition-colors text-sm dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700" onClick={handleExport}>
               <Download className="h-4 w-4" />
               <span>Export CSV</span>
             </button>
@@ -467,7 +467,7 @@ export const OneDriveMonitoringDashboard: React.FC<OneDriveMonitoringDashboardPr
         </div>
 
         {/* Toolbar */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-slate-50 p-3 rounded-lg border border-slate-200">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-slate-50 p-3 rounded-lg border border-slate-200 dark:bg-slate-950 dark:border-slate-700">
           <div className="flex items-center space-x-3 w-full md:w-auto">
             {/* Search */}
             <div className="relative w-full md:w-64">
@@ -475,7 +475,7 @@ export const OneDriveMonitoringDashboard: React.FC<OneDriveMonitoringDashboardPr
               <input 
                 type="text" 
                 placeholder="Search user or job ID..." 
-                className="w-full pl-9 pr-3 py-2 bg-white border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full pl-9 pr-3 py-2 bg-white border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-slate-900 dark:border-slate-600"
                 value={search}
                 onChange={e => setSearch(e.target.value)}
               />
@@ -484,7 +484,7 @@ export const OneDriveMonitoringDashboard: React.FC<OneDriveMonitoringDashboardPr
             <div className="relative">
               <Filter className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 dark:text-slate-400" />
               <select 
-                className="pl-9 pr-8 py-2 bg-white border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none cursor-pointer"
+                className="pl-9 pr-8 py-2 bg-white border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none cursor-pointer dark:bg-slate-900 dark:border-slate-600"
                 value={filterStatus}
                 onChange={e => setFilterStatus(e.target.value)}
               >
@@ -500,14 +500,14 @@ export const OneDriveMonitoringDashboard: React.FC<OneDriveMonitoringDashboardPr
           
           {/* Bulk Actions */}
           <div className="flex items-center space-x-2">
-            <span className="text-xs text-slate-500 mr-2 font-medium">{selectedRows.size} Selected</span>
-            <button disabled={selectedRows.size === 0} className="p-2 border border-slate-300 rounded text-slate-600 hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors" title="Pause Selected">
+            <span className="text-xs text-slate-500 mr-2 font-medium dark:text-slate-400">{selectedRows.size} Selected</span>
+            <button disabled={selectedRows.size === 0} className="p-2 border border-slate-300 rounded text-slate-600 hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors dark:text-slate-300 dark:border-slate-600 dark:hover:bg-slate-800" title="Pause Selected">
               <Pause className="h-4 w-4" />
             </button>
-            <button disabled={selectedRows.size === 0} className="p-2 border border-slate-300 rounded text-slate-600 hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors" title="Resume Selected">
+            <button disabled={selectedRows.size === 0} className="p-2 border border-slate-300 rounded text-slate-600 hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors dark:text-slate-300 dark:border-slate-600 dark:hover:bg-slate-800" title="Resume Selected">
               <Play className="h-4 w-4" />
             </button>
-            <button disabled={selectedRows.size === 0} className="p-2 border border-slate-300 rounded text-slate-600 hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors" title="Cancel Selected">
+            <button disabled={selectedRows.size === 0} className="p-2 border border-slate-300 rounded text-slate-600 hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors dark:text-slate-300 dark:border-slate-600 dark:hover:bg-slate-800" title="Cancel Selected">
               <XCircle className="h-4 w-4 text-red-500" />
             </button>
           </div>
@@ -517,53 +517,53 @@ export const OneDriveMonitoringDashboard: React.FC<OneDriveMonitoringDashboardPr
       {/* Data Table */}
       <div className="flex-1 overflow-x-auto">
         <table className="min-w-full divide-y divide-slate-200">
-          <thead className="bg-slate-50 sticky top-0 z-10">
+          <thead className="bg-slate-50 sticky top-0 z-10 dark:bg-slate-950">
             <tr>
               <th scope="col" className="px-4 py-3 text-left">
                 <input 
                   type="checkbox" 
-                  className="rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                  className="rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer dark:border-slate-600"
                   checked={selectedRows.size === paginatedJobs.length && paginatedJobs.length > 0}
                   onChange={toggleAll}
                 />
               </th>
-              <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Job ID</th>
-              <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">User</th>
-              <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Status</th>
-              <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider min-w-[150px]">Progress</th>
-              <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Data Size</th>
-              <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Duration</th>
+              <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider dark:text-slate-300">Job ID</th>
+              <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider dark:text-slate-300">User</th>
+              <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider dark:text-slate-300">Status</th>
+              <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider min-w-[150px] dark:text-slate-300">Progress</th>
+              <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider dark:text-slate-300">Data Size</th>
+              <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider dark:text-slate-300">Duration</th>
               <th scope="col" className="relative px-4 py-3"><span className="sr-only">Actions</span></th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-slate-200">
+          <tbody className="bg-white divide-y divide-slate-200 dark:bg-slate-900">
             {paginatedJobs.map((job) => (
               <tr key={job.id} className="hover:bg-blue-50/50 transition-colors group cursor-pointer" onClick={() => setSelectedJobId(job.id)}>
                 <td className="px-4 py-4 whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
                   <input 
                     type="checkbox" 
-                    className="rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                    className="rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer dark:border-slate-600"
                     checked={selectedRows.has(job.id)}
                     onChange={() => toggleRow(job.id)}
                   />
                 </td>
-                <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-slate-900">{job.id}</td>
-                <td className="px-4 py-4 whitespace-nowrap text-sm text-slate-600">{job.user}</td>
+                <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-slate-900 dark:text-slate-100">{job.id}</td>
+                <td className="px-4 py-4 whitespace-nowrap text-sm text-slate-600 dark:text-slate-300">{job.user}</td>
                 <td className="px-4 py-4 whitespace-nowrap">
                   <StatusBadge status={job.status} pulse />
                 </td>
                 <td className="px-4 py-4 whitespace-nowrap">
                   <div className="flex items-center space-x-2">
-                    <div className="w-full bg-slate-200 rounded-full h-1.5 w-24">
+                    <div className="w-full bg-slate-200 rounded-full h-1.5 w-24 dark:bg-slate-700">
                       <div className={`h-1.5 rounded-full ${job.status === 'FAILED' ? 'bg-red-500' : 'bg-blue-500'}`} style={{ width: `${job.progress}%` }}></div>
                     </div>
-                    <span className="text-xs text-slate-500 font-medium w-8">{job.progress.toFixed(0)}%</span>
+                    <span className="text-xs text-slate-500 font-medium w-8 dark:text-slate-400">{job.progress.toFixed(0)}%</span>
                   </div>
                 </td>
-                <td className="px-4 py-4 whitespace-nowrap text-sm text-slate-500 font-mono">{job.dataSize}</td>
-                <td className="px-4 py-4 whitespace-nowrap text-sm text-slate-500">{job.duration}</td>
+                <td className="px-4 py-4 whitespace-nowrap text-sm text-slate-500 font-mono dark:text-slate-400">{job.dataSize}</td>
+                <td className="px-4 py-4 whitespace-nowrap text-sm text-slate-500 dark:text-slate-400">{job.duration}</td>
                 <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium" onClick={(e) => e.stopPropagation()}>
-                  <button className="text-slate-500 dark:text-slate-400 hover:text-slate-600 p-1">
+                  <button className="text-slate-500 dark:text-slate-400 hover:text-slate-600 p-1 dark:hover:text-slate-300">
                     <MoreVertical className="h-4 w-4" />
                   </button>
                 </td>
@@ -571,10 +571,10 @@ export const OneDriveMonitoringDashboard: React.FC<OneDriveMonitoringDashboardPr
             ))}
             {paginatedJobs.length === 0 && (
               <tr>
-                <td colSpan={8} className="px-4 py-12 text-center text-slate-500">
+                <td colSpan={8} className="px-4 py-12 text-center text-slate-500 dark:text-slate-400">
                   <div className="flex flex-col items-center justify-center">
                     <Search className="h-8 w-8 text-slate-600 dark:text-slate-300 mb-3" />
-                    <p className="text-base font-medium text-slate-800">No jobs found</p>
+                    <p className="text-base font-medium text-slate-800 dark:text-slate-100">No jobs found</p>
                     <p className="text-sm mt-1">Try adjusting your filters or search query.</p>
                   </div>
                 </td>
@@ -585,22 +585,22 @@ export const OneDriveMonitoringDashboard: React.FC<OneDriveMonitoringDashboardPr
       </div>
 
       {/* Pagination Footer */}
-      <div className="bg-slate-50 px-6 py-3 border-t border-slate-200 flex items-center justify-between">
-        <div className="text-sm text-slate-500">
-          Showing <span className="font-medium text-slate-800">{filteredJobs.length === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1}</span> to <span className="font-medium text-slate-800">{Math.min(currentPage * itemsPerPage, filteredJobs.length)}</span> of <span className="font-medium text-slate-800">{filteredJobs.length}</span> results
+      <div className="bg-slate-50 px-6 py-3 border-t border-slate-200 flex items-center justify-between dark:bg-slate-950 dark:border-slate-700">
+        <div className="text-sm text-slate-500 dark:text-slate-400">
+          Showing <span className="font-medium text-slate-800 dark:text-slate-100">{filteredJobs.length === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1}</span> to <span className="font-medium text-slate-800 dark:text-slate-100">{Math.min(currentPage * itemsPerPage, filteredJobs.length)}</span> of <span className="font-medium text-slate-800 dark:text-slate-100">{filteredJobs.length}</span> results
         </div>
         <div className="flex space-x-2">
           <button 
             disabled={currentPage === 1}
             onClick={() => setCurrentPage(p => p - 1)}
-            className="px-3 py-1.5 border border-slate-300 rounded text-sm font-medium bg-white text-slate-700 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-3 py-1.5 border border-slate-300 rounded text-sm font-medium bg-white text-slate-700 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-slate-900 dark:text-slate-200 dark:border-slate-600 dark:hover:bg-slate-950"
           >
             Previous
           </button>
           <button 
             disabled={currentPage === totalPages || totalPages === 0}
             onClick={() => setCurrentPage(p => p + 1)}
-            className="px-3 py-1.5 border border-slate-300 rounded text-sm font-medium bg-white text-slate-700 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-3 py-1.5 border border-slate-300 rounded text-sm font-medium bg-white text-slate-700 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-slate-900 dark:text-slate-200 dark:border-slate-600 dark:hover:bg-slate-950"
           >
             Next
           </button>
