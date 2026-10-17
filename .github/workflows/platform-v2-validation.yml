@@ -1,8 +1,8 @@
 name: Platform v2 validation
 on:
   push:
-    branches: [refactor/platform-v2-services, fix/localhost-development-auth]
-    paths: ['platform/**','.github/workflows/platform-v2-validation.yml']
+    branches: [refactor/platform-v2-services, fix/localhost-development-auth, feature/extract-discovery-service]
+    paths: ['platform/**','server/discoveryGateway.ts','server.ts','src/components/discovery/DiscoveryServiceDashboard.tsx','src/services/platformV2.ts','src/App.tsx','.github/workflows/platform-v2-validation.yml']
   pull_request:
     paths: ['platform/**','.github/workflows/platform-v2-validation.yml']
 jobs:
@@ -45,3 +45,13 @@ jobs:
       - run: npx prisma migrate diff --from-url "$DATABASE_URL" --to-schema-datamodel prisma/schema.prisma --exit-code
       - run: npm run check
       - run: npm test
+
+  console-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install
+      - run: npm run build
