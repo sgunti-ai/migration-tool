@@ -52,7 +52,7 @@ export const MigrationAdvisorWidget: React.FC<MigrationAdvisorWidgetProps> = ({ 
           <Sparkles className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
           <h2 className="text-sm font-bold text-slate-900 dark:text-white">AI Migration Advisor</h2>
         </div>
-        <button onClick={onClose} className="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-500 transition-colors">
+        <button onClick={onClose} className="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-500 transition-colors dark:text-slate-400">
           <X className="w-4 h-4" />
         </button>
       </div>
