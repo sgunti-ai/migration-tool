@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import { startLiveDiscovery } from './server/liveDiscovery.js';
+import { discoveryServiceGateway } from './server/discoveryGateway.js';
 import { buildLiveInventoryReport } from './server/liveInventoryReport.js';
 import { authRoutes, requireAuth, requireSameOrigin, isLocalDevelopmentRequest } from './server/auth.js';
 import { GoogleGenAI } from '@google/genai';
@@ -70,6 +71,10 @@ async function startServer() {
     if (['POST','PUT','PATCH','DELETE'].includes(req.method)) return res.status(503).json({error:'Live migration features are disabled. Only simulated demo operations exist. Set DEMO_MODE=true for isolated demos.'});
     next();
   });
+
+  // New discovery service runs against its own PostgreSQL database.
+  // Existing legacy endpoints remain available during the UI migration.
+  app.use('/api/discovery-service', discoveryServiceGateway);
 
   // Ensure initial discovery seed data is populated
   if (process.env.DEMO_MODE === 'true') {
