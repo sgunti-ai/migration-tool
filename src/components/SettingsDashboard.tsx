@@ -46,7 +46,7 @@ export const SettingsDashboard = () => {
       <div className="px-6 py-5 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-200">System Settings</h1>
-          <p className="text-sm text-slate-500 mt-1">Configure notifications, security compliance, and integrations.</p>
+          <p className="text-sm text-slate-500 mt-1 dark:text-slate-400">Configure notifications, security compliance, and integrations.</p>
         </div>
         <div className="flex space-x-3">
           <button 
@@ -120,18 +120,18 @@ export const SettingsDashboard = () => {
               <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm p-5">
                 <h3 className="text-base font-semibold text-slate-800 dark:text-slate-200 mb-4 flex items-center"><MessageSquare className="w-5 h-5 mr-2 text-indigo-600" /> Chat Integrations</h3>
                 <div className="space-y-4">
-                  <label className="flex items-center space-x-3 cursor-pointer p-3 hover:bg-slate-50 dark:hover:bg-slate-800 rounded border border-transparent hover:border-slate-100">
+                  <label className="flex items-center space-x-3 cursor-pointer p-3 hover:bg-slate-50 dark:hover:bg-slate-800 rounded border border-transparent hover:border-slate-100 dark:hover:border-slate-800">
                     <input type="checkbox" checked={notificationState.teamsIntegration} onChange={e => setNotificationState({...notificationState, teamsIntegration: e.target.checked})} className="rounded text-blue-600 w-5 h-5" />
                     <div className="flex-1">
                       <div className="text-sm font-medium text-slate-700 dark:text-slate-300">Microsoft Teams Integration</div>
-                      <div className="text-xs text-slate-500">Send notifications directly to connected Teams channels.</div>
+                      <div className="text-xs text-slate-500 dark:text-slate-400">Send notifications directly to connected Teams channels.</div>
                     </div>
                   </label>
-                  <label className="flex items-center space-x-3 cursor-pointer p-3 hover:bg-slate-50 dark:hover:bg-slate-800 rounded border border-transparent hover:border-slate-100">
+                  <label className="flex items-center space-x-3 cursor-pointer p-3 hover:bg-slate-50 dark:hover:bg-slate-800 rounded border border-transparent hover:border-slate-100 dark:hover:border-slate-800">
                     <input type="checkbox" checked={notificationState.slackIntegration} onChange={e => setNotificationState({...notificationState, slackIntegration: e.target.checked})} className="rounded text-blue-600 w-5 h-5" />
                     <div className="flex-1">
                       <div className="text-sm font-medium text-slate-700 dark:text-slate-300">Slack Integration</div>
-                      <div className="text-xs text-slate-500">Send notifications to Slack workspaces via Incoming Webhook.</div>
+                      <div className="text-xs text-slate-500 dark:text-slate-400">Send notifications to Slack workspaces via Incoming Webhook.</div>
                     </div>
                   </label>
                 </div>
@@ -195,11 +195,11 @@ export const SettingsDashboard = () => {
               <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm p-5">
                 <h3 className="text-base font-semibold text-slate-800 dark:text-slate-200 mb-4 flex items-center"><Users className="w-5 h-5 mr-2 text-indigo-600" /> Access & Compliance</h3>
                 <div className="space-y-4">
-                  <label className="flex items-center space-x-3 cursor-pointer p-3 hover:bg-slate-50 dark:hover:bg-slate-800 rounded border border-transparent hover:border-slate-100">
+                  <label className="flex items-center space-x-3 cursor-pointer p-3 hover:bg-slate-50 dark:hover:bg-slate-800 rounded border border-transparent hover:border-slate-100 dark:hover:border-slate-800">
                     <input type="checkbox" checked={securityState.rbacEnforced} onChange={e => setSecurityState({...securityState, rbacEnforced: e.target.checked})} className="rounded text-blue-600 w-5 h-5" />
                     <div className="flex-1">
                       <div className="text-sm font-medium text-slate-700 dark:text-slate-300">Enforce Strict RBAC</div>
-                      <div className="text-xs text-slate-500">Require specific Global Admin or Migration Operator roles to initiate jobs.</div>
+                      <div className="text-xs text-slate-500 dark:text-slate-400">Require specific Global Admin or Migration Operator roles to initiate jobs.</div>
                     </div>
                   </label>
                   
@@ -237,7 +237,7 @@ export const SettingsDashboard = () => {
                       <Key className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 dark:text-slate-400" />
                       <input type="password" value={apiState.apiKey} onChange={e => setApiState({...apiState, apiKey: e.target.value})} className="pl-9 w-full border border-slate-300 dark:border-slate-600 rounded p-2 text-sm font-mono" />
                     </div>
-                    <button className="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 rounded text-sm font-medium hover:bg-slate-200">Rotate Key</button>
+                    <button className="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 rounded text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-700">Rotate Key</button>
                   </div>
                 </div>
 
@@ -257,11 +257,11 @@ export const SettingsDashboard = () => {
                     </div>
                   </div>
                   <div>
-                    <label className="flex items-center space-x-3 cursor-pointer p-3 mt-4 hover:bg-slate-50 dark:hover:bg-slate-800 rounded border border-transparent hover:border-slate-100">
+                    <label className="flex items-center space-x-3 cursor-pointer p-3 mt-4 hover:bg-slate-50 dark:hover:bg-slate-800 rounded border border-transparent hover:border-slate-100 dark:hover:border-slate-800">
                       <input type="checkbox" checked={apiState.thirdPartySync} onChange={e => setApiState({...apiState, thirdPartySync: e.target.checked})} className="rounded text-blue-600 w-5 h-5" />
                       <div className="flex-1">
                         <div className="text-sm font-medium text-slate-700 dark:text-slate-300">Third-Party Extensions</div>
-                        <div className="text-xs text-slate-500">Allow external tools (e.g. ServiceNow, Jira) to query migration status.</div>
+                        <div className="text-xs text-slate-500 dark:text-slate-400">Allow external tools (e.g. ServiceNow, Jira) to query migration status.</div>
                       </div>
                     </label>
                   </div>
