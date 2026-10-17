@@ -526,7 +526,7 @@ export const TenantConfigurationDashboard: React.FC<TenantConfigurationDashboard
             onClick={() => setShowConfirm('reset')}
             className="flex items-center space-x-1.5 px-3 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-750 rounded-lg text-xs font-medium transition cursor-pointer"
           >
-            <RotateCcw className="h-3.5 w-3.5 text-slate-500" />
+            <RotateCcw className="h-3.5 w-3.5 text-slate-500 dark:text-slate-400" />
             <span>Reset Defaults</span>
           </button>
 
@@ -649,7 +649,7 @@ export const TenantConfigurationDashboard: React.FC<TenantConfigurationDashboard
                     <div>
                       <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1 flex items-center justify-between">
                         <span>Tenant Primary Domain</span>
-                        <span className="text-[11px] font-normal text-slate-400">e.g. contoso.onmicrosoft.com</span>
+                        <span className="text-[11px] font-normal text-slate-400 dark:text-slate-500">e.g. contoso.onmicrosoft.com</span>
                       </label>
                       <div className="relative">
                         <Globe className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-slate-500" />
@@ -705,7 +705,7 @@ export const TenantConfigurationDashboard: React.FC<TenantConfigurationDashboard
                     <div>
                       <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1 flex items-center justify-between">
                         <span>Application (Client) ID</span>
-                        <span title="The Client ID of the enterprise application registered in Azure Portal"><HelpCircle className="w-3.5 h-3.5 text-slate-400" /></span>
+                        <span title="The Client ID of the enterprise application registered in Azure Portal"><HelpCircle className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" /></span>
                       </label>
                       <input 
                         type="text" 
@@ -735,7 +735,7 @@ export const TenantConfigurationDashboard: React.FC<TenantConfigurationDashboard
                         <button
                           type="button"
                           onClick={() => setShowSourceSecret(!showSourceSecret)}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 dark:text-slate-500"
                         >
                           {showSourceSecret ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                         </button>
@@ -861,7 +861,7 @@ export const TenantConfigurationDashboard: React.FC<TenantConfigurationDashboard
                     <div>
                       <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1 flex items-center justify-between">
                         <span>Tenant Primary Domain</span>
-                        <span className="text-[11px] font-normal text-slate-400">e.g. fabrikam.com</span>
+                        <span className="text-[11px] font-normal text-slate-400 dark:text-slate-500">e.g. fabrikam.com</span>
                       </label>
                       <div className="relative">
                         <Globe className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-slate-500" />
@@ -917,7 +917,7 @@ export const TenantConfigurationDashboard: React.FC<TenantConfigurationDashboard
                     <div>
                       <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1 flex items-center justify-between">
                         <span>Application (Client) ID</span>
-                        <span title="The Client ID registered in target tenant"><HelpCircle className="w-3.5 h-3.5 text-slate-400" /></span>
+                        <span title="The Client ID registered in target tenant"><HelpCircle className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" /></span>
                       </label>
                       <input 
                         type="text" 
@@ -947,7 +947,7 @@ export const TenantConfigurationDashboard: React.FC<TenantConfigurationDashboard
                         <button
                           type="button"
                           onClick={() => setShowTargetSecret(!showTargetSecret)}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 dark:text-slate-500"
                         >
                           {showTargetSecret ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                         </button>
@@ -1196,7 +1196,7 @@ export const TenantConfigurationDashboard: React.FC<TenantConfigurationDashboard
                   <div className="flex-1">
                     <div className="text-xs font-bold text-slate-900 dark:text-slate-100 flex items-center">
                       Preserve Permissions & ACLs
-                      <Lock className="w-3.5 h-3.5 ml-1.5 text-slate-400" />
+                      <Lock className="w-3.5 h-3.5 ml-1.5 text-slate-400 dark:text-slate-500" />
                     </div>
                     <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
                       Migrates item-level permissions, direct access grants, and anonymous sharing links to target.
@@ -1216,7 +1216,7 @@ export const TenantConfigurationDashboard: React.FC<TenantConfigurationDashboard
                     <div className="flex-1">
                       <div className="text-xs font-bold text-slate-900 dark:text-slate-100 flex items-center">
                         Preserve File Version History
-                        <History className="w-3.5 h-3.5 ml-1.5 text-slate-400" />
+                        <History className="w-3.5 h-3.5 ml-1.5 text-slate-400 dark:text-slate-500" />
                       </div>
                       <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
                         Transfers prior revision history for OneDrive & SharePoint documents.
@@ -1250,7 +1250,7 @@ export const TenantConfigurationDashboard: React.FC<TenantConfigurationDashboard
                   <div className="flex-1">
                     <div className="text-xs font-bold text-slate-900 dark:text-slate-100 flex items-center">
                       Preserve Original Timestamps
-                      <FileClock className="w-3.5 h-3.5 ml-1.5 text-slate-400" />
+                      <FileClock className="w-3.5 h-3.5 ml-1.5 text-slate-400 dark:text-slate-500" />
                     </div>
                     <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
                       Maintains original "Created Date" and "Last Modified By" system attributes.
@@ -1269,7 +1269,7 @@ export const TenantConfigurationDashboard: React.FC<TenantConfigurationDashboard
                   <div className="flex-1">
                     <div className="text-xs font-bold text-slate-900 dark:text-slate-100 flex items-center">
                       Preserve Mailbox Rules & Delegations
-                      <Users className="w-3.5 h-3.5 ml-1.5 text-slate-400" />
+                      <Users className="w-3.5 h-3.5 ml-1.5 text-slate-400 dark:text-slate-500" />
                     </div>
                     <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
                       Transfers server-side inbox rules, safe senders list, and SendAs/FullAccess mailbox permissions.
@@ -1416,7 +1416,7 @@ export const TenantConfigurationDashboard: React.FC<TenantConfigurationDashboard
                       onChange={e => setPolicyState({ ...policyState, parallelWorkers: Number(e.target.value) })}
                       className="w-full accent-blue-600"
                     />
-                    <div className="flex justify-between text-[10px] text-slate-400">
+                    <div className="flex justify-between text-[10px] text-slate-400 dark:text-slate-500">
                       <span>4 (Low Network Impact)</span>
                       <span>16 (Balanced)</span>
                       <span>32 (Max Throughput)</span>
@@ -1548,7 +1548,7 @@ export const TenantConfigurationDashboard: React.FC<TenantConfigurationDashboard
                   <span className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
                     <Sparkles className="w-3.5 h-3.5 text-indigo-500" /> Interactive Mapping Sandbox Tester
                   </span>
-                  <span className="text-[10px] text-slate-500 font-mono">Live Evaluation</span>
+                  <span className="text-[10px] text-slate-500 font-mono dark:text-slate-400">Live Evaluation</span>
                 </div>
 
                 <div className="flex flex-col sm:flex-row items-center gap-3">
@@ -1562,7 +1562,7 @@ export const TenantConfigurationDashboard: React.FC<TenantConfigurationDashboard
                     />
                   </div>
 
-                  <ArrowRight className="w-5 h-5 text-slate-400 hidden sm:block mt-5 shrink-0" />
+                  <ArrowRight className="w-5 h-5 text-slate-400 hidden sm:block mt-5 shrink-0 dark:text-slate-500" />
 
                   <div className="w-full sm:flex-1">
                     <label className="block text-[11px] text-slate-500 dark:text-slate-400 mb-1">Resulting Target Identity:</label>
