@@ -140,7 +140,7 @@ export const TenantConnectCards: React.FC<TenantConnectCardsProps> = ({
             <Shield className="h-5 w-5" />
           </div>
           <div>
-            <h4 className="text-sm font-semibold text-slate-100">
+            <h4 className="text-sm font-semibold text-slate-100 dark:text-slate-800">
               Multi-Tenant Entra ID Authentication & MSAL Consent
             </h4>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
@@ -183,7 +183,7 @@ export const TenantConnectCards: React.FC<TenantConnectCardsProps> = ({
                   <span className="text-[11px] font-bold uppercase tracking-wider text-blue-400">
                     Step 1 • Source
                   </span>
-                  <h3 className="text-base font-semibold text-slate-100">
+                  <h3 className="text-base font-semibold text-slate-100 dark:text-slate-800">
                     Connect Source Tenant
                   </h3>
                 </div>
@@ -211,7 +211,7 @@ export const TenantConnectCards: React.FC<TenantConnectCardsProps> = ({
               <div className="bg-white dark:bg-slate-800/60 rounded-lg p-3 border border-slate-200 dark:border-slate-700/60 mb-4 space-y-2 text-xs">
                 <div className="flex justify-between items-center">
                   <span className="text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-                    <Globe className="h-3.5 w-3.5 text-slate-500" /> Primary Domain:
+                    <Globe className="h-3.5 w-3.5 text-slate-500 dark:text-slate-400" /> Primary Domain:
                   </span>
                   <span className="font-semibold text-emerald-400 font-mono">
                     {tenantStatus.source.domain}
@@ -219,15 +219,15 @@ export const TenantConnectCards: React.FC<TenantConnectCardsProps> = ({
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-                    <Building2 className="h-3.5 w-3.5 text-slate-500" /> Organization:
+                    <Building2 className="h-3.5 w-3.5 text-slate-500 dark:text-slate-400" /> Organization:
                   </span>
-                  <span className="text-slate-200 truncate max-w-[180px]">
+                  <span className="text-slate-200 truncate max-w-[180px] dark:text-slate-700">
                     {tenantStatus.source.displayName || 'Enterprise Source Tenant'}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-                    <Key className="h-3.5 w-3.5 text-slate-500" /> Admin Consent:
+                    <Key className="h-3.5 w-3.5 text-slate-500 dark:text-slate-400" /> Admin Consent:
                   </span>
                   <span className="text-emerald-400 font-medium">Granted (Graph.ReadWrite.All)</span>
                 </div>
@@ -251,14 +251,14 @@ export const TenantConnectCards: React.FC<TenantConnectCardsProps> = ({
                 <button
                   id="btn-source-manual-connect"
                   onClick={() => setShowConfigModal('SOURCE')}
-                  className="px-3 py-2 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 transition-colors cursor-pointer"
+                  className="px-3 py-2 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 transition-colors cursor-pointer dark:hover:bg-slate-800"
                 >
                   Domain Setup
                 </button>
               </div>
             ) : (
               <div className="flex items-center justify-between w-full">
-                <span className="text-[11px] text-slate-500 flex items-center gap-1">
+                <span className="text-[11px] text-slate-500 flex items-center gap-1 dark:text-slate-400">
                   <Shield className="h-3 w-3 text-emerald-500" /> AES-256 Encrypted Session
                 </span>
                 <button
@@ -293,7 +293,7 @@ export const TenantConnectCards: React.FC<TenantConnectCardsProps> = ({
                   <span className="text-[11px] font-bold uppercase tracking-wider text-indigo-400">
                     Step 2 • Target
                   </span>
-                  <h3 className="text-base font-semibold text-slate-100">
+                  <h3 className="text-base font-semibold text-slate-100 dark:text-slate-800">
                     Connect Target Tenant
                   </h3>
                 </div>
@@ -321,7 +321,7 @@ export const TenantConnectCards: React.FC<TenantConnectCardsProps> = ({
               <div className="bg-white dark:bg-slate-800/60 rounded-lg p-3 border border-slate-200 dark:border-slate-700/60 mb-4 space-y-2 text-xs">
                 <div className="flex justify-between items-center">
                   <span className="text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-                    <Globe className="h-3.5 w-3.5 text-slate-500" /> Primary Domain:
+                    <Globe className="h-3.5 w-3.5 text-slate-500 dark:text-slate-400" /> Primary Domain:
                   </span>
                   <span className="font-semibold text-emerald-400 font-mono">
                     {tenantStatus.target.domain}
@@ -329,15 +329,15 @@ export const TenantConnectCards: React.FC<TenantConnectCardsProps> = ({
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-                    <Building2 className="h-3.5 w-3.5 text-slate-500" /> Organization:
+                    <Building2 className="h-3.5 w-3.5 text-slate-500 dark:text-slate-400" /> Organization:
                   </span>
-                  <span className="text-slate-200 truncate max-w-[180px]">
+                  <span className="text-slate-200 truncate max-w-[180px] dark:text-slate-700">
                     {tenantStatus.target.displayName || 'Destination Target Tenant'}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-                    <Key className="h-3.5 w-3.5 text-slate-500" /> Admin Consent:
+                    <Key className="h-3.5 w-3.5 text-slate-500 dark:text-slate-400" /> Admin Consent:
                   </span>
                   <span className="text-emerald-400 font-medium">Granted (Directory.ReadWrite.All)</span>
                 </div>
@@ -361,14 +361,14 @@ export const TenantConnectCards: React.FC<TenantConnectCardsProps> = ({
                 <button
                   id="btn-target-manual-connect"
                   onClick={() => setShowConfigModal('TARGET')}
-                  className="px-3 py-2 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 transition-colors cursor-pointer"
+                  className="px-3 py-2 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 transition-colors cursor-pointer dark:hover:bg-slate-800"
                 >
                   Domain Setup
                 </button>
               </div>
             ) : (
               <div className="flex items-center justify-between w-full">
-                <span className="text-[11px] text-slate-500 flex items-center gap-1">
+                <span className="text-[11px] text-slate-500 flex items-center gap-1 dark:text-slate-400">
                   <Shield className="h-3 w-3 text-emerald-500" /> AES-256 Encrypted Session
                 </span>
                 <button
@@ -434,7 +434,7 @@ export const TenantConnectCards: React.FC<TenantConnectCardsProps> = ({
                       setManualDomain(showConfigModal === 'SOURCE' ? 'contoso.onmicrosoft.com' : 'fabrikam.com');
                       setManualName(showConfigModal === 'SOURCE' ? 'Contoso Enterprise' : 'Fabrikam Corp');
                     }}
-                    className="px-2.5 py-1 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:bg-slate-700 text-blue-400 rounded text-xs border border-slate-200 dark:border-slate-700"
+                    className="px-2.5 py-1 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:bg-slate-700 text-blue-400 rounded text-xs border border-slate-200 dark:border-slate-700 dark:hover:bg-slate-800"
                   >
                     {showConfigModal === 'SOURCE' ? 'contoso.onmicrosoft.com' : 'fabrikam.com'}
                   </button>
@@ -444,7 +444,7 @@ export const TenantConnectCards: React.FC<TenantConnectCardsProps> = ({
                       setManualDomain(showConfigModal === 'SOURCE' ? 'megacorp.onmicrosoft.com' : 'futurecloud.io');
                       setManualName(showConfigModal === 'SOURCE' ? 'MegaCorp Global' : 'FutureCloud Tech');
                     }}
-                    className="px-2.5 py-1 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:bg-slate-700 text-blue-400 rounded text-xs border border-slate-200 dark:border-slate-700"
+                    className="px-2.5 py-1 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:bg-slate-700 text-blue-400 rounded text-xs border border-slate-200 dark:border-slate-700 dark:hover:bg-slate-800"
                   >
                     {showConfigModal === 'SOURCE' ? 'megacorp.onmicrosoft.com' : 'futurecloud.io'}
                   </button>
@@ -456,7 +456,7 @@ export const TenantConnectCards: React.FC<TenantConnectCardsProps> = ({
               <button
                 type="button"
                 onClick={() => setShowConfigModal(null)}
-                className="px-3 py-2 text-xs font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white"
+                className="px-3 py-2 text-xs font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white dark:hover:text-slate-100"
               >
                 Cancel
               </button>
