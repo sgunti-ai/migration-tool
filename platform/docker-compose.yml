@@ -37,6 +37,7 @@ services:
       DATABASE_URL: postgresql://discovery:${DISCOVERY_DB_PASSWORD:?Set DISCOVERY_DB_PASSWORD}@postgres:5432/discovery?schema=public
       REDIS_URL: redis://redis:6379
       PORT: 3100
+      DISCOVERY_BIND_HOST: 0.0.0.0
     ports: ["127.0.0.1:3100:3100"]
     command: ["npm","run","dev"]
     depends_on:
