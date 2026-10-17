@@ -132,7 +132,7 @@ export const UserListTable: React.FC<UserListTableProps> = ({
 
   const renderSortIcon = (field: SortField) => {
     if (sortField !== field) {
-      return <ChevronsUpDown className="w-3.5 h-3.5 text-slate-600 opacity-60 group-hover:opacity-100 transition" />;
+      return <ChevronsUpDown className="w-3.5 h-3.5 text-slate-600 opacity-60 group-hover:opacity-100 transition dark:text-slate-300" />;
     }
     return sortOrder === 'asc' ? (
       <ChevronUp className="w-3.5 h-3.5 text-blue-400" />
@@ -147,7 +147,7 @@ export const UserListTable: React.FC<UserListTableProps> = ({
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 px-1">
         <div className="flex items-center space-x-3">
           <div className="relative flex-1 sm:w-72">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-500" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
             <input
               type="text"
               value={tableSearch}
@@ -161,7 +161,7 @@ export const UserListTable: React.FC<UserListTableProps> = ({
             {tableSearch && (
               <button
                 onClick={() => setTableSearch('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white dark:hover:text-slate-100"
               >
                 <X className="w-3 h-3" />
               </button>
@@ -182,7 +182,7 @@ export const UserListTable: React.FC<UserListTableProps> = ({
               setPageSize(Number(e.target.value));
               setCurrentPage(1);
             }}
-            className="px-2 py-1 text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:border-blue-500"
+            className="px-2 py-1 text-xs bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:border-blue-500 dark:text-slate-700"
           >
             <option value={10}>10</option>
             <option value={20}>20</option>
@@ -203,13 +203,13 @@ export const UserListTable: React.FC<UserListTableProps> = ({
                   <button
                     type="button"
                     onClick={toggleSelectAll}
-                    className="p-1 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white rounded transition"
+                    className="p-1 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white rounded transition dark:hover:text-slate-100"
                     title={isAllCurrentSelected ? 'Deselect all' : 'Select all'}
                   >
                     {isAllCurrentSelected ? (
                       <CheckSquare className="w-4 h-4 text-blue-500" />
                     ) : (
-                      <Square className="w-4 h-4 text-slate-600" />
+                      <Square className="w-4 h-4 text-slate-600 dark:text-slate-300" />
                     )}
                   </button>
                 </th>
@@ -217,7 +217,7 @@ export const UserListTable: React.FC<UserListTableProps> = ({
                 {/* User & UPN */}
                 <th
                   onClick={() => handleSort('displayName')}
-                  className="px-4 py-3 cursor-pointer group hover:text-slate-900 dark:text-white transition"
+                  className="px-4 py-3 cursor-pointer group hover:text-slate-900 dark:text-white transition dark:hover:text-slate-100"
                 >
                   <div className="flex items-center space-x-1.5">
                     <span>Entra ID User / UPN</span>
@@ -228,7 +228,7 @@ export const UserListTable: React.FC<UserListTableProps> = ({
                 {/* Department */}
                 <th
                   onClick={() => handleSort('department')}
-                  className="px-4 py-3 cursor-pointer group hover:text-slate-900 dark:text-white transition w-40"
+                  className="px-4 py-3 cursor-pointer group hover:text-slate-900 dark:text-white transition w-40 dark:hover:text-slate-100"
                 >
                   <div className="flex items-center space-x-1.5">
                     <span>Department</span>
@@ -239,7 +239,7 @@ export const UserListTable: React.FC<UserListTableProps> = ({
                 {/* Job Title */}
                 <th
                   onClick={() => handleSort('jobTitle')}
-                  className="px-4 py-3 cursor-pointer group hover:text-slate-900 dark:text-white transition w-44"
+                  className="px-4 py-3 cursor-pointer group hover:text-slate-900 dark:text-white transition w-44 dark:hover:text-slate-100"
                 >
                   <div className="flex items-center space-x-1.5">
                     <span>Job Title</span>
@@ -250,7 +250,7 @@ export const UserListTable: React.FC<UserListTableProps> = ({
                 {/* MFA Status */}
                 <th
                   onClick={() => handleSort('mfaStatus')}
-                  className="px-4 py-3 cursor-pointer group hover:text-slate-900 dark:text-white transition w-32"
+                  className="px-4 py-3 cursor-pointer group hover:text-slate-900 dark:text-white transition w-32 dark:hover:text-slate-100"
                 >
                   <div className="flex items-center space-x-1.5">
                     <span>MFA Status</span>
@@ -266,7 +266,7 @@ export const UserListTable: React.FC<UserListTableProps> = ({
                 {/* Mailbox Size */}
                 <th
                   onClick={() => handleSort('mailboxSizeMB')}
-                  className="px-4 py-3 cursor-pointer group hover:text-slate-900 dark:text-white transition w-28 text-right"
+                  className="px-4 py-3 cursor-pointer group hover:text-slate-900 dark:text-white transition w-28 text-right dark:hover:text-slate-100"
                 >
                   <div className="flex items-center justify-end space-x-1.5">
                     <span>Mailbox</span>
@@ -277,7 +277,7 @@ export const UserListTable: React.FC<UserListTableProps> = ({
                 {/* OneDrive */}
                 <th
                   onClick={() => handleSort('oneDriveUsedGB')}
-                  className="px-4 py-3 cursor-pointer group hover:text-slate-900 dark:text-white transition w-28 text-right"
+                  className="px-4 py-3 cursor-pointer group hover:text-slate-900 dark:text-white transition w-28 text-right dark:hover:text-slate-100"
                 >
                   <div className="flex items-center justify-end space-x-1.5">
                     <span>OneDrive</span>
@@ -288,7 +288,7 @@ export const UserListTable: React.FC<UserListTableProps> = ({
                 {/* Status */}
                 <th
                   onClick={() => handleSort('accountEnabled')}
-                  className="px-4 py-3 cursor-pointer group hover:text-slate-900 dark:text-white transition w-24 text-center"
+                  className="px-4 py-3 cursor-pointer group hover:text-slate-900 dark:text-white transition w-24 text-center dark:hover:text-slate-100"
                 >
                   <div className="flex items-center justify-center space-x-1.5">
                     <span>Status</span>
@@ -349,10 +349,10 @@ export const UserListTable: React.FC<UserListTableProps> = ({
               ) : paginatedUsers.length === 0 ? (
                 // Empty state
                 <tr>
-                  <td colSpan={10} className="py-16 text-center text-slate-500">
-                    <User className="w-10 h-10 mx-auto text-slate-600 mb-2 opacity-60" />
+                  <td colSpan={10} className="py-16 text-center text-slate-500 dark:text-slate-400">
+                    <User className="w-10 h-10 mx-auto text-slate-600 mb-2 opacity-60 dark:text-slate-300" />
                     <p className="text-sm font-medium text-slate-500 dark:text-slate-400">No discovered users match the criteria</p>
-                    <p className="text-xs text-slate-500 mt-1">
+                    <p className="text-xs text-slate-500 mt-1 dark:text-slate-400">
                       Try clearing search filters or scanning the tenant again
                     </p>
                   </td>
@@ -378,7 +378,7 @@ export const UserListTable: React.FC<UserListTableProps> = ({
                       <td className="w-12 px-3 py-3 text-center" onClick={(e) => toggleSelectUser(user.id, e)}>
                         <button
                           type="button"
-                          className="p-1 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white rounded transition"
+                          className="p-1 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white rounded transition dark:hover:text-slate-100"
                         >
                           {isSelected ? (
                             <CheckSquare className="w-4 h-4 text-blue-500" />
@@ -410,7 +410,7 @@ export const UserListTable: React.FC<UserListTableProps> = ({
                         {user.department ? (
                           <span className="truncate block">{user.department}</span>
                         ) : (
-                          <span className="text-slate-500 italic">Unassigned</span>
+                          <span className="text-slate-500 italic dark:text-slate-400">Unassigned</span>
                         )}
                       </td>
 
@@ -421,7 +421,7 @@ export const UserListTable: React.FC<UserListTableProps> = ({
                             {user.jobTitle}
                           </span>
                         ) : (
-                          <span className="text-slate-600 italic">—</span>
+                          <span className="text-slate-600 italic dark:text-slate-300">—</span>
                         )}
                       </td>
 
@@ -459,7 +459,7 @@ export const UserListTable: React.FC<UserListTableProps> = ({
                             )}
                           </div>
                         ) : (
-                          <span className="text-[11px] text-slate-500 italic">No license</span>
+                          <span className="text-[11px] text-slate-500 italic dark:text-slate-400">No license</span>
                         )}
                       </td>
 
@@ -471,7 +471,7 @@ export const UserListTable: React.FC<UserListTableProps> = ({
                       {/* OneDrive */}
                       <td className="px-4 py-3 text-right font-mono text-slate-600 dark:text-slate-300 whitespace-nowrap">
                         <span className="inline-flex items-center gap-1">
-                          <HardDrive className="w-3 h-3 text-slate-500" />
+                          <HardDrive className="w-3 h-3 text-slate-500 dark:text-slate-400" />
                           {oneDriveGB} GB
                         </span>
                       </td>
@@ -483,7 +483,7 @@ export const UserListTable: React.FC<UserListTableProps> = ({
                             Active
                           </span>
                         ) : (
-                          <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-white dark:bg-slate-800 text-slate-500 border border-slate-200 dark:border-slate-700">
+                          <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-white dark:bg-slate-800 text-slate-500 border border-slate-200 dark:border-slate-700 dark:text-slate-400">
                             Disabled
                           </span>
                         )}
@@ -523,33 +523,33 @@ export const UserListTable: React.FC<UserListTableProps> = ({
             <button
               onClick={() => setCurrentPage(1)}
               disabled={currentPage === 1}
-              className="px-2.5 py-1 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:bg-white dark:bg-slate-800 hover:text-slate-900 dark:text-white disabled:opacity-40 disabled:cursor-not-allowed transition"
+              className="px-2.5 py-1 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:bg-white dark:bg-slate-800 hover:text-slate-900 dark:text-white disabled:opacity-40 disabled:cursor-not-allowed transition dark:hover:bg-slate-900 dark:hover:text-slate-100"
             >
               First
             </button>
             <button
               onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
               disabled={currentPage === 1}
-              className="p-1 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:bg-white dark:bg-slate-800 hover:text-slate-900 dark:text-white disabled:opacity-40 disabled:cursor-not-allowed transition"
+              className="p-1 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:bg-white dark:bg-slate-800 hover:text-slate-900 dark:text-white disabled:opacity-40 disabled:cursor-not-allowed transition dark:hover:bg-slate-900 dark:hover:text-slate-100"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
 
-            <span className="px-3 py-1 font-mono text-slate-900 dark:text-white bg-slate-800 rounded border border-slate-200 dark:border-slate-700">
+            <span className="px-3 py-1 font-mono text-slate-900 dark:text-white bg-slate-800 rounded border border-slate-200 dark:border-slate-700 dark:bg-slate-100">
               {currentPage} / {totalPages}
             </span>
 
             <button
               onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages}
-              className="p-1 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:bg-white dark:bg-slate-800 hover:text-slate-900 dark:text-white disabled:opacity-40 disabled:cursor-not-allowed transition"
+              className="p-1 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:bg-white dark:bg-slate-800 hover:text-slate-900 dark:text-white disabled:opacity-40 disabled:cursor-not-allowed transition dark:hover:bg-slate-900 dark:hover:text-slate-100"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
             <button
               onClick={() => setCurrentPage(totalPages)}
               disabled={currentPage === totalPages}
-              className="px-2.5 py-1 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:bg-white dark:bg-slate-800 hover:text-slate-900 dark:text-white disabled:opacity-40 disabled:cursor-not-allowed transition"
+              className="px-2.5 py-1 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-600 dark:text-slate-300 hover:bg-white dark:bg-slate-800 hover:text-slate-900 dark:text-white disabled:opacity-40 disabled:cursor-not-allowed transition dark:hover:bg-slate-900 dark:hover:text-slate-100"
             >
               Last
             </button>
@@ -571,7 +571,7 @@ export const UserListTable: React.FC<UserListTableProps> = ({
             <button
               id="btn-batch-export-csv"
               onClick={() => onExportSelected(selectedUsersList, 'csv')}
-              className="px-3 py-1.5 text-xs font-medium bg-white dark:bg-slate-800 hover:bg-slate-100 dark:bg-slate-700 text-slate-200 rounded-lg border border-slate-600 transition flex items-center space-x-1.5"
+              className="px-3 py-1.5 text-xs font-medium bg-white dark:bg-slate-800 hover:bg-slate-100 dark:bg-slate-700 text-slate-200 rounded-lg border border-slate-600 transition flex items-center space-x-1.5 dark:text-slate-700 dark:border-slate-300 dark:hover:bg-slate-800"
             >
               <Download className="w-3.5 h-3.5 text-emerald-400" />
               <span>Export CSV</span>
@@ -580,7 +580,7 @@ export const UserListTable: React.FC<UserListTableProps> = ({
             <button
               id="btn-batch-export-json"
               onClick={() => onExportSelected(selectedUsersList, 'json')}
-              className="px-3 py-1.5 text-xs font-medium bg-white dark:bg-slate-800 hover:bg-slate-100 dark:bg-slate-700 text-slate-200 rounded-lg border border-slate-600 transition flex items-center space-x-1.5"
+              className="px-3 py-1.5 text-xs font-medium bg-white dark:bg-slate-800 hover:bg-slate-100 dark:bg-slate-700 text-slate-200 rounded-lg border border-slate-600 transition flex items-center space-x-1.5 dark:text-slate-700 dark:border-slate-300 dark:hover:bg-slate-800"
             >
               <Download className="w-3.5 h-3.5 text-blue-400" />
               <span>Export JSON</span>
@@ -600,7 +600,7 @@ export const UserListTable: React.FC<UserListTableProps> = ({
             <button
               id="btn-batch-deselect"
               onClick={() => setSelectedUserIds(new Set())}
-              className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white hover:bg-white dark:bg-slate-800 rounded-lg transition"
+              className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white hover:bg-white dark:bg-slate-800 rounded-lg transition dark:hover:bg-slate-900 dark:hover:text-slate-100"
               title="Deselect all"
             >
               <X className="w-4 h-4" />
