@@ -1,16 +1,13 @@
 import React,{useCallback,useEffect,useState} from 'react';
 import {RefreshCw,Play,Database,Plus,ShieldCheck} from 'lucide-react';
+import {discoveryClient,type V2Project,type V2Scan,type V2Inventory,type V2Report} from '../../services/platformV2';
 
-type Project={id:string;name:string;sourceTenantId:string};
-type Scan={id:string;status:string;progress:number;scanType:string;createdAt:string;errorMessage?:string|null};
-type Inventory={count:number;items:Array<{workload:string;sourceId:string;name:string|null;isDeleted:boolean}>};
-type Report={status:string;workloads:Array<{workload:string;status:string;itemsRecorded:number;errorMessage?:string|null}>;unsupportedWorkloads:Array<{workload:string;status:string}>};
+type Project=V2Project;
+type Scan=V2Scan;
+type Inventory=V2Inventory;
+type Report=V2Report;
 const workloads=['Users','Groups','SharePoint','Teams','OneDrive'] as const;
-const api=async<T,>(path:string,init?:RequestInit):Promise<T>=>{
- const res=await fetch('/api/discovery-service'+path,{...init,headers:{'Content-Type':'application/json',...init?.headers}});
- if(!res.ok){let message='Discovery API HTTP '+res.status;try{const body=await res.json();message=body.error||message;}catch{}throw new Error(message);}
- return res.json() as Promise<T>;
-};
+const api=<T,>(path:string,init?:RequestInit)=>discoveryClient.request<T>(path,init);
 
 export const DiscoveryServiceDashboard:React.FC=()=>{
  const [projects,setProjects]=useState<Project[]>([]);
