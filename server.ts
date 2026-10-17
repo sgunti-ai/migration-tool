@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { startLiveDiscovery } from './server/liveDiscovery.js';
 import { authRoutes, requireAuth, requireSameOrigin, isLocalDevelopmentRequest } from './server/auth.js';
 import { GoogleGenAI } from '@google/genai';
