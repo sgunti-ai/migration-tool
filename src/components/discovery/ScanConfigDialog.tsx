@@ -110,7 +110,7 @@ export const ScanConfigDialog: React.FC<ScanConfigDialogProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white hover:bg-white dark:bg-slate-800 rounded-lg transition"
+            className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white hover:bg-white dark:bg-slate-800 rounded-lg transition dark:hover:bg-slate-900 dark:hover:text-slate-100"
           >
             <X className="w-4 h-4" />
           </button>
@@ -177,7 +177,7 @@ export const ScanConfigDialog: React.FC<ScanConfigDialogProps> = ({
                 >
                   Select All
                 </button>
-                <span className="text-slate-600">•</span>
+                <span className="text-slate-600 dark:text-slate-300">•</span>
                 <button
                   type="button"
                   onClick={() => handleSelectAll(false)}
@@ -206,7 +206,7 @@ export const ScanConfigDialog: React.FC<ScanConfigDialogProps> = ({
                       {isChecked ? (
                         <CheckSquare className="w-4 h-4 text-blue-400 shrink-0" />
                       ) : (
-                        <Square className="w-4 h-4 text-slate-600 shrink-0" />
+                        <Square className="w-4 h-4 text-slate-600 shrink-0 dark:text-slate-300" />
                       )}
                     </div>
                     <div className="min-w-0">
@@ -229,7 +229,7 @@ export const ScanConfigDialog: React.FC<ScanConfigDialogProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 text-xs font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white transition"
+                className="px-4 py-2 text-xs font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white transition dark:hover:text-slate-100"
               >
                 Cancel
               </button>
@@ -242,7 +242,7 @@ export const ScanConfigDialog: React.FC<ScanConfigDialogProps> = ({
               >
                 {isStarting ? (
                   <>
-                    <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin dark:border-slate-900"></div>
                     <span>Initializing Scan...</span>
                   </>
                 ) : (
