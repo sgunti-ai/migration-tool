@@ -269,11 +269,11 @@ export const SecurityComplianceDashboard: React.FC<SecurityComplianceDashboardPr
           <div className="space-y-2 text-xs">
             <div className="flex justify-between p-2.5 bg-white dark:bg-slate-800/40 rounded-lg border border-slate-200 dark:border-slate-700/40">
               <span className="text-slate-500 dark:text-slate-400">Storage Architecture:</span>
-              <span className="text-slate-200 font-mono">SQLite WAL Encrypted Snapshot</span>
+              <span className="text-slate-200 font-mono dark:text-slate-700">SQLite WAL Encrypted Snapshot</span>
             </div>
             <div className="flex justify-between p-2.5 bg-white dark:bg-slate-800/40 rounded-lg border border-slate-200 dark:border-slate-700/40">
               <span className="text-slate-500 dark:text-slate-400">Retention Policy:</span>
-              <span className="text-slate-200 font-mono">30 Days Continuous Rolling Archive</span>
+              <span className="text-slate-200 font-mono dark:text-slate-700">30 Days Continuous Rolling Archive</span>
             </div>
             <div className="flex justify-between p-2.5 bg-white dark:bg-slate-800/40 rounded-lg border border-slate-200 dark:border-slate-700/40">
               <span className="text-slate-500 dark:text-slate-400">Last Snapshot Verified:</span>
@@ -305,7 +305,7 @@ export const SecurityComplianceDashboard: React.FC<SecurityComplianceDashboardPr
 
             <button
               onClick={onRefreshMetrics}
-              className="p-1.5 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 transition-colors cursor-pointer"
+              className="p-1.5 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 transition-colors cursor-pointer dark:hover:bg-slate-800"
               title="Refresh Metrics"
             >
               <RefreshCw className="h-3.5 w-3.5" />
@@ -369,22 +369,22 @@ export const SecurityComplianceDashboard: React.FC<SecurityComplianceDashboardPr
           <div className="p-3 bg-white dark:bg-slate-800/40 rounded-lg border border-slate-200 dark:border-slate-700/50">
             <span className="text-[11px] text-slate-500 dark:text-slate-400 block">GDPR Art. 32</span>
             <span className="font-semibold text-emerald-400">COMPLIANT</span>
-            <p className="text-[10px] text-slate-500 mt-0.5">Pseudonymization & encryption</p>
+            <p className="text-[10px] text-slate-500 mt-0.5 dark:text-slate-400">Pseudonymization & encryption</p>
           </div>
           <div className="p-3 bg-white dark:bg-slate-800/40 rounded-lg border border-slate-200 dark:border-slate-700/50">
             <span className="text-[11px] text-slate-500 dark:text-slate-400 block">HIPAA Security Rule</span>
             <span className="font-semibold text-emerald-400">COMPLIANT</span>
-            <p className="text-[10px] text-slate-500 mt-0.5">Audit controls & transmission security</p>
+            <p className="text-[10px] text-slate-500 mt-0.5 dark:text-slate-400">Audit controls & transmission security</p>
           </div>
           <div className="p-3 bg-white dark:bg-slate-800/40 rounded-lg border border-slate-200 dark:border-slate-700/50">
             <span className="text-[11px] text-slate-500 dark:text-slate-400 block">SOC 2 Type II</span>
             <span className="font-semibold text-emerald-400">VERIFIED</span>
-            <p className="text-[10px] text-slate-500 mt-0.5">Security, availability & confidentiality</p>
+            <p className="text-[10px] text-slate-500 mt-0.5 dark:text-slate-400">Security, availability & confidentiality</p>
           </div>
           <div className="p-3 bg-white dark:bg-slate-800/40 rounded-lg border border-slate-200 dark:border-slate-700/50">
             <span className="text-[11px] text-slate-500 dark:text-slate-400 block">ISO/IEC 27001</span>
             <span className="font-semibold text-emerald-400">ALIGNED</span>
-            <p className="text-[10px] text-slate-500 mt-0.5">ISMS cloud standard adherence</p>
+            <p className="text-[10px] text-slate-500 mt-0.5 dark:text-slate-400">ISMS cloud standard adherence</p>
           </div>
         </div>
       </div>
