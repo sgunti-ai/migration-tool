@@ -55,6 +55,33 @@ app.get('/api/v2/projects/:projectId/scans/:scanId/provenance',async(req,res)=>{
  // Never return deltaLink: opaque Graph tokens can expose tenant discovery state.
  res.json({scanId:scan.id,organizationId,projectId:scan.projectId,sourceTenantId:scan.sourceTenantId,mode:scan.mode,scanType:scan.scanType,apiProvider:scan.apiProvider,status:scan.status,startedAt:scan.startedAt,finishedAt:scan.finishedAt,workloads});
 });
+app.get('/api/v2/projects/:projectId/scans/:scanId/report',async(req,res)=>{
+ const organizationId=req.principal!.organizationId;
+ const scan=await db.scan.findFirst({where:{id:req.params.scanId,projectId:req.params.projectId,organizationId}});
+ if(!scan)return res.sendStatus(404);
+ const requested=JSON.parse(scan.workloads) as string[];
+ const [records,counts]=await Promise.all([
+  db.discoveryScanWorkload.findMany({where:{scanId:scan.id,projectId:scan.projectId,organizationId},select:{workload:true,status:true,itemsSeen:true,itemsDeleted:true,pagesRead:true,startedAt:true,completedAt:true,errorMessage:true}}),
+  db.inventoryItem.groupBy({by:['workload'],where:{scanId:scan.id,projectId:scan.projectId,organizationId},_count:{_all:true}})
+ ]);
+ const countByWorkload=new Map(counts.map(row=>[row.workload,row._count._all]));
+ const statusByWorkload=new Map(records.map(row=>[row.workload,row]));
+ const results=requested.map(workload=>{
+  const state=statusByWorkload.get(workload);
+  return {workload,status:state?.status||'NOT_STARTED',itemsRecorded:countByWorkload.get(workload)||0,
+   itemsSeen:state?.itemsSeen??null,itemsDeleted:state?.itemsDeleted??null,pagesRead:state?.pagesRead??null,
+   startedAt:state?.startedAt||null,completedAt:state?.completedAt||null,errorMessage:state?.errorMessage||null};
+ });
+ if(requested.includes('Teams'))results.push({workload:'TeamsChannel',status:statusByWorkload.get('Teams')?.status||'NOT_STARTED',
+  itemsRecorded:countByWorkload.get('TeamsChannel')||0,itemsSeen:null,itemsDeleted:null,pagesRead:null,
+  startedAt:null,completedAt:null,errorMessage:null});
+ res.setHeader('Cache-Control','no-store');
+ res.json({source:'LIVE_MICROSOFT_GRAPH',isEstimated:false,organizationId,projectId:scan.projectId,
+  sourceTenantId:scan.sourceTenantId,scanId:scan.id,status:scan.status,scanType:scan.scanType,
+  startedAt:scan.startedAt,finishedAt:scan.finishedAt,workloads:results,
+  unsupportedWorkloads:['Exchange','DistributionLists','SecurityCompliance'].map(workload=>({workload,status:'NOT_IMPLEMENTED',itemsRecorded:null})),
+  completeness:scan.status==='COMPLETED'?'Enumeration completed for requested workloads; advanced workload details are not yet assessed':'Scan is incomplete; inventory counts may be partial'});
+});
 app.get('/api/v2/projects/:projectId/inventory/current',async(req,res)=>{
  const organizationId=req.principal!.organizationId;
  const project=await db.project.findFirst({where:{id:req.params.projectId,organizationId}});
