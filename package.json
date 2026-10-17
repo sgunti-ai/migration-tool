@@ -14,7 +14,8 @@
     "build:web": "vite build",
     "build:api": "esbuild apps/api/server.ts --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=dist/server.cjs",
     "check": "tsc --noEmit",
-    "check:discovery": "npm --prefix services/discovery run check"
+    "check:discovery": "npm --prefix services/discovery run check",
+    "test:layout": "node --test tests/monorepo-layout.test.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
