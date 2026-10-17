@@ -459,7 +459,7 @@ export const MigrationToolDashboard: React.FC<MigrationToolDashboardProps> = ({
             <span className="px-2.5 py-0.5 rounded text-[11px] font-mono font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20 uppercase tracking-wider">
               Control Center
             </span>
-            <span className="text-slate-500">•</span>
+            <span className="text-slate-500 dark:text-slate-400">•</span>
             <span className="text-xs text-slate-500 dark:text-slate-400 font-mono">v4.2 Enterprise Edition</span>
           </div>
           <h1 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight mt-1">
@@ -478,7 +478,7 @@ export const MigrationToolDashboard: React.FC<MigrationToolDashboardProps> = ({
             <span className="text-blue-400 font-mono font-medium">
               {tenantStatus?.source?.domain || 'contoso.onmicrosoft.com'}
             </span>
-            <ArrowRight className="w-3.5 h-3.5 text-slate-500" />
+            <ArrowRight className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
             <span className="text-emerald-400 font-mono font-medium">
               {tenantStatus?.target?.domain || 'fabrikam.com'}
             </span>
@@ -487,7 +487,7 @@ export const MigrationToolDashboard: React.FC<MigrationToolDashboardProps> = ({
           <button
             onClick={handleRefresh}
             disabled={isRefreshing}
-            className="px-3 py-2 text-xs font-medium text-slate-600 dark:text-slate-300 bg-slate-800 hover:bg-slate-100 dark:bg-slate-700 hover:text-white rounded-lg border border-slate-200 dark:border-slate-700 transition flex items-center space-x-1.5"
+            className="px-3 py-2 text-xs font-medium text-slate-600 dark:text-slate-300 bg-slate-800 hover:bg-slate-100 dark:bg-slate-700 hover:text-white rounded-lg border border-slate-200 dark:border-slate-700 transition flex items-center space-x-1.5 dark:hover:bg-slate-800"
             title="Refresh dashboard metrics"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin text-blue-400' : 'text-slate-500 dark:text-slate-400'}`} />
@@ -514,7 +514,7 @@ export const MigrationToolDashboard: React.FC<MigrationToolDashboardProps> = ({
           <h2 id="top-stats-heading" className="text-sm font-semibold text-slate-600 dark:text-slate-300 tracking-wide uppercase">
             Key Migration Metrics
           </h2>
-          <span className="text-xs text-slate-500 flex items-center gap-1.5">
+          <span className="text-xs text-slate-500 flex items-center gap-1.5 dark:text-slate-400">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
             Telemetry live
           </span>
@@ -525,7 +525,7 @@ export const MigrationToolDashboard: React.FC<MigrationToolDashboardProps> = ({
           <div
             id="card-total-users"
             onClick={() => onNavigateTab && onNavigateTab('discovery')}
-            className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 hover:border-slate-200 dark:border-slate-700 transition-all flex flex-col justify-between shadow-sm cursor-pointer"
+            className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 hover:border-slate-200 dark:border-slate-700 transition-all flex flex-col justify-between shadow-sm cursor-pointer dark:hover:border-slate-700"
           >
             <div className="flex items-start justify-between">
               <span className="text-xs font-medium text-slate-500 dark:text-slate-400">Total Users to Migrate</span>
@@ -569,7 +569,7 @@ export const MigrationToolDashboard: React.FC<MigrationToolDashboardProps> = ({
           <div
             id="card-completed-migrations"
             onClick={() => onNavigateTab && onNavigateTab('reports')}
-            className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 hover:border-slate-200 dark:border-slate-700 transition-all flex flex-col justify-between shadow-sm cursor-pointer"
+            className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 hover:border-slate-200 dark:border-slate-700 transition-all flex flex-col justify-between shadow-sm cursor-pointer dark:hover:border-slate-700"
           >
             <div className="flex items-start justify-between">
               <span className="text-xs font-medium text-slate-500 dark:text-slate-400">Completed Migrations</span>
@@ -609,7 +609,7 @@ export const MigrationToolDashboard: React.FC<MigrationToolDashboardProps> = ({
           <div
             id="card-data-transferred"
             onClick={() => onNavigateTab && onNavigateTab('reports')}
-            className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 hover:border-slate-200 dark:border-slate-700 transition-all flex flex-col justify-between shadow-sm cursor-pointer"
+            className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 hover:border-slate-200 dark:border-slate-700 transition-all flex flex-col justify-between shadow-sm cursor-pointer dark:hover:border-slate-700"
           >
             <div className="flex items-start justify-between">
               <span className="text-xs font-medium text-slate-500 dark:text-slate-400">Data Transferred</span>
@@ -631,7 +631,7 @@ export const MigrationToolDashboard: React.FC<MigrationToolDashboardProps> = ({
           <div
             id="card-success-rate"
             onClick={() => onNavigateTab && onNavigateTab('reports')}
-            className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 hover:border-slate-200 dark:border-slate-700 transition-all flex flex-col justify-between shadow-sm cursor-pointer"
+            className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 hover:border-slate-200 dark:border-slate-700 transition-all flex flex-col justify-between shadow-sm cursor-pointer dark:hover:border-slate-700"
           >
             <div className="flex items-start justify-between">
               <span className="text-xs font-medium text-slate-500 dark:text-slate-400">Success Rate</span>
@@ -844,7 +844,7 @@ export const MigrationToolDashboard: React.FC<MigrationToolDashboardProps> = ({
                   <span className="w-2 h-2 rounded bg-sky-500"></span> Active
                 </span>
                 <span className="flex items-center gap-1 text-slate-500 dark:text-slate-400">
-                  <span className="w-2 h-2 rounded bg-slate-500"></span> Pending
+                  <span className="w-2 h-2 rounded bg-slate-500 dark:bg-slate-400"></span> Pending
                 </span>
                 <span className="flex items-center gap-1 text-slate-500 dark:text-slate-400">
                   <span className="w-2 h-2 rounded bg-rose-500"></span> Failed
@@ -1029,7 +1029,7 @@ export const MigrationToolDashboard: React.FC<MigrationToolDashboardProps> = ({
                             e.stopPropagation();
                             setExpandedJobId(isExpanded ? null : job.id);
                           }}
-                          className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition"
+                          className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition dark:text-slate-500"
                           title={isExpanded ? 'Collapse job details' : 'Expand job details'}
                           aria-expanded={isExpanded}
                         >
@@ -1064,7 +1064,7 @@ export const MigrationToolDashboard: React.FC<MigrationToolDashboardProps> = ({
                       </div>
                     </div>
 
-                    <div className="mt-2.5 flex items-center justify-between text-[10px] text-slate-500 pt-2 border-t border-slate-200 dark:border-slate-800/60">
+                    <div className="mt-2.5 flex items-center justify-between text-[10px] text-slate-500 pt-2 border-t border-slate-200 dark:border-slate-800/60 dark:text-slate-400">
                       <span className="flex items-center gap-1">
                         <Clock className="w-3 h-3" />
                         {job.startedAt} ({job.duration})
@@ -1101,7 +1101,7 @@ export const MigrationToolDashboard: React.FC<MigrationToolDashboardProps> = ({
                               Workload Delta Sync
                             </span>
                             <span className="flex items-center gap-1">
-                              <Clock className="w-3 h-3 text-slate-400" />
+                              <Clock className="w-3 h-3 text-slate-400 dark:text-slate-500" />
                               Cutover & Routing
                             </span>
                           </div>
@@ -1131,7 +1131,7 @@ export const MigrationToolDashboard: React.FC<MigrationToolDashboardProps> = ({
             {onNavigateTab && (
               <button
                 onClick={() => onNavigateTab('migrate', 'projects')}
-                className="w-full py-2 text-center text-xs text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white bg-slate-800/40 hover:bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-800 transition"
+                className="w-full py-2 text-center text-xs text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white bg-slate-800/40 hover:bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-800 transition dark:hover:bg-slate-900 dark:hover:text-slate-100"
               >
                 View All Migration Projects
               </button>
@@ -1197,7 +1197,7 @@ export const MigrationToolDashboard: React.FC<MigrationToolDashboardProps> = ({
                     ) : (
                       <button
                         onClick={() => handleResolveError(err.id, err.actionLabel)}
-                        className="w-full py-1.5 px-2.5 text-xs font-semibold rounded bg-white dark:bg-slate-800 hover:bg-slate-100 dark:bg-slate-700 text-slate-200 hover:text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 transition flex items-center justify-center space-x-1.5 group"
+                        className="w-full py-1.5 px-2.5 text-xs font-semibold rounded bg-white dark:bg-slate-800 hover:bg-slate-100 dark:bg-slate-700 text-slate-200 hover:text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 transition flex items-center justify-center space-x-1.5 group dark:hover:bg-slate-800 dark:hover:text-slate-100"
                       >
                         <Zap className="w-3.5 h-3.5 text-amber-400 group-hover:animate-bounce" />
                         <span>{err.actionLabel}</span>
@@ -1211,7 +1211,7 @@ export const MigrationToolDashboard: React.FC<MigrationToolDashboardProps> = ({
             {onNavigateTab && (
               <button
                 onClick={() => onNavigateTab('migrate', 'error_management')}
-                className="w-full py-2 text-center text-xs text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white bg-slate-800/40 hover:bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-800 transition"
+                className="w-full py-2 text-center text-xs text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white bg-slate-800/40 hover:bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-800 transition dark:hover:bg-slate-900 dark:hover:text-slate-100"
               >
                 Open Full Error Management Cockpit
               </button>
@@ -1233,7 +1233,7 @@ export const MigrationToolDashboard: React.FC<MigrationToolDashboardProps> = ({
                   Mark all read ({unreadNotifCount})
                 </button>
               ) : (
-                <span className="text-[11px] text-slate-500">All caught up</span>
+                <span className="text-[11px] text-slate-500 dark:text-slate-400">All caught up</span>
               )}
             </div>
 
@@ -1261,7 +1261,7 @@ export const MigrationToolDashboard: React.FC<MigrationToolDashboardProps> = ({
 
                   <p className="text-xs text-slate-600 dark:text-slate-300 mt-1.5 leading-relaxed">{notif.message}</p>
 
-                  <div className="mt-2.5 flex items-center justify-between text-[10px] text-slate-500">
+                  <div className="mt-2.5 flex items-center justify-between text-[10px] text-slate-500 dark:text-slate-400">
                     <span className="px-1.5 py-0.5 rounded bg-slate-50 dark:bg-slate-900 font-mono text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-800">
                       {notif.category}
                     </span>
@@ -1272,7 +1272,7 @@ export const MigrationToolDashboard: React.FC<MigrationToolDashboardProps> = ({
                             prev.map((n) => (n.id === notif.id ? { ...n, read: true } : n))
                           )
                         }
-                        className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white"
+                        className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white dark:hover:text-slate-100"
                       >
                         Dismiss
                       </button>
@@ -1287,7 +1287,7 @@ export const MigrationToolDashboard: React.FC<MigrationToolDashboardProps> = ({
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
                 Notification dispatcher active
               </span>
-              <span className="text-slate-500 font-mono">MS Graph Webhooks</span>
+              <span className="text-slate-500 font-mono dark:text-slate-400">MS Graph Webhooks</span>
             </div>
           </div>
         </div>
