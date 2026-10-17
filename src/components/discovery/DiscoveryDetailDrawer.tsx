@@ -108,7 +108,7 @@ export const DiscoveryDetailDrawer: React.FC<DiscoveryDetailDrawerProps> = ({
           <button
             id="btn-close-drawer"
             onClick={onClose}
-            className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white hover:bg-white dark:bg-slate-800 rounded-lg transition"
+            className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white hover:bg-white dark:bg-slate-800 rounded-lg transition dark:hover:bg-slate-900 dark:hover:text-slate-100"
           >
             <X className="w-5 h-5" />
           </button>
@@ -177,7 +177,7 @@ export const DiscoveryDetailDrawer: React.FC<DiscoveryDetailDrawerProps> = ({
                       <div>
                         <span className="text-slate-500 dark:text-slate-400">Reporting Manager:</span>
                         <div className="font-medium text-slate-900 dark:text-white mt-0.5">
-                          {user.manager || <span className="text-slate-500 italic">None assigned</span>}
+                          {user.manager || <span className="text-slate-500 italic dark:text-slate-400">None assigned</span>}
                         </div>
                       </div>
                       <div>
@@ -205,7 +205,7 @@ export const DiscoveryDetailDrawer: React.FC<DiscoveryDetailDrawerProps> = ({
                         ))}
                       </div>
                     ) : (
-                      <p className="text-xs text-slate-500 italic">No administrative privileged roles assigned.</p>
+                      <p className="text-xs text-slate-500 italic dark:text-slate-400">No administrative privileged roles assigned.</p>
                     )}
                   </div>
 
@@ -248,7 +248,7 @@ export const DiscoveryDetailDrawer: React.FC<DiscoveryDetailDrawerProps> = ({
                             <div className="text-base font-bold text-slate-900 dark:text-white mt-0.5">
                               {(detailData.mailbox.totalItemSizeMB / 1024).toFixed(2)} GB
                             </div>
-                            <span className="text-[10px] text-slate-500">
+                            <span className="text-[10px] text-slate-500 dark:text-slate-400">
                               {Math.round(detailData.mailbox.totalItemSizeMB)} MB total
                             </span>
                           </div>
@@ -276,7 +276,7 @@ export const DiscoveryDetailDrawer: React.FC<DiscoveryDetailDrawerProps> = ({
 
                         <div className="pt-2 border-t border-slate-200 dark:border-slate-700/60 text-xs">
                           <span className="text-slate-500 dark:text-slate-400">Retention Policy:</span>
-                          <div className="font-medium text-slate-200 mt-0.5">
+                          <div className="font-medium text-slate-200 mt-0.5 dark:text-slate-700">
                             {detailData.mailbox.retentionPolicy || 'Default MRM Policy'}
                           </div>
                         </div>
@@ -301,7 +301,7 @@ export const DiscoveryDetailDrawer: React.FC<DiscoveryDetailDrawerProps> = ({
                             ))}
                           </div>
                         ) : (
-                          <p className="text-xs text-slate-500 italic">No external delegates configured for this mailbox.</p>
+                          <p className="text-xs text-slate-500 italic dark:text-slate-400">No external delegates configured for this mailbox.</p>
                         )}
                       </div>
 
@@ -323,12 +323,12 @@ export const DiscoveryDetailDrawer: React.FC<DiscoveryDetailDrawerProps> = ({
                             ))}
                           </div>
                         ) : (
-                          <p className="text-xs text-slate-500 italic">No forwarding rules active.</p>
+                          <p className="text-xs text-slate-500 italic dark:text-slate-400">No forwarding rules active.</p>
                         )}
                       </div>
                     </>
                   ) : (
-                    <div className="text-center py-12 text-slate-500 text-xs">
+                    <div className="text-center py-12 text-slate-500 text-xs dark:text-slate-400">
                       No Exchange Online mailbox discovered for this user.
                     </div>
                   )}
@@ -354,7 +354,7 @@ export const DiscoveryDetailDrawer: React.FC<DiscoveryDetailDrawerProps> = ({
                           <span className="text-slate-500 dark:text-slate-400">Site Collection URL:</span>
                           <div className="font-mono text-blue-400 mt-1 break-all bg-slate-50 dark:bg-slate-900 p-2 rounded-lg border border-slate-200 dark:border-slate-800 flex items-center justify-between">
                             <span>{detailData.oneDrive.siteUrl}</span>
-                            <ExternalLink className="w-3.5 h-3.5 text-slate-500 shrink-0 ml-2" />
+                            <ExternalLink className="w-3.5 h-3.5 text-slate-500 shrink-0 ml-2 dark:text-slate-400" />
                           </div>
                         </div>
 
@@ -364,7 +364,7 @@ export const DiscoveryDetailDrawer: React.FC<DiscoveryDetailDrawerProps> = ({
                             <div className="text-base font-bold text-slate-900 dark:text-white mt-0.5">
                               {detailData.oneDrive.storageUsedGB} GB
                             </div>
-                            <span className="text-[10px] text-slate-500">
+                            <span className="text-[10px] text-slate-500 dark:text-slate-400">
                               of {detailData.oneDrive.storageQuotaGB} GB quota
                             </span>
                           </div>
@@ -414,7 +414,7 @@ export const DiscoveryDetailDrawer: React.FC<DiscoveryDetailDrawerProps> = ({
                       </div>
                     </>
                   ) : (
-                    <div className="text-center py-12 text-slate-500 text-xs">
+                    <div className="text-center py-12 text-slate-500 text-xs dark:text-slate-400">
                       No active OneDrive for Business provisioned.
                     </div>
                   )}
@@ -450,7 +450,7 @@ export const DiscoveryDetailDrawer: React.FC<DiscoveryDetailDrawerProps> = ({
                         ))}
                       </div>
                     ) : (
-                      <p className="text-xs text-slate-500 italic">User is not an owner or direct admin of any discovered Teams.</p>
+                      <p className="text-xs text-slate-500 italic dark:text-slate-400">User is not an owner or direct admin of any discovered Teams.</p>
                     )}
                   </div>
 
@@ -472,7 +472,7 @@ export const DiscoveryDetailDrawer: React.FC<DiscoveryDetailDrawerProps> = ({
                         ))}
                       </div>
                     ) : (
-                      <p className="text-xs text-slate-500 italic">No explicit group memberships mapped.</p>
+                      <p className="text-xs text-slate-500 italic dark:text-slate-400">No explicit group memberships mapped.</p>
                     )}
                   </div>
                 </div>
@@ -504,7 +504,7 @@ export const DiscoveryDetailDrawer: React.FC<DiscoveryDetailDrawerProps> = ({
                         ))}
                       </div>
                     ) : (
-                      <p className="text-xs text-slate-500 italic">No licenses assigned to this account.</p>
+                      <p className="text-xs text-slate-500 italic dark:text-slate-400">No licenses assigned to this account.</p>
                     )}
                   </div>
                 </div>
@@ -517,7 +517,7 @@ export const DiscoveryDetailDrawer: React.FC<DiscoveryDetailDrawerProps> = ({
         <div className="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/90 flex items-center justify-between">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-xs font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white transition"
+            className="px-4 py-2 text-xs font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white transition dark:hover:text-slate-100"
           >
             Close
           </button>
