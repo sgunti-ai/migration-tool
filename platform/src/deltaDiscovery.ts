@@ -5,6 +5,7 @@ import {allowGraphUrl,GraphError} from './graph.js';
 /** A stale Graph delta token requires a new baseline, never blind token retries. */
 export const isExpiredDeltaCursor=(error:unknown)=>error instanceof GraphError && error.status===410;
 import {assertLease,type Lease} from './leases.js';
+import {publishStagedInventory} from './reconciliation.js';
 
 export type DeltaWorkload='Users'|'Groups';
 const endpoints:Record<DeltaWorkload,string>={
@@ -75,28 +76,10 @@ export async function executeDeltaScan(ctx:DeltaContext,workload:DeltaWorkload,g
   }
   if(!finalLink)throw new Error('Graph delta session ended without final deltaLink');
   // Successful initial baseline or incremental reconciliation is the only point where the cursor advances.
-  await db.$transaction(async tx=>{
-   await assertLease(tx,lease);
-   // A complete baseline is authoritative: records absent from it are tombstoned.
-   // This also cleans up objects retained after an expired delta token.
-   if(mode==='INITIAL_FULL') {
-    await tx.currentInventoryItem.updateMany({where:{organizationId,projectId,sourceTenantId,workload,isDeleted:false,lastScanId:{not:scanId}},data:{isDeleted:true,observedAt:new Date(),lastScanId:scanId}});
-   }
-   const staged=await tx.inventoryItem.findMany({where:{scanId,workload}});
-   for(const item of staged){
-    await tx.currentInventoryItem.upsert({
-     where:{projectId_sourceTenantId_workload_sourceId:{projectId,sourceTenantId,workload,sourceId:item.sourceId}},
-     create:{organizationId,projectId,sourceTenantId,workload,sourceId:item.sourceId,name:item.name,metadata:item.metadata as any,isDeleted:item.isDeleted,lastScanId:scanId,observedAt:item.observedAt},
-     update:{name:item.name,metadata:item.metadata as any,isDeleted:item.isDeleted,lastScanId:scanId,observedAt:item.observedAt}
-    });
-   }
-   await tx.discoveryCursor.upsert({
-    where:{projectId_sourceTenantId_workload:{projectId,sourceTenantId,workload}},
-    create:{organizationId,projectId,sourceTenantId,workload,deltaLink:finalLink},
-    update:{deltaLink:finalLink}
-   });
-   await tx.discoveryScanWorkload.update({where:{id:record.id},data:{status:'COMPLETED',completedAt:new Date()}});
-  },{timeout:120000});
+  await publishStagedInventory(ctx,[workload],lease,{baseline:mode==='INITIAL_FULL',deltaLink:finalLink,cursorWorkload:workload});
+  await db.discoveryScanWorkload.update({
+   where:{id:record.id},data:{status:'COMPLETED',completedAt:new Date()}
+  });
   return {seen,deleted,pages,mode};
  }catch(error){
   await db.discoveryScanWorkload.update({where:{id:record.id},data:{status:'FAILED',errorMessage:error instanceof Error?error.message:'Unknown error',completedAt:new Date()}});
