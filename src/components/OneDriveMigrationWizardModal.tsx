@@ -616,7 +616,7 @@ export const OneDriveMigrationWizardModal: React.FC<OneDriveMigrationWizardModal
 
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors dark:text-slate-500"
           >
             <X className="h-5 w-5" />
           </button>
@@ -735,7 +735,7 @@ export const OneDriveMigrationWizardModal: React.FC<OneDriveMigrationWizardModal
                       <span className="font-semibold text-slate-800 dark:text-slate-200">
                         Compatibility Status (`Get-SPOCrossTenantCompatibilityStatus`)
                       </span>
-                      <p className="text-[11px] text-slate-500 mt-0.5">
+                      <p className="text-[11px] text-slate-500 mt-0.5 dark:text-slate-400">
                         Status verified as "Compatible". No schema conflicts or tenant blockers detected.
                       </p>
                     </div>
@@ -747,7 +747,7 @@ export const OneDriveMigrationWizardModal: React.FC<OneDriveMigrationWizardModal
                       <span className="font-semibold text-slate-800 dark:text-slate-200">
                         Migration Relationship (`Set-SPOCrossTenantRelationship`)
                       </span>
-                      <p className="text-[11px] text-slate-500 mt-0.5">
+                      <p className="text-[11px] text-slate-500 mt-0.5 dark:text-slate-400">
                         Bi-directional cryptographic handshake verified between Source & Target SPO.
                       </p>
                     </div>
@@ -759,7 +759,7 @@ export const OneDriveMigrationWizardModal: React.FC<OneDriveMigrationWizardModal
                       <span className="font-semibold text-slate-800 dark:text-slate-200">
                         Cross-Tenant User Data Migration License Pool
                       </span>
-                      <p className="text-[11px] text-slate-500 mt-0.5">
+                      <p className="text-[11px] text-slate-500 mt-0.5 dark:text-slate-400">
                         Add-on licenses allocated in target tenant covering all planned OneDrive moves.
                       </p>
                     </div>
@@ -771,7 +771,7 @@ export const OneDriveMigrationWizardModal: React.FC<OneDriveMigrationWizardModal
                       <span className="font-semibold text-slate-800 dark:text-slate-200">
                         Source Account Status: Read/Write Active
                       </span>
-                      <p className="text-[11px] text-slate-500 mt-0.5">
+                      <p className="text-[11px] text-slate-500 mt-0.5 dark:text-slate-400">
                         Confirmed source personal sites are Read/Write. (Read-only sites are blocked).
                       </p>
                     </div>
@@ -851,7 +851,7 @@ export const OneDriveMigrationWizardModal: React.FC<OneDriveMigrationWizardModal
 
                   <div className="grid grid-cols-2 gap-2 text-xs">
                     <div>
-                      <span className="text-[10px] text-slate-400">Source Suffix:</span>
+                      <span className="text-[10px] text-slate-400 dark:text-slate-500">Source Suffix:</span>
                       <input
                         type="text"
                         value={formData.domainTransformSource}
@@ -860,7 +860,7 @@ export const OneDriveMigrationWizardModal: React.FC<OneDriveMigrationWizardModal
                       />
                     </div>
                     <div>
-                      <span className="text-[10px] text-slate-400">Target Suffix:</span>
+                      <span className="text-[10px] text-slate-400 dark:text-slate-500">Target Suffix:</span>
                       <input
                         type="text"
                         value={formData.domainTransformTarget}
@@ -877,7 +877,7 @@ export const OneDriveMigrationWizardModal: React.FC<OneDriveMigrationWizardModal
                   </h4>
 
                   <div>
-                    <label className="block text-[11px] text-slate-500 mb-1">Target Assigned License SKU</label>
+                    <label className="block text-[11px] text-slate-500 mb-1 dark:text-slate-400">Target Assigned License SKU</label>
                     <select
                       value={formData.targetLicensingSku}
                       onChange={(e) => setFormData({ ...formData, targetLicensingSku: e.target.value })}
@@ -932,7 +932,7 @@ export const OneDriveMigrationWizardModal: React.FC<OneDriveMigrationWizardModal
                     >
                       <div>
                         <span className="font-semibold text-slate-800 dark:text-slate-200">All Version History</span>
-                        <p className="text-[10px] text-slate-500">Full audit & revision history across all files (SOC2/ISO standard)</p>
+                        <p className="text-[10px] text-slate-500 dark:text-slate-400">Full audit & revision history across all files (SOC2/ISO standard)</p>
                       </div>
                       <input
                         type="radio"
@@ -953,7 +953,7 @@ export const OneDriveMigrationWizardModal: React.FC<OneDriveMigrationWizardModal
                     >
                       <div>
                         <span className="font-semibold text-slate-800 dark:text-slate-200">Last 5 Major Versions</span>
-                        <p className="text-[10px] text-slate-500">Prunes ancient intermediate saves to maximize network speed</p>
+                        <p className="text-[10px] text-slate-500 dark:text-slate-400">Prunes ancient intermediate saves to maximize network speed</p>
                       </div>
                       <input
                         type="radio"
@@ -974,7 +974,7 @@ export const OneDriveMigrationWizardModal: React.FC<OneDriveMigrationWizardModal
                     >
                       <div>
                         <span className="font-semibold text-slate-800 dark:text-slate-200">Current Version Only</span>
-                        <p className="text-[10px] text-slate-500">Migrates latest head copy without prior revisions</p>
+                        <p className="text-[10px] text-slate-500 dark:text-slate-400">Migrates latest head copy without prior revisions</p>
                       </div>
                       <input
                         type="radio"
@@ -1049,7 +1049,7 @@ export const OneDriveMigrationWizardModal: React.FC<OneDriveMigrationWizardModal
                       Step 4: OneDrive Queue & Batch Options (Microsoft 4,000 Accounts/Batch Standard)
                     </h3>
                   </div>
-                  <span className="text-[10px] text-slate-500 font-mono">
+                  <span className="text-[10px] text-slate-500 font-mono dark:text-slate-400">
                     Sequential & DAG Batches
                   </span>
                 </div>
@@ -1062,7 +1062,7 @@ export const OneDriveMigrationWizardModal: React.FC<OneDriveMigrationWizardModal
               <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40 space-y-3">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
                   <div className="flex-1">
-                    <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1 dark:text-slate-400">
                       OneDrive Batch Queue Pipeline
                     </label>
                     <input
@@ -1126,7 +1126,7 @@ export const OneDriveMigrationWizardModal: React.FC<OneDriveMigrationWizardModal
                     </button>
                   </div>
 
-                  <div className="text-[11px] text-slate-500 font-medium">
+                  <div className="text-[11px] text-slate-500 font-medium dark:text-slate-400">
                     <span>{queueConfig.batches.length} Batches Configured</span>
                     <span className="mx-1.5">•</span>
                     <span>{queueConfig.batches.reduce((sum, b) => sum + b.userCount, 0)} Accounts Total</span>
@@ -1159,8 +1159,8 @@ export const OneDriveMigrationWizardModal: React.FC<OneDriveMigrationWizardModal
                       return (
                         <React.Fragment key={batch.id}>
                           {idx > 0 && (
-                            <div className="flex flex-col items-center px-1 text-slate-400">
-                              <span className="text-[9px] font-mono font-semibold text-slate-500 uppercase">
+                            <div className="flex flex-col items-center px-1 text-slate-400 dark:text-slate-500">
+                              <span className="text-[9px] font-mono font-semibold text-slate-500 uppercase dark:text-slate-400">
                                 {batch.dependencyCondition}
                               </span>
                               <ArrowRight className="h-4 w-4 text-blue-500" />
@@ -1187,21 +1187,21 @@ export const OneDriveMigrationWizardModal: React.FC<OneDriveMigrationWizardModal
                             <div className="font-semibold text-xs text-slate-900 dark:text-white truncate">
                               {batch.name}
                             </div>
-                            <div className="text-[10px] font-mono text-slate-500 mb-2 truncate">
+                            <div className="text-[10px] font-mono text-slate-500 mb-2 truncate dark:text-slate-400">
                               {batch.batchCode}
                             </div>
 
                             <div className="space-y-1 text-[10px] text-slate-600 dark:text-slate-300 border-t border-slate-200/60 dark:border-slate-700/60 pt-1.5">
                               <div className="flex justify-between">
-                                <span className="text-slate-400">Start Time:</span>
+                                <span className="text-slate-400 dark:text-slate-500">Start Time:</span>
                                 <span className="font-medium">{batch.startTime ? batch.startTime.replace('T', ' ') : 'Immediate'}</span>
                               </div>
                               <div className="flex justify-between">
-                                <span className="text-slate-400">End Cutoff:</span>
+                                <span className="text-slate-400 dark:text-slate-500">End Cutoff:</span>
                                 <span className="font-medium">{batch.endTime ? batch.endTime.replace('T', ' ') : 'Open window'}</span>
                               </div>
                               <div className="flex justify-between pt-0.5">
-                                <span className="text-slate-400">Dependency:</span>
+                                <span className="text-slate-400 dark:text-slate-500">Dependency:</span>
                                 <span className={`font-semibold ${isRoot ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'}`}>
                                   {isRoot ? 'Root (Runs First)' : `Depends on ${pred ? pred.batchCode : 'Batch'}`}
                                 </span>
@@ -1248,7 +1248,7 @@ export const OneDriveMigrationWizardModal: React.FC<OneDriveMigrationWizardModal
                             className="px-2.5 py-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-semibold text-slate-900 dark:text-white flex-1 max-w-sm"
                           />
 
-                          <span className="font-mono text-[10px] text-slate-500 px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+                          <span className="font-mono text-[10px] text-slate-500 px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 dark:text-slate-400">
                             {batch.batchCode}
                           </span>
                         </div>
@@ -1258,7 +1258,7 @@ export const OneDriveMigrationWizardModal: React.FC<OneDriveMigrationWizardModal
                             type="button"
                             disabled={isFirst}
                             onClick={() => handleMoveBatch(index, 'up')}
-                            className="p-1 rounded text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30"
+                            className="p-1 rounded text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 dark:text-slate-400"
                           >
                             ↑
                           </button>
@@ -1266,14 +1266,14 @@ export const OneDriveMigrationWizardModal: React.FC<OneDriveMigrationWizardModal
                             type="button"
                             disabled={isLast}
                             onClick={() => handleMoveBatch(index, 'down')}
-                            className="p-1 rounded text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30"
+                            className="p-1 rounded text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 dark:text-slate-400"
                           >
                             ↓
                           </button>
                           <button
                             type="button"
                             onClick={() => handleDuplicateBatch(batch.id)}
-                            className="p-1 rounded text-slate-500 hover:text-blue-600 hover:bg-blue-50"
+                            className="p-1 rounded text-slate-500 hover:text-blue-600 hover:bg-blue-50 dark:text-slate-400"
                           >
                             <Copy className="h-3.5 w-3.5" />
                           </button>
@@ -1281,7 +1281,7 @@ export const OneDriveMigrationWizardModal: React.FC<OneDriveMigrationWizardModal
                             type="button"
                             disabled={queueConfig.batches.length <= 1}
                             onClick={() => handleRemoveBatch(batch.id)}
-                            className="p-1 rounded text-slate-500 hover:text-rose-600 hover:bg-rose-50 disabled:opacity-30"
+                            className="p-1 rounded text-slate-500 hover:text-rose-600 hover:bg-rose-50 disabled:opacity-30 dark:text-slate-400"
                           >
                             <Trash2 className="h-3.5 w-3.5" />
                           </button>
@@ -1298,7 +1298,7 @@ export const OneDriveMigrationWizardModal: React.FC<OneDriveMigrationWizardModal
                           </div>
 
                           <div>
-                            <label className="block text-[11px] text-slate-500 mb-1">Scheduled Start Time</label>
+                            <label className="block text-[11px] text-slate-500 mb-1 dark:text-slate-400">Scheduled Start Time</label>
                             <input
                               type="datetime-local"
                               value={batch.startTime}
@@ -1308,7 +1308,7 @@ export const OneDriveMigrationWizardModal: React.FC<OneDriveMigrationWizardModal
                           </div>
 
                           <div>
-                            <label className="block text-[11px] text-slate-500 mb-1">Scheduled End Time (Cutoff)</label>
+                            <label className="block text-[11px] text-slate-500 mb-1 dark:text-slate-400">Scheduled End Time (Cutoff)</label>
                             <input
                               type="datetime-local"
                               value={batch.endTime}
@@ -1326,7 +1326,7 @@ export const OneDriveMigrationWizardModal: React.FC<OneDriveMigrationWizardModal
                           </div>
 
                           <div>
-                            <label className="block text-[11px] text-slate-500 mb-1">Depends On Predecessor</label>
+                            <label className="block text-[11px] text-slate-500 mb-1 dark:text-slate-400">Depends On Predecessor</label>
                             <select
                               value={batch.dependsOnBatchId || ''}
                               onChange={(e) =>
@@ -1348,7 +1348,7 @@ export const OneDriveMigrationWizardModal: React.FC<OneDriveMigrationWizardModal
                           </div>
 
                           <div>
-                            <label className="block text-[11px] text-slate-500 mb-1">Failure Action</label>
+                            <label className="block text-[11px] text-slate-500 mb-1 dark:text-slate-400">Failure Action</label>
                             <select
                               value={batch.actionOnDependencyFailure}
                               onChange={(e) =>
@@ -1374,7 +1374,7 @@ export const OneDriveMigrationWizardModal: React.FC<OneDriveMigrationWizardModal
 
                           <div className="grid grid-cols-2 gap-2">
                             <div>
-                              <label className="block text-[11px] text-slate-500 mb-1">Accounts</label>
+                              <label className="block text-[11px] text-slate-500 mb-1 dark:text-slate-400">Accounts</label>
                               <input
                                 type="number"
                                 min="1"
@@ -1387,7 +1387,7 @@ export const OneDriveMigrationWizardModal: React.FC<OneDriveMigrationWizardModal
                               />
                             </div>
                             <div>
-                              <label className="block text-[11px] text-slate-500 mb-1">Workers</label>
+                              <label className="block text-[11px] text-slate-500 mb-1 dark:text-slate-400">Workers</label>
                               <select
                                 value={batch.concurrencyLimit}
                                 onChange={(e) =>
@@ -1405,7 +1405,7 @@ export const OneDriveMigrationWizardModal: React.FC<OneDriveMigrationWizardModal
                           </div>
 
                           <div>
-                            <label className="block text-[11px] text-slate-500 mb-1">Priority</label>
+                            <label className="block text-[11px] text-slate-500 mb-1 dark:text-slate-400">Priority</label>
                             <select
                               value={batch.priority}
                               onChange={(e) => handleUpdateBatch(batch.id, { priority: e.target.value as any })}
@@ -1468,7 +1468,7 @@ export const OneDriveMigrationWizardModal: React.FC<OneDriveMigrationWizardModal
                   <h4 className="font-semibold text-slate-900 dark:text-white">Direct Streaming Engine</h4>
 
                   <div>
-                    <label className="block text-[11px] text-slate-500 mb-1">Transfer Chunk Size</label>
+                    <label className="block text-[11px] text-slate-500 mb-1 dark:text-slate-400">Transfer Chunk Size</label>
                     <select
                       value={formData.chunkSizeMB}
                       onChange={(e) => setFormData({ ...formData, chunkSizeMB: parseInt(e.target.value, 10) || 25 })}
@@ -1481,12 +1481,12 @@ export const OneDriveMigrationWizardModal: React.FC<OneDriveMigrationWizardModal
                   </div>
 
                   <div>
-                    <label className="block text-[11px] text-slate-500 mb-1">Throttling & Backoff Policy</label>
+                    <label className="block text-[11px] text-slate-500 mb-1 dark:text-slate-400">Throttling & Backoff Policy</label>
                     <input
                       type="text"
                       disabled
                       value="Exponential Jitter Backoff (Graph API 429 Protection)"
-                      className="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-xs text-slate-500"
+                      className="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-xs text-slate-500 dark:text-slate-400"
                     />
                   </div>
                 </div>
@@ -1505,7 +1505,7 @@ export const OneDriveMigrationWizardModal: React.FC<OneDriveMigrationWizardModal
                   </label>
 
                   <div>
-                    <label className="block text-[11px] text-slate-500 mb-1">Administrator Alert Email</label>
+                    <label className="block text-[11px] text-slate-500 mb-1 dark:text-slate-400">Administrator Alert Email</label>
                     <input
                       type="text"
                       value={formData.adminNotificationEmail}
@@ -1533,29 +1533,29 @@ export const OneDriveMigrationWizardModal: React.FC<OneDriveMigrationWizardModal
               {/* Review Highlights */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
                 <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40 space-y-1.5">
-                  <span className="text-[10px] uppercase font-bold text-slate-500">Workload & Scope</span>
+                  <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400">Workload & Scope</span>
                   <div className="font-bold text-slate-900 dark:text-white">OneDrive Personal Sites</div>
-                  <div className="text-slate-500">
+                  <div className="text-slate-500 dark:text-slate-400">
                     {formData.sourceTenant} ➔ {formData.targetTenant}
                   </div>
                 </div>
 
                 <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40 space-y-1.5">
-                  <span className="text-[10px] uppercase font-bold text-slate-500">Batch Architecture</span>
+                  <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400">Batch Architecture</span>
                   <div className="font-bold text-slate-900 dark:text-white">
                     {queueConfig.batches.length} Sequenced Waves
                   </div>
-                  <div className="text-slate-500">
+                  <div className="text-slate-500 dark:text-slate-400">
                     {queueConfig.batches.reduce((sum, b) => sum + b.userCount, 0)} Total Accounts Enqueued
                   </div>
                 </div>
 
                 <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40 space-y-1.5">
-                  <span className="text-[10px] uppercase font-bold text-slate-500">Safeguards & Redirects</span>
+                  <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400">Safeguards & Redirects</span>
                   <div className="font-bold text-emerald-600 dark:text-emerald-400">
                     Target Site Block + Source Redirect
                   </div>
-                  <div className="text-slate-500">Zero-Disk Direct Memory Stream</div>
+                  <div className="text-slate-500 dark:text-slate-400">Zero-Disk Direct Memory Stream</div>
                 </div>
               </div>
 
@@ -1569,7 +1569,7 @@ export const OneDriveMigrationWizardModal: React.FC<OneDriveMigrationWizardModal
                     <h4 className="font-bold text-slate-900 dark:text-white">
                       {isValidating ? 'Validating OneDrive Safeguards...' : 'OneDrive Pre-Flight Safeguards Verified'}
                     </h4>
-                    <p className="text-slate-500 text-[11px] mt-0.5">
+                    <p className="text-slate-500 text-[11px] mt-0.5 dark:text-slate-400">
                       SPO cross-tenant compatibility, license quotas, target site creation restrictions, and credentials confirmed.
                     </p>
                   </div>
@@ -1605,14 +1605,14 @@ export const OneDriveMigrationWizardModal: React.FC<OneDriveMigrationWizardModal
                         </span>
                         <div>
                           <span className="font-semibold text-slate-900 dark:text-white">{b.name}</span>
-                          <span className="font-mono text-slate-500 text-[10px] ml-2">({b.batchCode})</span>
+                          <span className="font-mono text-slate-500 text-[10px] ml-2 dark:text-slate-400">({b.batchCode})</span>
                         </div>
                       </div>
                       <div className="text-right text-[11px]">
                         <span className="font-medium text-slate-700 dark:text-slate-300">
                           {b.userCount} Accounts • {b.concurrencyLimit} Workers
                         </span>
-                        <div className="text-[10px] text-slate-500">
+                        <div className="text-[10px] text-slate-500 dark:text-slate-400">
                           Window: {b.startTime ? b.startTime.replace('T', ' ') : 'Immediate'} ➔ {b.endTime ? b.endTime.replace('T', ' ') : 'Open'}
                         </div>
                       </div>
@@ -1636,7 +1636,7 @@ export const OneDriveMigrationWizardModal: React.FC<OneDriveMigrationWizardModal
           </button>
 
           <div className="flex items-center space-x-2.5">
-            <span className="text-xs text-slate-400">
+            <span className="text-xs text-slate-400 dark:text-slate-500">
               Step {currentStep} of {steps.length}
             </span>
 
@@ -1657,7 +1657,7 @@ export const OneDriveMigrationWizardModal: React.FC<OneDriveMigrationWizardModal
               >
                 {isSubmitting ? (
                   <>
-                    <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin dark:border-slate-900" />
                     <span>Scheduling Batches...</span>
                   </>
                 ) : (
