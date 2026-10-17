@@ -10,6 +10,9 @@ const app=express();
 app.disable('x-powered-by');
 app.use(express.json({limit:'128kb'}));
 app.get('/health/live',(_req,res)=>res.json({status:'up'}));
+app.get('/health/ready',async(_req,res)=>{
+ try {await db.$queryRaw`SELECT 1`;res.json({status:'ready'});}catch {res.status(503).json({status:'unavailable'});}
+});
 app.post('/api/v2/auth/local/login',async(req,res)=>{
  const body=z.object({username:z.string(),password:z.string()}).safeParse(req.body);
  if(!body.success)return res.status(400).json({error:'Invalid login request'});
@@ -102,4 +105,4 @@ app.get('/api/v2/projects/:projectId/scans/:scanId/items',async(req,res)=>{
  res.json({count,page,take,items});
 });
 app.use((error:unknown,_req:express.Request,res:express.Response,_next:express.NextFunction)=>{console.error(error);res.status(500).json({error:'Internal server error'});});
-app.listen(config.PORT,config.NODE_ENV==='development'?'127.0.0.1':'0.0.0.0',()=>console.log(`Migration v2 API on port ${config.PORT}`));
+app.listen(config.PORT,process.env.DISCOVERY_BIND_HOST|| (config.NODE_ENV==='development'?'127.0.0.1':'0.0.0.0'),()=>console.log(`Migration v2 API on port ${config.PORT}`));
