@@ -40,7 +40,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
       <div className="flex flex-col md:flex-row items-center gap-3">
         {/* Search input */}
         <div className="relative flex-1 w-full">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 dark:text-slate-400" />
           <input
             id="input-user-search"
             type="text"
@@ -52,7 +52,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
           {filters.search && (
             <button
               onClick={() => onFilterChange({ search: '' })}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white dark:hover:text-slate-100"
             >
               <X className="w-3.5 h-3.5" />
             </button>
@@ -66,7 +66,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
             id="select-department-filter"
             value={filters.department}
             onChange={(e) => onFilterChange({ department: e.target.value })}
-            className="px-3 py-2 text-xs bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 rounded-lg text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="px-3 py-2 text-xs bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 rounded-lg text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:text-slate-700"
           >
             <option value="ALL">All Departments</option>
             {departments.map((d) => (
@@ -81,7 +81,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
             id="select-mfa-filter"
             value={filters.mfaStatus}
             onChange={(e) => onFilterChange({ mfaStatus: e.target.value })}
-            className="px-3 py-2 text-xs bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 rounded-lg text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="px-3 py-2 text-xs bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 rounded-lg text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:text-slate-700"
           >
             <option value="ALL">All MFA Status</option>
             <option value="ENFORCED">Enforced (Conditional Access)</option>
@@ -94,7 +94,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
             id="select-license-filter"
             value={filters.license}
             onChange={(e) => onFilterChange({ license: e.target.value })}
-            className="px-3 py-2 text-xs bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 rounded-lg text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="px-3 py-2 text-xs bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 rounded-lg text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:text-slate-700"
           >
             <option value="ALL">All Licenses</option>
             {licenses.map((l) => (
@@ -109,7 +109,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
             id="select-account-status-filter"
             value={filters.accountEnabled}
             onChange={(e) => onFilterChange({ accountEnabled: e.target.value })}
-            className="px-3 py-2 text-xs bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 rounded-lg text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="px-3 py-2 text-xs bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 rounded-lg text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:text-slate-700"
           >
             <option value="ALL">All Account States</option>
             <option value="true">Enabled Only</option>
