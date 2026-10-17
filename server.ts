@@ -76,6 +76,13 @@ async function startServer() {
   // Existing legacy endpoints remain available during the UI migration.
   app.use('/api/discovery-service', discoveryServiceGateway);
 
+  // Legacy scoped discovery writes are disabled by default after service extraction.
+  // Opt-in is available only for an explicitly planned data migration period.
+  app.use('/api/scoped-discovery', (req,res,next) => {
+    if(process.env.ENABLE_LEGACY_DISCOVERY==='true')return next();
+    return res.status(410).json({error:'Discovery has moved to /api/discovery-service/projects. Existing legacy scan records are not automatically migrated.'});
+  });
+
   // Ensure initial discovery seed data is populated
   if (process.env.DEMO_MODE === 'true') {
     await ensureDiscoveryDataSeeded();
