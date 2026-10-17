@@ -196,7 +196,7 @@ export const ReportGenerationEngine: React.FC<ReportGenerationEngineProps> = ({
         <div className="lg:col-span-2 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl overflow-hidden">
           <div className="border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/40 p-4 flex items-center space-x-3">
             <Settings className="h-5 w-5 text-blue-400" />
-            <h3 className="font-semibold text-slate-100">Report Configuration</h3>
+            <h3 className="font-semibold text-slate-100 dark:text-slate-800">Report Configuration</h3>
           </div>
           
           <div className="p-6 space-y-8">
@@ -214,7 +214,7 @@ export const ReportGenerationEngine: React.FC<ReportGenerationEngineProps> = ({
                 >
                   <Activity className={`h-6 w-6 mb-3 ${reportType === 'PERFORMANCE' ? 'text-blue-400' : 'text-slate-500'}`} />
                   <span className={`font-semibold text-sm ${reportType === 'PERFORMANCE' ? 'text-blue-100' : 'text-slate-600 dark:text-slate-300'}`}>Performance</span>
-                  <span className="text-xs text-slate-500 mt-1">Throughput & resource metrics</span>
+                  <span className="text-xs text-slate-500 mt-1 dark:text-slate-400">Throughput & resource metrics</span>
                 </button>
                 <button
                   onClick={() => setReportType('SECURITY_AUDIT')}
@@ -226,7 +226,7 @@ export const ReportGenerationEngine: React.FC<ReportGenerationEngineProps> = ({
                 >
                   <ShieldAlert className={`h-6 w-6 mb-3 ${reportType === 'SECURITY_AUDIT' ? 'text-emerald-400' : 'text-slate-500'}`} />
                   <span className={`font-semibold text-sm ${reportType === 'SECURITY_AUDIT' ? 'text-emerald-100' : 'text-slate-600 dark:text-slate-300'}`}>Security Audit</span>
-                  <span className="text-xs text-slate-500 mt-1">Access logs & encryption status</span>
+                  <span className="text-xs text-slate-500 mt-1 dark:text-slate-400">Access logs & encryption status</span>
                 </button>
                 <button
                   onClick={() => setReportType('COMPLIANCE_SNAPSHOT')}
@@ -238,7 +238,7 @@ export const ReportGenerationEngine: React.FC<ReportGenerationEngineProps> = ({
                 >
                   <FileText className={`h-6 w-6 mb-3 ${reportType === 'COMPLIANCE_SNAPSHOT' ? 'text-purple-400' : 'text-slate-500'}`} />
                   <span className={`font-semibold text-sm ${reportType === 'COMPLIANCE_SNAPSHOT' ? 'text-purple-100' : 'text-slate-600 dark:text-slate-300'}`}>Full Snapshot</span>
-                  <span className="text-xs text-slate-500 mt-1">Combined compliance report</span>
+                  <span className="text-xs text-slate-500 mt-1 dark:text-slate-400">Combined compliance report</span>
                 </button>
               </div>
             </div>
@@ -339,37 +339,37 @@ export const ReportGenerationEngine: React.FC<ReportGenerationEngineProps> = ({
           <div className="border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/40 p-4 flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <History className="h-5 w-5 text-emerald-400" />
-              <h3 className="font-semibold text-slate-100">Recent Reports</h3>
+              <h3 className="font-semibold text-slate-100 dark:text-slate-800">Recent Reports</h3>
             </div>
           </div>
           <div className="p-4 flex-1 overflow-y-auto space-y-3">
             {recentReports.length === 0 ? (
-              <div className="h-full flex flex-col items-center justify-center text-slate-500 pb-10">
+              <div className="h-full flex flex-col items-center justify-center text-slate-500 pb-10 dark:text-slate-400">
                 <FileText className="h-10 w-10 mb-3 opacity-20" />
                 <p className="text-sm">No reports generated yet.</p>
               </div>
             ) : (
               recentReports.map(report => (
-                <div key={report.id} className="bg-slate-50/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg p-3 hover:bg-slate-100 dark:bg-slate-700/50 transition-colors group cursor-pointer">
+                <div key={report.id} className="bg-slate-50/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg p-3 hover:bg-slate-100 dark:bg-slate-700/50 transition-colors group cursor-pointer dark:hover:bg-slate-800">
                   <div className="flex items-start justify-between">
                     <div className="flex items-start space-x-3">
                       <div className={`p-2 rounded-md ${report.format === 'PDF' ? 'bg-red-500/10 text-red-400' : 'bg-yellow-500/10 text-yellow-400'}`}>
                         {report.format === 'PDF' ? <FileText className="h-4 w-4" /> : <FileJson className="h-4 w-4" />}
                       </div>
                       <div>
-                        <h4 className="text-sm font-medium text-slate-200">{report.name}</h4>
+                        <h4 className="text-sm font-medium text-slate-200 dark:text-slate-700">{report.name}</h4>
                         <div className="flex items-center space-x-2 mt-1">
                           <span className="text-[10px] bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-1.5 py-0.5 rounded font-mono">
                             {report.id}
                           </span>
-                          <span className="text-xs text-slate-500">{report.size}</span>
+                          <span className="text-xs text-slate-500 dark:text-slate-400">{report.size}</span>
                         </div>
-                        <p className="text-xs text-slate-500 mt-1">
+                        <p className="text-xs text-slate-500 mt-1 dark:text-slate-400">
                           {new Date(report.timestamp).toLocaleString()}
                         </p>
                       </div>
                     </div>
-                    <button className="text-slate-500 hover:text-blue-400 p-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button className="text-slate-500 hover:text-blue-400 p-1 opacity-0 group-hover:opacity-100 transition-opacity dark:text-slate-400">
                       <Download className="h-4 w-4" />
                     </button>
                   </div>
