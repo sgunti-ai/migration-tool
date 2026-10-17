@@ -1,3 +1,4 @@
+import {readdirSync} from 'node:fs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {existsSync,readFileSync} from 'node:fs';
@@ -26,4 +27,11 @@ test('core DB path remains stable while Discovery owns a separate schema',()=>{
  assert.equal(existsSync(file('prisma/schema.prisma')),true);
  assert.match(readFileSync(file('prisma/schema.prisma'),'utf8'),/provider\s*=\s*"sqlite"/);
  assert.match(readFileSync(file('services/discovery/prisma/schema.prisma'),'utf8'),/provider\s*=\s*"postgresql"/);
+});
+
+test('root directory has no leftover one-off code patch scripts',()=>{
+ const obsolete=/^(?:fix_|patch_|clean_dashboard|global_theme_patch|update_dashboard)/;
+ const leftovers=readdirSync(root).filter(name=>obsolete.test(name));
+ assert.deepEqual(leftovers,[]);
+ assert.equal(existsSync(file('bun.lock')),false,'npm is the supported root package manager');
 });
