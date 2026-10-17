@@ -96,14 +96,14 @@ export const AuditTrailViewer: React.FC<AuditTrailViewerProps> = ({ currentRole 
         <div className="flex items-center space-x-2">
           <button
             onClick={handleExportLogs}
-            className="flex items-center space-x-1.5 px-3 py-1.5 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:bg-slate-700 text-slate-200 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 transition-colors cursor-pointer"
+            className="flex items-center space-x-1.5 px-3 py-1.5 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:bg-slate-700 text-slate-200 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 transition-colors cursor-pointer dark:text-slate-700 dark:hover:bg-slate-800"
           >
             <Download className="h-3.5 w-3.5 text-blue-400" />
             <span>Export CSV</span>
           </button>
           <button
             onClick={fetchLogs}
-            className="p-1.5 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 transition-colors cursor-pointer dark:hover:bg-slate-800"
             title="Refresh logs"
           >
             <RefreshCw className={`h-3.5 w-3.5 ${loading ? 'animate-spin' : ''}`} />
@@ -130,7 +130,7 @@ export const AuditTrailViewer: React.FC<AuditTrailViewerProps> = ({ currentRole 
             <select
               value={actionFilter}
               onChange={(e) => setActionFilter(e.target.value)}
-              className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1 text-xs text-slate-200 focus:outline-none focus:border-blue-500"
+              className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1 text-xs text-slate-200 focus:outline-none focus:border-blue-500 dark:text-slate-700"
             >
               <option value="ALL">All Actions ({logs.length})</option>
               {uniqueActions.map((act) => (
@@ -158,18 +158,18 @@ export const AuditTrailViewer: React.FC<AuditTrailViewerProps> = ({ currentRole 
             <tbody className="divide-y divide-slate-800 text-slate-600 dark:text-slate-300">
               {filteredLogs.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="py-8 text-center text-slate-500">
+                  <td colSpan={6} className="py-8 text-center text-slate-500 dark:text-slate-400">
                     No matching audit records found.
                   </td>
                 </tr>
               ) : (
                 filteredLogs.map((log) => (
-                  <tr key={log.id} className="hover:bg-white dark:bg-slate-800/30 transition-colors">
+                  <tr key={log.id} className="hover:bg-white dark:bg-slate-800/30 transition-colors dark:hover:bg-slate-900">
                     <td className="py-3 px-4 whitespace-nowrap text-slate-500 dark:text-slate-400 font-mono">
                       {new Date(log.timestamp).toLocaleString()}
                     </td>
                     <td className="py-3 px-4 whitespace-nowrap">
-                      <div className="font-semibold text-slate-200">{log.actorEmail}</div>
+                      <div className="font-semibold text-slate-200 dark:text-slate-700">{log.actorEmail}</div>
                       <span className="text-[10px] text-slate-500 dark:text-slate-400">{log.actorRole}</span>
                     </td>
                     <td className="py-3 px-4 whitespace-nowrap font-mono text-blue-400 font-medium">
