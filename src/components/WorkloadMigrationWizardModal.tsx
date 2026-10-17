@@ -842,7 +842,7 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
             </button>
             <button
               onClick={onClose}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors dark:text-slate-500"
             >
               <X className="h-5 w-5" />
             </button>
@@ -1066,7 +1066,7 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                     />
                   </div>
                   <div className="flex items-center justify-between text-xs pt-1">
-                    <span className="text-slate-500">Graph Application Scope:</span>
+                    <span className="text-slate-500 dark:text-slate-400">Graph Application Scope:</span>
                     <span className="text-emerald-500 font-semibold flex items-center">
                       <Check className="h-3 w-3 mr-1" /> Validated
                     </span>
@@ -1088,7 +1088,7 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                     />
                   </div>
                   <div className="flex items-center justify-between text-xs pt-1">
-                    <span className="text-slate-500">Mailbox & OneDrive Quota:</span>
+                    <span className="text-slate-500 dark:text-slate-400">Mailbox & OneDrive Quota:</span>
                     <span className="text-emerald-500 font-semibold flex items-center">
                       <Check className="h-3 w-3 mr-1" /> 500 GB Available
                     </span>
@@ -1103,13 +1103,13 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                     type="checkbox"
                     checked={formData.validateGraphPermissions}
                     onChange={(e) => setFormData({ ...formData, validateGraphPermissions: e.target.checked })}
-                    className="h-4 w-4 text-blue-600 rounded border-slate-300"
+                    className="h-4 w-4 text-blue-600 rounded border-slate-300 dark:border-slate-600"
                   />
                   <div>
                     <span className="text-sm font-medium text-slate-900 dark:text-white">
                       Enforce Pre-Flight Graph API & EWS Impersonation Permission Check
                     </span>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs text-slate-500 dark:text-slate-400">
                       Verifies Mail.ReadWrite, Files.ReadWrite.All, Directory.ReadWrite.All, and Sites.FullControl.All before starting.
                     </p>
                   </div>
@@ -1120,13 +1120,13 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                     type="checkbox"
                     checked={formData.throttleBypassRequested}
                     onChange={(e) => setFormData({ ...formData, throttleBypassRequested: e.target.checked })}
-                    className="h-4 w-4 text-blue-600 rounded border-slate-300"
+                    className="h-4 w-4 text-blue-600 rounded border-slate-300 dark:border-slate-600"
                   />
                   <div>
                     <span className="text-sm font-medium text-slate-900 dark:text-white">
                       Enable Microsoft EWS Throttling Relaxation Header Policy
                     </span>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs text-slate-500 dark:text-slate-400">
                       Applies optimal burst thresholds (EwsMaxBurst, EwsRechargeRate) to prevent 429 delays during data streaming.
                     </p>
                   </div>
@@ -1137,13 +1137,13 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                     type="checkbox"
                     checked={formData.targetQuotaPreCheck}
                     onChange={(e) => setFormData({ ...formData, targetQuotaPreCheck: e.target.checked })}
-                    className="h-4 w-4 text-blue-600 rounded border-slate-300"
+                    className="h-4 w-4 text-blue-600 rounded border-slate-300 dark:border-slate-600"
                   />
                   <div>
                     <span className="text-sm font-medium text-slate-900 dark:text-white">
                       Pre-Validate Target Mailbox & OneDrive Storage Quotas
                     </span>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs text-slate-500 dark:text-slate-400">
                       Ensures target account provisioned storage exceeds source mailbox and OneDrive footprint before transferring data.
                     </p>
                   </div>
@@ -1229,7 +1229,7 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                           ][runningStepIndex] || 'Finalizing Pre-Flight Validation...'}
                         </span>
                       </span>
-                      <span className="text-slate-400 font-mono">
+                      <span className="text-slate-400 font-mono dark:text-slate-500">
                         Step {runningStepIndex + 1} of 8
                       </span>
                     </div>
@@ -1251,7 +1251,7 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                       {/* 1. License Availability */}
                       <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-1.5">
                         <div className="flex items-center justify-between">
-                          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider flex items-center space-x-1.5">
+                          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider flex items-center space-x-1.5 dark:text-slate-400">
                             <Key className="h-3.5 w-3.5 text-blue-500" />
                             <span>License Availability</span>
                           </span>
@@ -1262,7 +1262,7 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                         <div className="text-sm font-bold text-slate-900 dark:text-white">
                           52 Available / 15 Needed
                         </div>
-                        <p className="text-[11px] text-slate-500">
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400">
                           {formData.targetLicensingSku}: 37 unassigned licenses headroom remaining.
                         </p>
                       </div>
@@ -1270,7 +1270,7 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                       {/* 2. Storage Limits */}
                       <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-1.5">
                         <div className="flex items-center justify-between">
-                          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider flex items-center space-x-1.5">
+                          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider flex items-center space-x-1.5 dark:text-slate-400">
                             <HardDrive className="h-3.5 w-3.5 text-emerald-500" />
                             <span>Storage Limits</span>
                           </span>
@@ -1281,7 +1281,7 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                         <div className="text-sm font-bold text-slate-900 dark:text-white">
                           18.2 TB Free Headroom
                         </div>
-                        <p className="text-[11px] text-slate-500">
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400">
                           100 GB primary mailbox quota + 1.5 TB auto-expanding archive ready.
                         </p>
                       </div>
@@ -1289,7 +1289,7 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                       {/* 3. Source Object Existence */}
                       <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-1.5">
                         <div className="flex items-center justify-between">
-                          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider flex items-center space-x-1.5">
+                          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider flex items-center space-x-1.5 dark:text-slate-400">
                             <Users className="h-3.5 w-3.5 text-purple-500" />
                             <span>Source Objects</span>
                           </span>
@@ -1300,7 +1300,7 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                         <div className="text-sm font-bold text-slate-900 dark:text-white">
                           Verified & Enabled
                         </div>
-                        <p className="text-[11px] text-slate-500">
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400">
                           All source accounts resolved with healthy mailboxes and personal OneDrive sites.
                         </p>
                       </div>
@@ -1363,11 +1363,11 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                                       <span className="font-semibold text-slate-900 dark:text-white">
                                         {check.title}
                                       </span>
-                                      <span className="px-1.5 py-0.2 rounded text-[10px] font-mono bg-slate-100 dark:bg-slate-800 text-slate-500">
+                                      <span className="px-1.5 py-0.2 rounded text-[10px] font-mono bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400">
                                         {check.category}
                                       </span>
                                       {check.durationMs && (
-                                        <span className="text-[10px] text-slate-400">
+                                        <span className="text-[10px] text-slate-400 dark:text-slate-500">
                                           {check.durationMs}ms
                                         </span>
                                       )}
@@ -1391,9 +1391,9 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                                     {check.status}
                                   </span>
                                   {isExpanded ? (
-                                    <ChevronUp className="h-4 w-4 text-slate-400" />
+                                    <ChevronUp className="h-4 w-4 text-slate-400 dark:text-slate-500" />
                                   ) : (
-                                    <ChevronDown className="h-4 w-4 text-slate-400" />
+                                    <ChevronDown className="h-4 w-4 text-slate-400 dark:text-slate-500" />
                                   )}
                                 </div>
                               </div>
@@ -1411,7 +1411,7 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                                           key={k}
                                           className="p-1.5 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800"
                                         >
-                                          <div className="text-slate-400">{k}:</div>
+                                          <div className="text-slate-400 dark:text-slate-500">{k}:</div>
                                           <div className="font-semibold text-slate-800 dark:text-slate-200 truncate">
                                             {String(v)}
                                           </div>
@@ -1540,7 +1540,7 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                         <h4 className="text-sm font-semibold text-slate-900 dark:text-white">
                           Target License SKU Allocation
                         </h4>
-                        <p className="text-xs text-slate-500">
+                        <p className="text-xs text-slate-500 dark:text-slate-400">
                           Auto-assign target license plan before streaming data to avoid Graph API 403 Forbidden errors.
                         </p>
                       </div>
@@ -1573,14 +1573,14 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                   <div className="border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden">
                     <div className="px-4 py-2.5 bg-slate-100/70 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs font-semibold text-slate-700 dark:text-slate-300">
                       <span>Sample Scoped Identity Remappings</span>
-                      <span className="text-slate-500 font-normal">Showing {getComputedUserMappings().length} accounts</span>
+                      <span className="text-slate-500 font-normal dark:text-slate-400">Showing {getComputedUserMappings().length} accounts</span>
                     </div>
                     <div className="divide-y divide-slate-100 dark:divide-slate-800 text-xs">
                       {getComputedUserMappings().map((m, idx) => (
                         <div key={idx} className="px-4 py-2.5 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/30">
                           <div className="flex items-center space-x-2 font-mono">
                             <span className="text-slate-700 dark:text-slate-300">{m.sourceUPN}</span>
-                            <ArrowRight className="h-3 w-3 text-slate-400" />
+                            <ArrowRight className="h-3 w-3 text-slate-400 dark:text-slate-500" />
                             <span className="text-blue-600 dark:text-blue-400 font-semibold">{m.targetUPN}</span>
                           </div>
                           <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
@@ -1803,7 +1803,7 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                             <span className="text-sm font-medium text-slate-900 dark:text-white">
                               End-to-End SHA-256 Bit-Level Stream Checksum Verification
                             </span>
-                            <p className="text-xs text-slate-500">
+                            <p className="text-xs text-slate-500 dark:text-slate-400">
                               Calculates stream hashes on source read and compares against target write response to ensure 100% data integrity.
                             </p>
                           </div>
@@ -1942,7 +1942,7 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                             onChange={(e) => setFormData({ ...formData, maxItemSizeMB: Number(e.target.value) })}
                             className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white"
                           />
-                          <span className="text-[10px] text-slate-500">Items exceeding 4MB automatically use chunked stream sessions.</span>
+                          <span className="text-[10px] text-slate-500 dark:text-slate-400">Items exceeding 4MB automatically use chunked stream sessions.</span>
                         </div>
                       </div>
                     </div>
@@ -1963,7 +1963,7 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                             <span className="text-sm font-medium text-slate-900 dark:text-white">
                               Preserve Mailbox Delegation & Shared Permissions
                             </span>
-                            <p className="text-xs text-slate-500">
+                            <p className="text-xs text-slate-500 dark:text-slate-400">
                               Remaps FullAccess, SendAs, and SendOnBehalf rights between source and target identities.
                             </p>
                           </div>
@@ -1980,7 +1980,7 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                             <span className="text-sm font-medium text-slate-900 dark:text-white">
                               Preserve Folder-Level Access Control Lists (ACLs)
                             </span>
-                            <p className="text-xs text-slate-500">
+                            <p className="text-xs text-slate-500 dark:text-slate-400">
                               Re-applies custom folder permissions on user mailboxes and OneDrive directory trees.
                             </p>
                           </div>
@@ -1997,7 +1997,7 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                             <span className="text-sm font-medium text-slate-900 dark:text-white">
                               Remap External Sharing Links & Guest Access
                             </span>
-                            <p className="text-xs text-slate-500">
+                            <p className="text-xs text-slate-500 dark:text-slate-400">
                               Re-generates sharing links and maps external guest permissions to target tenant guest directory.
                             </p>
                           </div>
@@ -2014,7 +2014,7 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                             <span className="text-sm font-medium text-slate-900 dark:text-white">
                               Automated Path Length Normalization (&gt;400 UTF-16 Chars)
                             </span>
-                            <p className="text-xs text-slate-500">
+                            <p className="text-xs text-slate-500 dark:text-slate-400">
                               Safeguards deeply nested folder hierarchies from failing SharePoint URL character restrictions.
                             </p>
                           </div>
@@ -2092,7 +2092,7 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                             type="text"
                             disabled
                             value="TLS 1.3 / AES-256-GCM Hardware Accelerated"
-                            className="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-500"
+                            className="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-500 dark:text-slate-400"
                           />
                         </div>
                       </div>
@@ -2286,7 +2286,7 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                               scheduledWindowStartTime: `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`,
                             });
                           }}
-                          className="px-2 py-0.5 rounded text-[10px] bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300"
+                          className="px-2 py-0.5 rounded text-[10px] bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-600"
                         >
                           +1 Hour
                         </button>
@@ -2301,7 +2301,7 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                               scheduledWindowStartTime: `${tonight.getFullYear()}-${pad(tonight.getMonth() + 1)}-${pad(tonight.getDate())}T22:00`,
                             });
                           }}
-                          className="px-2 py-0.5 rounded text-[10px] bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300"
+                          className="px-2 py-0.5 rounded text-[10px] bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-600"
                         >
                           Tonight 22:00 UTC
                         </button>
@@ -2334,7 +2334,7 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                               scheduledWindowEndTime: `${end.getFullYear()}-${pad(end.getMonth() + 1)}-${pad(end.getDate())}T${pad(end.getHours())}:${pad(end.getMinutes())}`,
                             });
                           }}
-                          className="px-2 py-0.5 rounded text-[10px] bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300"
+                          className="px-2 py-0.5 rounded text-[10px] bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-600"
                         >
                           +4 Hours
                         </button>
@@ -2351,7 +2351,7 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                               scheduledWindowEndTime: `${end.getFullYear()}-${pad(end.getMonth() + 1)}-${pad(end.getDate())}T${pad(end.getHours())}:${pad(end.getMinutes())}`,
                             });
                           }}
-                          className="px-2 py-0.5 rounded text-[10px] bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300"
+                          className="px-2 py-0.5 rounded text-[10px] bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-600"
                         >
                           +8 Hours
                         </button>
@@ -2450,7 +2450,7 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                         </div>
                       </div>
 
-                      <div className="flex items-center space-x-2 text-[11px] text-slate-500">
+                      <div className="flex items-center space-x-2 text-[11px] text-slate-500 dark:text-slate-400">
                         <span className="font-semibold text-slate-700 dark:text-slate-300">
                           {queueConfig.batches.length} Batches
                         </span>
@@ -2476,7 +2476,7 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                           Batch Dependency Sequence Flowchart
                         </h4>
                       </div>
-                      <span className="text-[10px] text-slate-400">
+                      <span className="text-[10px] text-slate-400 dark:text-slate-500">
                         Orchestrator enforces predecessor completion before unlocking next batch
                       </span>
                     </div>
@@ -2521,8 +2521,8 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                             <React.Fragment key={batch.id}>
                               {/* Connector Arrow before node (if dependent) */}
                               {idx > 0 && (
-                                <div className="flex flex-col items-center px-1 text-slate-400">
-                                  <div className="flex items-center space-x-1 font-mono text-[9px] font-semibold text-slate-500 uppercase tracking-tighter">
+                                <div className="flex flex-col items-center px-1 text-slate-400 dark:text-slate-500">
+                                  <div className="flex items-center space-x-1 font-mono text-[9px] font-semibold text-slate-500 uppercase tracking-tighter dark:text-slate-400">
                                     <span>
                                       {batch.dependencyCondition === 'SUCCESS'
                                         ? 'On Success'
@@ -2564,19 +2564,19 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                                 <div className="font-semibold text-xs text-slate-900 dark:text-white truncate">
                                   {batch.name}
                                 </div>
-                                <div className="text-[10px] font-mono text-slate-500 mb-2 truncate">
+                                <div className="text-[10px] font-mono text-slate-500 mb-2 truncate dark:text-slate-400">
                                   {batch.batchCode}
                                 </div>
 
                                 <div className="space-y-1 text-[10px] text-slate-600 dark:text-slate-300 border-t border-slate-200/60 dark:border-slate-700/60 pt-1.5">
                                   <div className="flex items-center justify-between">
-                                    <span className="text-slate-400">Start Time:</span>
+                                    <span className="text-slate-400 dark:text-slate-500">Start Time:</span>
                                     <span className="font-medium text-slate-800 dark:text-slate-200">
                                       {batch.startTime ? batch.startTime.replace('T', ' ') : 'Immediate'}
                                     </span>
                                   </div>
                                   <div className="flex items-center justify-between">
-                                    <span className="text-slate-400">End Cutoff:</span>
+                                    <span className="text-slate-400 dark:text-slate-500">End Cutoff:</span>
                                     <span className="font-medium text-slate-800 dark:text-slate-200">
                                       {batch.endTime ? batch.endTime.replace('T', ' ') : 'Open window'}
                                     </span>
@@ -2588,7 +2588,7 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                                     </div>
                                   )}
                                   <div className="flex items-center justify-between pt-0.5">
-                                    <span className="text-slate-400">Dependency:</span>
+                                    <span className="text-slate-400 dark:text-slate-500">Dependency:</span>
                                     <span
                                       className={`font-semibold ${
                                         isRoot
@@ -2617,7 +2617,7 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                         <ListOrdered className="h-4 w-4 text-blue-500" />
                         <span>Configured Batch Pipeline Details ({queueConfig.batches.length} Batches)</span>
                       </h4>
-                      <span className="text-[11px] text-slate-500">
+                      <span className="text-[11px] text-slate-500 dark:text-slate-400">
                         Select a batch to adjust its Start Time, End Time, or Dependency Predecessor
                       </span>
                     </div>
@@ -2653,7 +2653,7 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                                 placeholder="Batch Name"
                               />
 
-                              <span className="font-mono text-[10px] text-slate-500 px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+                              <span className="font-mono text-[10px] text-slate-500 px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 dark:text-slate-400">
                                 {batch.batchCode}
                               </span>
                             </div>
@@ -2682,7 +2682,7 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                                 title="Move Earlier in Sequence"
                                 disabled={isFirst}
                                 onClick={() => handleMoveBatch(index, 'up')}
-                                className="p-1 rounded text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30"
+                                className="p-1 rounded text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 dark:text-slate-400"
                               >
                                 ↑
                               </button>
@@ -2691,7 +2691,7 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                                 title="Move Later in Sequence"
                                 disabled={isLast}
                                 onClick={() => handleMoveBatch(index, 'down')}
-                                className="p-1 rounded text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30"
+                                className="p-1 rounded text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 disabled:opacity-30 dark:text-slate-400"
                               >
                                 ↓
                               </button>
@@ -2699,7 +2699,7 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                                 type="button"
                                 title="Duplicate Batch"
                                 onClick={() => handleDuplicateBatch(batch.id)}
-                                className="p-1 rounded text-slate-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                                className="p-1 rounded text-slate-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 dark:text-slate-400"
                               >
                                 <Copy className="h-3.5 w-3.5" />
                               </button>
@@ -2708,7 +2708,7 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                                 title="Remove Batch"
                                 disabled={queueConfig.batches.length <= 1}
                                 onClick={() => handleRemoveBatch(batch.id)}
-                                className="p-1 rounded text-slate-500 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/20 disabled:opacity-30"
+                                className="p-1 rounded text-slate-500 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/20 disabled:opacity-30 dark:text-slate-400"
                               >
                                 <Trash2 className="h-3.5 w-3.5" />
                               </button>
@@ -2746,7 +2746,7 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                                         startTime: `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`,
                                       });
                                     }}
-                                    className="px-1.5 py-0.5 rounded text-[9px] bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 text-slate-700 dark:text-slate-300"
+                                    className="px-1.5 py-0.5 rounded text-[9px] bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 text-slate-700 dark:text-slate-300 dark:hover:bg-slate-600"
                                   >
                                     Now
                                   </button>
@@ -2759,7 +2759,7 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                                         startTime: `${t.getFullYear()}-${pad(t.getMonth() + 1)}-${pad(t.getDate())}T${pad(t.getHours())}:${pad(t.getMinutes())}`,
                                       });
                                     }}
-                                    className="px-1.5 py-0.5 rounded text-[9px] bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 text-slate-700 dark:text-slate-300"
+                                    className="px-1.5 py-0.5 rounded text-[9px] bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 text-slate-700 dark:text-slate-300 dark:hover:bg-slate-600"
                                   >
                                     +2h
                                   </button>
@@ -2773,7 +2773,7 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                                         startTime: `${tonight.getFullYear()}-${pad(tonight.getMonth() + 1)}-${pad(tonight.getDate())}T22:00`,
                                       });
                                     }}
-                                    className="px-1.5 py-0.5 rounded text-[9px] bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 text-slate-700 dark:text-slate-300"
+                                    className="px-1.5 py-0.5 rounded text-[9px] bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 text-slate-700 dark:text-slate-300 dark:hover:bg-slate-600"
                                   >
                                     Tonight 22:00
                                   </button>
@@ -2805,7 +2805,7 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                                         endTime: `${t.getFullYear()}-${pad(t.getMonth() + 1)}-${pad(t.getDate())}T${pad(t.getHours())}:${pad(t.getMinutes())}`,
                                       });
                                     }}
-                                    className="px-1.5 py-0.5 rounded text-[9px] bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 text-slate-700 dark:text-slate-300"
+                                    className="px-1.5 py-0.5 rounded text-[9px] bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 text-slate-700 dark:text-slate-300 dark:hover:bg-slate-600"
                                   >
                                     +4h Window
                                   </button>
@@ -2821,7 +2821,7 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                                         endTime: `${t.getFullYear()}-${pad(t.getMonth() + 1)}-${pad(t.getDate())}T${pad(t.getHours())}:${pad(t.getMinutes())}`,
                                       });
                                     }}
-                                    className="px-1.5 py-0.5 rounded text-[9px] bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 text-slate-700 dark:text-slate-300"
+                                    className="px-1.5 py-0.5 rounded text-[9px] bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 text-slate-700 dark:text-slate-300 dark:hover:bg-slate-600"
                                   >
                                     +8h Window
                                   </button>
@@ -3049,19 +3049,19 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40 space-y-2 text-xs">
                   <div className="flex justify-between border-b border-slate-200 dark:border-slate-700/60 pb-1.5">
-                    <span className="text-slate-500">Workload:</span>
+                    <span className="text-slate-500 dark:text-slate-400">Workload:</span>
                     <span className="font-semibold text-slate-900 dark:text-white">{formData.workloadType}</span>
                   </div>
                   <div className="flex justify-between border-b border-slate-200 dark:border-slate-700/60 pb-1.5">
-                    <span className="text-slate-500">Job Name:</span>
+                    <span className="text-slate-500 dark:text-slate-400">Job Name:</span>
                     <span className="font-semibold text-slate-900 dark:text-white">{formData.name}</span>
                   </div>
                   <div className="flex justify-between border-b border-slate-200 dark:border-slate-700/60 pb-1.5">
-                    <span className="text-slate-500">Batch Code:</span>
+                    <span className="text-slate-500 dark:text-slate-400">Batch Code:</span>
                     <span className="font-mono text-slate-900 dark:text-white">{formData.batchCode}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Tenants:</span>
+                    <span className="text-slate-500 dark:text-slate-400">Tenants:</span>
                     <span className="text-slate-900 dark:text-white font-mono">
                       {formData.sourceTenant} → {formData.targetTenant}
                     </span>
@@ -3070,19 +3070,19 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
 
                 <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40 space-y-2 text-xs">
                   <div className="flex justify-between border-b border-slate-200 dark:border-slate-700/60 pb-1.5">
-                    <span className="text-slate-500">Streaming Mode:</span>
+                    <span className="text-slate-500 dark:text-slate-400">Streaming Mode:</span>
                     <span className="font-semibold text-emerald-500">Direct In-Memory (Zero Disk Staging)</span>
                   </div>
                   <div className="flex justify-between border-b border-slate-200 dark:border-slate-700/60 pb-1.5">
-                    <span className="text-slate-500">Chunk Size:</span>
+                    <span className="text-slate-500 dark:text-slate-400">Chunk Size:</span>
                     <span className="font-semibold text-slate-900 dark:text-white">{formData.chunkSizeMB} MB Chunks</span>
                   </div>
                   <div className="flex justify-between border-b border-slate-200 dark:border-slate-700/60 pb-1.5">
-                    <span className="text-slate-500">Worker Concurrency:</span>
+                    <span className="text-slate-500 dark:text-slate-400">Worker Concurrency:</span>
                     <span className="font-semibold text-slate-900 dark:text-white">{formData.concurrencyLimit} Parallel Workers</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Checkpoints & Resumable Retries:</span>
+                    <span className="text-slate-500 dark:text-slate-400">Checkpoints & Resumable Retries:</span>
                     <span className="text-blue-500 font-semibold">Enabled (Up to {formData.maxResumableRetries} retries)</span>
                   </div>
                 </div>
@@ -3118,9 +3118,9 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                             <div>
                               <div className="font-semibold text-slate-900 dark:text-white flex items-center space-x-1.5">
                                 <span>{b.name}</span>
-                                <span className="font-mono text-[10px] text-slate-400">({b.batchCode})</span>
+                                <span className="font-mono text-[10px] text-slate-400 dark:text-slate-500">({b.batchCode})</span>
                               </div>
-                              <div className="text-[11px] text-slate-500 flex items-center space-x-2 mt-0.5">
+                              <div className="text-[11px] text-slate-500 flex items-center space-x-2 mt-0.5 dark:text-slate-400">
                                 <span>{b.workloadType}</span>
                                 <span>•</span>
                                 <span>{b.userCount} Accounts</span>
@@ -3245,7 +3245,7 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                     >
                       {isSubmitting ? (
                         <>
-                          <div className="h-3.5 w-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                          <div className="h-3.5 w-3.5 border-2 border-white border-t-transparent rounded-full animate-spin dark:border-slate-900" />
                           <span>
                             {formData.scheduleType === 'QUEUE_AND_BATCH'
                               ? 'Enqueuing Batches...'
@@ -3281,7 +3281,7 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                           <span className="font-semibold text-slate-800 dark:text-slate-200">
                             License Pool:
                           </span>
-                          <span className="text-slate-500 ml-1">52 available (15 needed)</span>
+                          <span className="text-slate-500 ml-1 dark:text-slate-400">52 available (15 needed)</span>
                         </div>
                       </div>
 
@@ -3291,7 +3291,7 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                           <span className="font-semibold text-slate-800 dark:text-slate-200">
                             Storage Quotas:
                           </span>
-                          <span className="text-slate-500 ml-1">18.2 TB pooled headroom</span>
+                          <span className="text-slate-500 ml-1 dark:text-slate-400">18.2 TB pooled headroom</span>
                         </div>
                       </div>
 
@@ -3301,7 +3301,7 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                           <span className="font-semibold text-slate-800 dark:text-slate-200">
                             Source Objects:
                           </span>
-                          <span className="text-slate-500 ml-1">15/15 verified & active</span>
+                          <span className="text-slate-500 ml-1 dark:text-slate-400">15/15 verified & active</span>
                         </div>
                       </div>
                     </div>
@@ -3340,7 +3340,7 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
                               <span className="font-semibold text-slate-800 dark:text-slate-200">
                                 {chk.title}
                               </span>
-                              <span className="text-slate-500 text-[11px] truncate max-w-md">
+                              <span className="text-slate-500 text-[11px] truncate max-w-md dark:text-slate-400">
                                 — {chk.details}
                               </span>
                             </div>
@@ -3370,7 +3370,7 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
           </button>
 
           <div className="flex items-center space-x-2.5">
-            <span className="text-xs text-slate-400">
+            <span className="text-xs text-slate-400 dark:text-slate-500">
               Step {currentStep} of {steps.length}
             </span>
 
@@ -3414,7 +3414,7 @@ export const WorkloadMigrationWizardModal: React.FC<WorkloadMigrationWizardModal
               >
                 {isSubmitting ? (
                   <>
-                    <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin dark:border-slate-900" />
                     <span>
                       {formData.scheduleType === 'QUEUE_AND_BATCH'
                         ? 'Enqueuing Batches...'
