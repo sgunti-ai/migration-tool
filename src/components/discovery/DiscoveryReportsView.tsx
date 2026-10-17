@@ -200,7 +200,7 @@ export const DiscoveryReportsView: React.FC<DiscoveryReportsViewProps> = ({
                   Tenant: {sourceTenantDomain}
                 </span>
               </div>
-              <p className="text-sm text-slate-300 mt-1 max-w-3xl">
+              <p className="text-sm text-slate-300 mt-1 max-w-3xl dark:text-slate-600">
                 Download complete inventories and workload audit extracts of your source Microsoft 365 tenant.
                 Extract all identified mailboxes, user accounts, groups, distribution lists, OneDrive accounts, SharePoint sites, and Teams data.
               </p>
@@ -213,7 +213,7 @@ export const DiscoveryReportsView: React.FC<DiscoveryReportsViewProps> = ({
                 fetchScanHistory();
                 if (onRefreshSummary) onRefreshSummary();
               }}
-              className="p-2 text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg transition"
+              className="p-2 text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg transition dark:bg-slate-100 dark:text-slate-600 dark:border-slate-300 dark:hover:bg-slate-200"
               title="Refresh Reports & History"
             >
               <RefreshCw className="w-4 h-4" />
@@ -298,7 +298,7 @@ export const DiscoveryReportsView: React.FC<DiscoveryReportsViewProps> = ({
             <span>Includes Mailboxes, Users, Groups, DLs, OneDrive, SharePoint & Teams</span>
           </div>
           <div className="flex items-center space-x-2">
-            <Clock className="w-4 h-4 text-slate-400" />
+            <Clock className="w-4 h-4 text-slate-400 dark:text-slate-500" />
             <span>
               Last scanned:{' '}
               {summary?.lastScanTimestamp
@@ -399,7 +399,7 @@ export const DiscoveryReportsView: React.FC<DiscoveryReportsViewProps> = ({
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs text-slate-600 dark:text-slate-300">
-              <thead className="bg-slate-50 dark:bg-slate-800/60 uppercase text-[10px] text-slate-500 font-mono border-b border-slate-200 dark:border-slate-800">
+              <thead className="bg-slate-50 dark:bg-slate-800/60 uppercase text-[10px] text-slate-500 font-mono border-b border-slate-200 dark:border-slate-800 dark:text-slate-400">
                 <tr>
                   <th className="py-3 px-3">Scan ID & Type</th>
                   <th className="py-3 px-3">Status</th>
@@ -443,7 +443,7 @@ export const DiscoveryReportsView: React.FC<DiscoveryReportsViewProps> = ({
                     <td className="py-3 px-3 text-[11px] text-slate-500 dark:text-slate-400">
                       Mbx: {scan.mailboxesDiscovered} • Usr: {scan.usersDiscovered} • Grp: {scan.groupsDiscovered} • DL: {scan.dlDiscovered} • OD: {scan.oneDrivesDiscovered} • SP: {scan.sharePointSitesDiscovered} • Teams: {scan.teamsDiscovered}
                     </td>
-                    <td className="py-3 px-3 text-slate-400">
+                    <td className="py-3 px-3 text-slate-400 dark:text-slate-500">
                       {new Date(scan.completedAt || scan.startedAt).toLocaleString()}
                     </td>
                     <td className="py-3 px-3 text-right">
