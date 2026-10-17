@@ -99,7 +99,7 @@ export const OneDriveSteps: React.FC<OneDriveStepsProps> = ({
             <h4 className="font-semibold text-slate-900 dark:text-white">UPN Transformation Strategy</h4>
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="block text-[10px] text-slate-400">Source Suffix</label>
+                <label className="block text-[10px] text-slate-400 dark:text-slate-500">Source Suffix</label>
                 <input
                   type="text"
                   value={formData.domainTransformSource || '@contoso.onmicrosoft.com'}
@@ -108,7 +108,7 @@ export const OneDriveSteps: React.FC<OneDriveStepsProps> = ({
                 />
               </div>
               <div>
-                <label className="block text-[10px] text-slate-400">Target Suffix</label>
+                <label className="block text-[10px] text-slate-400 dark:text-slate-500">Target Suffix</label>
                 <input
                   type="text"
                   value={formData.domainTransformTarget || '@fabrikam.com'}
@@ -172,7 +172,7 @@ export const OneDriveSteps: React.FC<OneDriveStepsProps> = ({
                 >
                   <div>
                     <span className="font-semibold text-slate-800 dark:text-slate-200">{opt.title}</span>
-                    <p className="text-[10px] text-slate-500">{opt.desc}</p>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400">{opt.desc}</p>
                   </div>
                   <input
                     type="radio"
@@ -235,7 +235,7 @@ export const OneDriveSteps: React.FC<OneDriveStepsProps> = ({
               />
               <div>
                 <span className="font-semibold text-slate-800 dark:text-slate-200">Preserve Direct Folder ACLs & Internal Sharing</span>
-                <p className="text-[10px] text-slate-500">Maintains read/write permissions granted to internal colleagues.</p>
+                <p className="text-[10px] text-slate-500 dark:text-slate-400">Maintains read/write permissions granted to internal colleagues.</p>
               </div>
             </label>
 
@@ -248,7 +248,7 @@ export const OneDriveSteps: React.FC<OneDriveStepsProps> = ({
               />
               <div>
                 <span className="font-semibold text-slate-800 dark:text-slate-200">Re-link External Guest Sharing Links</span>
-                <p className="text-[10px] text-slate-500">Re-creates anonymous and specific-person guest links on the target tenant.</p>
+                <p className="text-[10px] text-slate-500 dark:text-slate-400">Re-creates anonymous and specific-person guest links on the target tenant.</p>
               </div>
             </label>
 
@@ -261,7 +261,7 @@ export const OneDriveSteps: React.FC<OneDriveStepsProps> = ({
               />
               <div>
                 <span className="font-semibold text-slate-800 dark:text-slate-200">Preserve Author & Created/Modified Timestamps</span>
-                <p className="text-[10px] text-slate-500">Retains original Created By, Modified By, and date attributes.</p>
+                <p className="text-[10px] text-slate-500 dark:text-slate-400">Retains original Created By, Modified By, and date attributes.</p>
               </div>
             </label>
           </div>
