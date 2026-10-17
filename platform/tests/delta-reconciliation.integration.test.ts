@@ -4,6 +4,7 @@ import {randomUUID} from 'node:crypto';
 import {db} from '../src/db.js';
 import {acquireLease} from '../src/leases.js';
 import {executeDeltaScan} from '../src/deltaDiscovery.js';
+import {GraphError} from '../src/graph.js';
 
 test('delta reconciliation persists updates and tombstones; a failed page never advances cursor',async()=>{
  const org=await db.organization.create({data:{name:'delta-test-'+randomUUID()}});
@@ -41,9 +42,27 @@ test('delta reconciliation persists updates and tombstones; a failed page never 
   await assert.rejects(executeDeltaScan(context(failed.scan.id),'Users',graph([{id:'u3',displayName:'Partial'}],undefined,true),failed.lease),/Simulated interrupted pagination/);
   const cursor=await db.discoveryCursor.findUniqueOrThrow({where:{projectId_sourceTenantId_workload:{projectId:project.id,sourceTenantId:project.sourceTenantId,workload:'Users'}}});
   assert.equal(cursor.deltaLink,b);
+  assert.equal(await db.currentInventoryItem.count({where:{projectId:project.id,sourceId:'u3'}}),0,'failed scan must not publish partial data');
   const third=await makeScan();
   await executeDeltaScan(context(third.scan.id),'Users',graph([{id:'u3',displayName:'Partial'}],b),third.lease);
   assert.equal(await db.currentInventoryItem.count({where:{projectId:project.id,sourceId:'u3'}}),1);
+  const recovery=await makeScan();
+  const requested:string[]=[];
+  const expiredThenBaseline={
+   async *listPages(path:string){
+    requested.push(path);
+    if(path===b)throw new GraphError(410,'/v1.0/users/delta');
+    yield {items:[{id:'u1',displayName:'Fresh baseline'}],deltaLink:a};
+   }
+  } as any;
+  const recovered=await executeDeltaScan(context(recovery.scan.id),'Users',expiredThenBaseline,recovery.lease);
+  assert.equal(recovered.mode,'INITIAL_FULL');
+  assert.equal(requested.length,2);
+  assert.equal(requested[0],b);
+  assert.match(requested[1],/users\\/delta/);
+  assert.equal((await db.currentInventoryItem.findFirstOrThrow({where:{projectId:project.id,sourceId:'u3'}})).isDeleted,true);
+  assert.equal((await db.discoveryCursor.findUniqueOrThrow({where:{projectId_sourceTenantId_workload:{projectId:project.id,sourceTenantId:project.sourceTenantId,workload:'Users'}}})).deltaLink,a);
+
  }finally{
   await db.discoveryScanWorkload.deleteMany({where:{projectId:project.id}});
   await db.discoveryCursor.deleteMany({where:{projectId:project.id}});

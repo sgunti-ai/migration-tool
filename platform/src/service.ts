@@ -44,16 +44,33 @@ export async function executeScan(scanId:string) {
     await executeDeltaScan({scanId,organizationId:scan.organizationId,projectId:scan.projectId,sourceTenantId:scan.sourceTenantId},adapter.workload,graph,lease);
    } else {
     await db.discoveryScanWorkload.upsert({where:{scanId_workload:{scanId,workload:adapter.workload}},create:{scanId,organizationId:scan.organizationId,projectId:scan.projectId,sourceTenantId:scan.sourceTenantId,workload:adapter.workload,status:'RUNNING',startedAt:new Date()},update:{status:'RUNNING',startedAt:new Date()}});
+    await db.$transaction(async tx=>{
+     await assertLease(tx,lease);
+     await tx.inventoryItem.deleteMany({where:{scanId,workload:{in:adapter.workload==='Teams'?['Teams','TeamsChannel']:[adapter.workload]}}});
+    });
     for await(const item of adapter.discover(graph)){
      if(lost)throw new Error('SCAN_LEASE_LOST');
      await db.$transaction(async tx=>{
       await assertLease(tx,lease);
       await tx.inventoryItem.upsert({where:{scanId_workload_sourceId:{scanId,workload:item.workload,sourceId:item.sourceId}},create:{scanId,organizationId:scan.organizationId,projectId:scan.projectId,sourceTenantId:scan.sourceTenantId,workload:item.workload,sourceId:item.sourceId,name:item.name,metadata:item.metadata as any},update:{name:item.name,metadata:item.metadata as any}});
-      await tx.currentInventoryItem.upsert({where:{projectId_sourceTenantId_workload_sourceId:{projectId:scan.projectId,sourceTenantId:scan.sourceTenantId,workload:item.workload,sourceId:item.sourceId}},create:{organizationId:scan.organizationId,projectId:scan.projectId,sourceTenantId:scan.sourceTenantId,workload:item.workload,sourceId:item.sourceId,name:item.name,metadata:item.metadata as any,lastScanId:scanId,isDeleted:false},update:{name:item.name,metadata:item.metadata as any,lastScanId:scanId,isDeleted:false,observedAt:new Date()}});
+      // Stage observations until the workload has completed successfully.
      });
     }
     await guard();
-    await db.discoveryScanWorkload.update({where:{scanId_workload:{scanId,workload:adapter.workload}},data:{status:'COMPLETED',completedAt:new Date()}});
+    await db.$transaction(async tx=>{
+     await assertLease(tx,lease);
+     const staged=await tx.inventoryItem.findMany({where:{scanId,workload:{in:adapter.workload==='Teams'?['Teams','TeamsChannel']:[adapter.workload]}}});
+     for(const item of staged.filter(item=>item.workload===adapter.workload|| (adapter.workload==='Teams'&&item.workload==='TeamsChannel'))){
+      await tx.currentInventoryItem.upsert({
+       where:{projectId_sourceTenantId_workload_sourceId:{projectId:scan.projectId,sourceTenantId:scan.sourceTenantId,workload:item.workload,sourceId:item.sourceId}},
+       create:{organizationId:scan.organizationId,projectId:scan.projectId,sourceTenantId:scan.sourceTenantId,workload:item.workload,sourceId:item.sourceId,name:item.name,metadata:item.metadata as any,lastScanId:scanId,isDeleted:false},
+       update:{name:item.name,metadata:item.metadata as any,lastScanId:scanId,isDeleted:false,observedAt:new Date()}
+      });
+     }
+     const workloadTypes=adapter.workload==='Teams'?['Teams','TeamsChannel']:[adapter.workload];
+     await tx.currentInventoryItem.updateMany({where:{organizationId:scan.organizationId,projectId:scan.projectId,sourceTenantId:scan.sourceTenantId,workload:{in:workloadTypes},lastScanId:{not:scanId},isDeleted:false},data:{isDeleted:true,lastScanId:scanId,observedAt:new Date()}});
+     await tx.discoveryScanWorkload.update({where:{scanId_workload:{scanId,workload:adapter.workload}},data:{status:'COMPLETED',completedAt:new Date()}});
+    },{timeout:120000});
    }
    await guard();
    await db.scan.updateMany({where:{id:scanId,leaseOwner:lease.owner,leaseEpoch:lease.epoch,status:'RUNNING'},data:{progress:Math.floor((index+1)/selected.length*100)}});

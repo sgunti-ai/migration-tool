@@ -1,6 +1,9 @@
 import type {GraphClient} from './graph.js';
 import {db} from './db.js';
-import {allowGraphUrl} from './graph.js';
+import {allowGraphUrl,GraphError} from './graph.js';
+
+/** A stale Graph delta token requires a new baseline, never blind token retries. */
+export const isExpiredDeltaCursor=(error:unknown)=>error instanceof GraphError && error.status===410;
 import {assertLease,type Lease} from './leases.js';
 
 export type DeltaWorkload='Users'|'Groups';
@@ -15,17 +18,26 @@ export async function executeDeltaScan(ctx:DeltaContext,workload:DeltaWorkload,g
  const cursor=await db.discoveryCursor.findUnique({where:{projectId_sourceTenantId_workload:{projectId,sourceTenantId,workload}}});
  if(cursor && cursor.organizationId!==organizationId)throw new Error('Discovery cursor organization mismatch');
  const prior=cursor?.deltaLink;
- const mode=deltaMode(prior);
- const start=prior?allowGraphUrl(prior):endpoints[workload];
+ let mode=deltaMode(prior);
+ let start=prior?allowGraphUrl(prior):endpoints[workload];
  const record=await db.discoveryScanWorkload.upsert({
   where:{scanId_workload:{scanId,workload}},
   create:{scanId,organizationId,projectId,sourceTenantId,workload,status:'RUNNING',startedAt:new Date()},
   update:{status:'RUNNING',startedAt:new Date(),errorMessage:null,itemsSeen:0,itemsDeleted:0,pagesRead:0}
  });
+ await db.$transaction(async tx=>{
+  await assertLease(tx,lease);
+  await tx.inventoryItem.deleteMany({where:{scanId,workload}});
+ });
  let pages=0,seen=0,deleted=0;
  let finalLink:string|undefined;
  try{
-  for await(const page of graph.listPages(start)){
+  // Graph may invalidate an old delta token (HTTP 410 Gone). Restart as a full
+  // baseline once; do not reuse the invalid token or retry indefinitely.
+  let resetAttempted=false;
+  while(true){
+   try {
+    for await(const page of graph.listPages(start)){
    pages++;
    // A page and its observations commit together; the delta cursor advances only on a complete session.
    await db.$transaction(async tx=>{
@@ -41,28 +53,50 @@ export async function executeDeltaScan(ctx:DeltaContext,workload:DeltaWorkload,g
       create:{scanId,organizationId,projectId,sourceTenantId,workload,sourceId,name,metadata,isDeleted,observedAt:new Date()},
       update:{name,metadata,isDeleted,observedAt:new Date()}
      });
-     await tx.currentInventoryItem.upsert({
-      where:{projectId_sourceTenantId_workload_sourceId:{projectId,sourceTenantId,workload,sourceId}},
-      create:{organizationId,projectId,sourceTenantId,workload,sourceId,name,metadata,isDeleted,lastScanId:scanId,observedAt:new Date()},
-      update:{name,metadata,isDeleted,lastScanId:scanId,observedAt:new Date()}
-     });
      seen++;if(isDeleted)deleted++;
     }
     await tx.discoveryScanWorkload.update({where:{id:record.id},data:{itemsSeen:seen,itemsDeleted:deleted,pagesRead:pages}});
    });
    if(page.deltaLink)finalLink=page.deltaLink;
+    }
+    break;
+   } catch(error) {
+    if(!prior || resetAttempted || pages!==0 || !isExpiredDeltaCursor(error)) throw error;
+    resetAttempted=true;
+    mode='INITIAL_FULL';
+    start=endpoints[workload];
+    pages=0;seen=0;deleted=0;finalLink=undefined;
+    await db.$transaction(async tx=>{
+     await assertLease(tx,lease);
+     await tx.inventoryItem.deleteMany({where:{scanId,workload}});
+     await tx.discoveryScanWorkload.update({where:{id:record.id},data:{itemsSeen:0,itemsDeleted:0,pagesRead:0}});
+    });
+   }
   }
   if(!finalLink)throw new Error('Graph delta session ended without final deltaLink');
   // Successful initial baseline or incremental reconciliation is the only point where the cursor advances.
   await db.$transaction(async tx=>{
    await assertLease(tx,lease);
+   // A complete baseline is authoritative: records absent from it are tombstoned.
+   // This also cleans up objects retained after an expired delta token.
+   if(mode==='INITIAL_FULL') {
+    await tx.currentInventoryItem.updateMany({where:{organizationId,projectId,sourceTenantId,workload,isDeleted:false,lastScanId:{not:scanId}},data:{isDeleted:true,observedAt:new Date(),lastScanId:scanId}});
+   }
+   const staged=await tx.inventoryItem.findMany({where:{scanId,workload}});
+   for(const item of staged){
+    await tx.currentInventoryItem.upsert({
+     where:{projectId_sourceTenantId_workload_sourceId:{projectId,sourceTenantId,workload,sourceId:item.sourceId}},
+     create:{organizationId,projectId,sourceTenantId,workload,sourceId:item.sourceId,name:item.name,metadata:item.metadata as any,isDeleted:item.isDeleted,lastScanId:scanId,observedAt:item.observedAt},
+     update:{name:item.name,metadata:item.metadata as any,isDeleted:item.isDeleted,lastScanId:scanId,observedAt:item.observedAt}
+    });
+   }
    await tx.discoveryCursor.upsert({
     where:{projectId_sourceTenantId_workload:{projectId,sourceTenantId,workload}},
     create:{organizationId,projectId,sourceTenantId,workload,deltaLink:finalLink},
     update:{deltaLink:finalLink}
    });
    await tx.discoveryScanWorkload.update({where:{id:record.id},data:{status:'COMPLETED',completedAt:new Date()}});
-  });
+  },{timeout:120000});
   return {seen,deleted,pages,mode};
  }catch(error){
   await db.discoveryScanWorkload.update({where:{id:record.id},data:{status:'FAILED',errorMessage:error instanceof Error?error.message:'Unknown error',completedAt:new Date()}});

@@ -1,7 +1,7 @@
 name: Platform v2 validation
 on:
   push:
-    branches: [refactor/platform-v2-services]
+    branches: [refactor/platform-v2-services, fix/localhost-development-auth]
     paths: ['platform/**','.github/workflows/platform-v2-validation.yml']
   pull_request:
     paths: ['platform/**','.github/workflows/platform-v2-validation.yml']
