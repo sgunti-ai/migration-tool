@@ -2,9 +2,9 @@ name: Platform v2 validation
 on:
   push:
     branches: [refactor/platform-v2-services, fix/localhost-development-auth, feature/extract-discovery-service, refactor/monorepo-apps-services-packages]
-    paths: ['services/discovery/**','apps/api/server/discoveryGateway.ts','apps/api/server.ts','apps/web/src/components/discovery/DiscoveryServiceDashboard.tsx','apps/web/src/services/platformV2.ts','apps/web/src/App.tsx','packages/**','package.json','vite.config.ts','tsconfig.json','.github/workflows/platform-v2-validation.yml']
+    paths: ['services/discovery/**','apps/api/server/discoveryGateway.ts','apps/api/server.ts','apps/web/src/components/discovery/DiscoveryServiceDashboard.tsx','apps/web/src/services/platformV2.ts','apps/web/src/App.tsx','packages/**','tests/**','package.json','vite.config.ts','tsconfig.json','.github/workflows/platform-v2-validation.yml']
   pull_request:
-    paths: ['services/discovery/**','apps/**','packages/**','package.json','vite.config.ts','tsconfig.json','.github/workflows/platform-v2-validation.yml']
+    paths: ['services/discovery/**','apps/**','packages/**','tests/**','package.json','vite.config.ts','tsconfig.json','.github/workflows/platform-v2-validation.yml']
 jobs:
   tests:
     runs-on: ubuntu-latest
