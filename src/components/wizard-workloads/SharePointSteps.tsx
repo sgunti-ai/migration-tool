@@ -67,7 +67,7 @@ export const SharePointSteps: React.FC<SharePointStepsProps> = ({
         {/* Admin Center Endpoints */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40 space-y-2">
-            <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">
+            <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
               Source SharePoint Admin URL
             </label>
             <input
@@ -83,7 +83,7 @@ export const SharePointSteps: React.FC<SharePointStepsProps> = ({
           </div>
 
           <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40 space-y-2">
-            <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500">
+            <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
               Target SharePoint Admin URL
             </label>
             <input
@@ -114,7 +114,7 @@ export const SharePointSteps: React.FC<SharePointStepsProps> = ({
               />
               <div>
                 <span className="font-semibold text-slate-800 dark:text-slate-200">Hub & Intranet Sites</span>
-                <p className="text-[10px] text-slate-500 mt-0.5">Corporate portals, global navigation, and associated sub-sites.</p>
+                <p className="text-[10px] text-slate-500 mt-0.5 dark:text-slate-400">Corporate portals, global navigation, and associated sub-sites.</p>
               </div>
             </label>
 
@@ -127,7 +127,7 @@ export const SharePointSteps: React.FC<SharePointStepsProps> = ({
               />
               <div>
                 <span className="font-semibold text-slate-800 dark:text-slate-200">Communication Sites</span>
-                <p className="text-[10px] text-slate-500 mt-0.5">Department announcements, marketing, and company knowledge bases.</p>
+                <p className="text-[10px] text-slate-500 mt-0.5 dark:text-slate-400">Department announcements, marketing, and company knowledge bases.</p>
               </div>
             </label>
 
@@ -140,7 +140,7 @@ export const SharePointSteps: React.FC<SharePointStepsProps> = ({
               />
               <div>
                 <span className="font-semibold text-slate-800 dark:text-slate-200">M365 Group & Team Sites</span>
-                <p className="text-[10px] text-slate-500 mt-0.5">Project workspaces, departmental document repositories, and modern lists.</p>
+                <p className="text-[10px] text-slate-500 mt-0.5 dark:text-slate-400">Project workspaces, departmental document repositories, and modern lists.</p>
               </div>
             </label>
           </div>
@@ -159,7 +159,7 @@ export const SharePointSteps: React.FC<SharePointStepsProps> = ({
 
           <div className="border border-slate-200 dark:border-slate-800 rounded-lg overflow-hidden">
             <table className="w-full text-left text-[11px]">
-              <thead className="bg-slate-50 dark:bg-slate-800 text-slate-500 font-semibold border-b border-slate-200 dark:border-slate-700">
+              <thead className="bg-slate-50 dark:bg-slate-800 text-slate-500 font-semibold border-b border-slate-200 dark:border-slate-700 dark:text-slate-400">
                 <tr>
                   <th className="p-2.5">Source Site Title & URL</th>
                   <th className="p-2.5">Type</th>
@@ -171,7 +171,7 @@ export const SharePointSteps: React.FC<SharePointStepsProps> = ({
                 <tr>
                   <td className="p-2.5 text-slate-900 dark:text-white font-medium">
                     Corporate Intranet Hub
-                    <div className="text-[10px] text-slate-400">https://contoso.sharepoint.com/sites/intranet</div>
+                    <div className="text-[10px] text-slate-400 dark:text-slate-500">https://contoso.sharepoint.com/sites/intranet</div>
                   </td>
                   <td className="p-2.5 font-sans"><span className="px-1.5 py-0.5 rounded bg-purple-500/10 text-purple-400">Hub Site</span></td>
                   <td className="p-2.5 text-slate-600 dark:text-slate-300">42.5 GB (18,400 items)</td>
@@ -180,7 +180,7 @@ export const SharePointSteps: React.FC<SharePointStepsProps> = ({
                 <tr>
                   <td className="p-2.5 text-slate-900 dark:text-white font-medium">
                     Human Resources Portal
-                    <div className="text-[10px] text-slate-400">https://contoso.sharepoint.com/sites/hr</div>
+                    <div className="text-[10px] text-slate-400 dark:text-slate-500">https://contoso.sharepoint.com/sites/hr</div>
                   </td>
                   <td className="p-2.5 font-sans"><span className="px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400">Communication</span></td>
                   <td className="p-2.5 text-slate-600 dark:text-slate-300">28.2 GB (9,200 items)</td>
@@ -189,7 +189,7 @@ export const SharePointSteps: React.FC<SharePointStepsProps> = ({
                 <tr>
                   <td className="p-2.5 text-slate-900 dark:text-white font-medium">
                     Engineering Team Collaboration
-                    <div className="text-[10px] text-slate-400">https://contoso.sharepoint.com/sites/engineering</div>
+                    <div className="text-[10px] text-slate-400 dark:text-slate-500">https://contoso.sharepoint.com/sites/engineering</div>
                   </td>
                   <td className="p-2.5 font-sans"><span className="px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400">Team Site</span></td>
                   <td className="p-2.5 text-slate-600 dark:text-slate-300">84.0 GB (44,100 items)</td>
@@ -239,7 +239,7 @@ export const SharePointSteps: React.FC<SharePointStepsProps> = ({
                 >
                   <div>
                     <span className="font-semibold text-slate-800 dark:text-slate-200">{opt.title}</span>
-                    <p className="text-[10px] text-slate-500">{opt.desc}</p>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400">{opt.desc}</p>
                   </div>
                   <input
                     type="radio"
@@ -267,7 +267,7 @@ export const SharePointSteps: React.FC<SharePointStepsProps> = ({
                   <span className="font-semibold text-slate-800 dark:text-slate-200">
                     Large List Threshold Protection (&gt;5,000 items)
                   </span>
-                  <p className="text-[10px] text-slate-500">
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400">
                     Automatically preserves indexed columns and chunk queries to bypass SharePoint 5,000 list view limit failures.
                   </p>
                 </div>
@@ -284,7 +284,7 @@ export const SharePointSteps: React.FC<SharePointStepsProps> = ({
                   <span className="font-semibold text-slate-800 dark:text-slate-200">
                     400-Character URL Path Length Remediation
                   </span>
-                  <p className="text-[10px] text-slate-500">
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400">
                     Detects nested deep folders exceeding 400 characters and creates aliases to prevent upload errors.
                   </p>
                 </div>
@@ -301,7 +301,7 @@ export const SharePointSteps: React.FC<SharePointStepsProps> = ({
                   <span className="font-semibold text-slate-800 dark:text-slate-200">
                     Migrate Custom Lists & Metadata Taxonomies
                   </span>
-                  <p className="text-[10px] text-slate-500">
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400">
                     Preserves choice fields, lookup columns, managed metadata terms, and calculated formulas.
                   </p>
                 </div>
@@ -370,7 +370,7 @@ export const SharePointSteps: React.FC<SharePointStepsProps> = ({
                 />
                 <div>
                   <span className="font-semibold text-slate-800 dark:text-slate-200">Re-link External Guest Sharing Links</span>
-                  <p className="text-[10px] text-slate-500">Replicates anonymous and specific-person guest links on the target tenant.</p>
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400">Replicates anonymous and specific-person guest links on the target tenant.</p>
                 </div>
               </label>
 
@@ -383,7 +383,7 @@ export const SharePointSteps: React.FC<SharePointStepsProps> = ({
                 />
                 <div>
                   <span className="font-semibold text-slate-800 dark:text-slate-200">Preserve Author & Modified Timestamps</span>
-                  <p className="text-[10px] text-slate-500">Maintains original Created, Created By, Modified, and Modified By audit attributes.</p>
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400">Maintains original Created, Created By, Modified, and Modified By audit attributes.</p>
                 </div>
               </label>
             </div>
@@ -413,7 +413,7 @@ export const SharePointSteps: React.FC<SharePointStepsProps> = ({
           <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40 space-y-3">
             <h4 className="font-semibold text-slate-900 dark:text-white">Throughput & Worker Concurrency</h4>
             <div>
-              <label className="block text-[11px] text-slate-500 mb-1">Parallel Site Migration Workers</label>
+              <label className="block text-[11px] text-slate-500 mb-1 dark:text-slate-400">Parallel Site Migration Workers</label>
               <select
                 value={formData.concurrencyLimit || 4}
                 onChange={(e) => setFormData({ ...formData, concurrencyLimit: parseInt(e.target.value, 10) })}
@@ -427,7 +427,7 @@ export const SharePointSteps: React.FC<SharePointStepsProps> = ({
             </div>
 
             <div>
-              <label className="block text-[11px] text-slate-500 mb-1">Direct Memory Chunk Size</label>
+              <label className="block text-[11px] text-slate-500 mb-1 dark:text-slate-400">Direct Memory Chunk Size</label>
               <select
                 value={formData.chunkSizeMB || 25}
                 onChange={(e) => setFormData({ ...formData, chunkSizeMB: parseInt(e.target.value, 10) })}
@@ -447,7 +447,7 @@ export const SharePointSteps: React.FC<SharePointStepsProps> = ({
                 <CheckCircle2 className="h-4 w-4 text-teal-600 mt-0.5 shrink-0" />
                 <div>
                   <span className="font-semibold text-slate-900 dark:text-white">Zero Disk Intermediate Staging</span>
-                  <p className="text-[10px] text-slate-500 mt-0.5">Stream direct cloud-to-cloud without saving site packages to local disk.</p>
+                  <p className="text-[10px] text-slate-500 mt-0.5 dark:text-slate-400">Stream direct cloud-to-cloud without saving site packages to local disk.</p>
                 </div>
               </div>
 
@@ -455,7 +455,7 @@ export const SharePointSteps: React.FC<SharePointStepsProps> = ({
                 <CheckCircle2 className="h-4 w-4 text-teal-600 mt-0.5 shrink-0" />
                 <div>
                   <span className="font-semibold text-slate-900 dark:text-white">CSOM 429 Jitter Backoff Protocol</span>
-                  <p className="text-[10px] text-slate-500 mt-0.5">Automated retry logic responding to Retry-After headers from Microsoft SPO.</p>
+                  <p className="text-[10px] text-slate-500 mt-0.5 dark:text-slate-400">Automated retry logic responding to Retry-After headers from Microsoft SPO.</p>
                 </div>
               </div>
             </div>
@@ -516,7 +516,7 @@ export const SharePointSteps: React.FC<SharePointStepsProps> = ({
               >
                 <div>
                   <span className="font-bold text-slate-800 dark:text-slate-200">Multi-Wave Scheduled Queue</span>
-                  <p className="text-[10px] text-slate-500">Phased departmental site rollouts with maintenance cutoff windows.</p>
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400">Phased departmental site rollouts with maintenance cutoff windows.</p>
                 </div>
                 <input
                   type="radio"
@@ -537,7 +537,7 @@ export const SharePointSteps: React.FC<SharePointStepsProps> = ({
               >
                 <div>
                   <span className="font-bold text-slate-800 dark:text-slate-200">Immediate Execution</span>
-                  <p className="text-[10px] text-slate-500">Commence site ingestion immediately following pre-flight pass.</p>
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400">Commence site ingestion immediately following pre-flight pass.</p>
                 </div>
                 <input
                   type="radio"
@@ -554,7 +554,7 @@ export const SharePointSteps: React.FC<SharePointStepsProps> = ({
             <h4 className="font-semibold text-slate-900 dark:text-white">Maintenance Cutover Windows</h4>
             <div className="space-y-2">
               <div>
-                <label className="block text-[11px] text-slate-500 mb-1">Window Start Time</label>
+                <label className="block text-[11px] text-slate-500 mb-1 dark:text-slate-400">Window Start Time</label>
                 <input
                   type="datetime-local"
                   value={formData.scheduledWindowStartTime}
@@ -563,7 +563,7 @@ export const SharePointSteps: React.FC<SharePointStepsProps> = ({
                 />
               </div>
               <div>
-                <label className="block text-[11px] text-slate-500 mb-1">Window Hard Cutoff</label>
+                <label className="block text-[11px] text-slate-500 mb-1 dark:text-slate-400">Window Hard Cutoff</label>
                 <input
                   type="datetime-local"
                   value={formData.scheduledWindowEndTime}
