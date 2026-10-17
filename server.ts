@@ -66,7 +66,7 @@ async function startServer() {
       if (req.path === '/discovery/start' && req.method === 'POST') return next();
       return res.status(410).json({error:'Legacy unscoped discovery endpoint disabled. Use /api/scoped-discovery/:projectId/scans and /items.'});
     }
-    if (req.path.startsWith('/organizations') || req.path.startsWith('/scoped-discovery/')) return next();
+    if (req.path.startsWith('/organizations') || req.path.startsWith('/scoped-discovery/') || req.path.startsWith('/discovery-service/')) return next();
     if (process.env.DEMO_MODE === 'true') return next();
     if (['POST','PUT','PATCH','DELETE'].includes(req.method)) return res.status(503).json({error:'Live migration features are disabled. Only simulated demo operations exist. Set DEMO_MODE=true for isolated demos.'});
     next();
