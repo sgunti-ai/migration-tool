@@ -276,7 +276,7 @@ export const WorkloadDiscoveryInventory: React.FC<WorkloadDiscoveryInventoryProp
                     <span>Verified</span>
                   </span>
                 </div>
-                <p className="text-xs text-slate-300 font-mono">
+                <p className="text-xs text-slate-300 font-mono dark:text-slate-600">
                   Source: <strong className="text-white">
                     {typeof summary?.sourceTenant === 'object' && summary?.sourceTenant !== null
                       ? summary.sourceTenant.domain
@@ -287,7 +287,7 @@ export const WorkloadDiscoveryInventory: React.FC<WorkloadDiscoveryInventoryProp
                 </p>
               </div>
             </div>
-            <p className="text-xs text-slate-300 max-w-2xl leading-relaxed">
+            <p className="text-xs text-slate-300 max-w-2xl leading-relaxed dark:text-slate-600">
               Real-time inventory of all 7 Microsoft 365 workloads discovered on the source tenant.
               Monitor identified Mailboxes, User Accounts, Groups, Distribution Lists, OneDrive accounts, SharePoint Sites, and Teams.
             </p>
@@ -321,25 +321,25 @@ export const WorkloadDiscoveryInventory: React.FC<WorkloadDiscoveryInventoryProp
         {/* Global Key Metrics Ribbon */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 pt-5 border-t border-slate-700/60">
           <div>
-            <span className="text-[10px] uppercase font-mono tracking-wider text-slate-400">Total Workload Items</span>
+            <span className="text-[10px] uppercase font-mono tracking-wider text-slate-400 dark:text-slate-500">Total Workload Items</span>
             <p className="text-xl font-bold text-white mt-0.5">
               {summary?.totalItems ? summary.totalItems.toLocaleString() : (unifiedItems.length || 432)}
             </p>
           </div>
           <div>
-            <span className="text-[10px] uppercase font-mono tracking-wider text-slate-400">Total Tenant Storage</span>
+            <span className="text-[10px] uppercase font-mono tracking-wider text-slate-400 dark:text-slate-500">Total Tenant Storage</span>
             <p className="text-xl font-bold text-emerald-400 mt-0.5">
               {summary?.storage?.totalStorageGB || 1824} GB
             </p>
           </div>
           <div>
-            <span className="text-[10px] uppercase font-mono tracking-wider text-slate-400">MFA Enforced Rate</span>
+            <span className="text-[10px] uppercase font-mono tracking-wider text-slate-400 dark:text-slate-500">MFA Enforced Rate</span>
             <p className="text-xl font-bold text-cyan-400 mt-0.5">
               {summary?.security?.mfaEnforcedPercent ?? summary?.security?.mfaEnforcedRate ?? 88}%
             </p>
           </div>
           <div>
-            <span className="text-[10px] uppercase font-mono tracking-wider text-slate-400">Migration Readiness</span>
+            <span className="text-[10px] uppercase font-mono tracking-wider text-slate-400 dark:text-slate-500">Migration Readiness</span>
             <p className="text-xl font-bold text-purple-400 mt-0.5">
               {summary?.readinessScore ?? 96}% Ready
             </p>
@@ -432,7 +432,7 @@ export const WorkloadDiscoveryInventory: React.FC<WorkloadDiscoveryInventoryProp
             </button>
             <button
               onClick={fetchUnifiedWorkloads}
-              className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white bg-slate-100 dark:bg-slate-800 rounded-lg transition"
+              className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white bg-slate-100 dark:bg-slate-800 rounded-lg transition dark:hover:text-slate-100"
               title="Refresh inventory"
             >
               <RefreshCw className="w-4 h-4" />
@@ -479,7 +479,7 @@ export const WorkloadDiscoveryInventory: React.FC<WorkloadDiscoveryInventoryProp
 
           {/* Search Box */}
           <div className="relative w-full sm:w-64 shrink-0">
-            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 dark:text-slate-500" />
             <input
               type="text"
               value={searchQuery}
@@ -603,7 +603,7 @@ export const WorkloadDiscoveryInventory: React.FC<WorkloadDiscoveryInventoryProp
                         ) : item.itemCount !== undefined ? (
                           <span>{item.itemCount} items</span>
                         ) : (
-                          <span className="text-slate-400">—</span>
+                          <span className="text-slate-400 dark:text-slate-500">—</span>
                         )}
                       </td>
 
