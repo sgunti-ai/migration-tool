@@ -236,7 +236,7 @@ export const LiveMonitoringCockpit: React.FC<LiveMonitoringCockpitProps> = ({
 
                         <div className="flex items-center space-x-2 font-bold text-sm text-slate-900 dark:text-white">
                           <span>{j.sourceTenantDomain}</span>
-                          <ArrowRight className="h-3.5 w-3.5 text-slate-400" />
+                          <ArrowRight className="h-3.5 w-3.5 text-slate-400 dark:text-slate-500" />
                           <span className="text-blue-600 dark:text-blue-400">{j.targetTenantDomain}</span>
                         </div>
                       </div>
@@ -257,7 +257,7 @@ export const LiveMonitoringCockpit: React.FC<LiveMonitoringCockpitProps> = ({
                             {metrics.failed} Failed
                           </span>
                         )}
-                        <span className="px-2 py-1 text-slate-500 font-mono text-[11px]">
+                        <span className="px-2 py-1 text-slate-500 font-mono text-[11px] dark:text-slate-400">
                           ({metrics.total} Total Users)
                         </span>
                       </div>
@@ -311,25 +311,25 @@ export const LiveMonitoringCockpit: React.FC<LiveMonitoringCockpitProps> = ({
                           </h5>
                           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                             <div className="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60">
-                              <span className="text-slate-500 text-[11px] block">Transferred Volume</span>
+                              <span className="text-slate-500 text-[11px] block dark:text-slate-400">Transferred Volume</span>
                               <span className="font-bold text-slate-900 dark:text-white font-mono">
                                 {metrics.progressedDataGB} GB / {metrics.estDataGB} GB
                               </span>
                             </div>
                             <div className="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60">
-                              <span className="text-slate-500 text-[11px] block">Items Migrated</span>
+                              <span className="text-slate-500 text-[11px] block dark:text-slate-400">Items Migrated</span>
                               <span className="font-bold text-slate-900 dark:text-white font-mono">
                                 {metrics.migratedItems.toLocaleString()} / {metrics.totalItems.toLocaleString()}
                               </span>
                             </div>
                             <div className="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60">
-                              <span className="text-slate-500 text-[11px] block">Mailbox Sync Avg</span>
+                              <span className="text-slate-500 text-[11px] block dark:text-slate-400">Mailbox Sync Avg</span>
                               <span className="font-bold text-emerald-600 dark:text-emerald-400 font-mono">
                                 {metrics.avgMailbox}%
                               </span>
                             </div>
                             <div className="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60">
-                              <span className="text-slate-500 text-[11px] block">OneDrive Sync Avg</span>
+                              <span className="text-slate-500 text-[11px] block dark:text-slate-400">OneDrive Sync Avg</span>
                               <span className="font-bold text-indigo-600 dark:text-indigo-400 font-mono">
                                 {metrics.avgDrive}%
                               </span>
@@ -354,7 +354,7 @@ export const LiveMonitoringCockpit: React.FC<LiveMonitoringCockpitProps> = ({
                                     <span className="font-semibold text-slate-800 dark:text-slate-200 font-mono">
                                       {u.targetUPN}
                                     </span>
-                                    <span className="text-slate-500 font-mono truncate">
+                                    <span className="text-slate-500 font-mono truncate dark:text-slate-400">
                                       ({u.activeStep || 'Migrating items...'})
                                     </span>
                                   </div>
@@ -365,7 +365,7 @@ export const LiveMonitoringCockpit: React.FC<LiveMonitoringCockpitProps> = ({
                               ))}
                             </div>
                           ) : (
-                            <p className="text-[11px] text-slate-500">
+                            <p className="text-[11px] text-slate-500 dark:text-slate-400">
                               No active background transfer streams currently running for this job.
                             </p>
                           )}
@@ -714,7 +714,7 @@ export const LiveMonitoringCockpit: React.FC<LiveMonitoringCockpitProps> = ({
 
             <div className="flex items-center space-x-2 text-slate-900 dark:text-white font-bold text-lg">
               <span className="text-slate-700 dark:text-slate-200">{activeJob.sourceTenantDomain}</span>
-              <ArrowRight className="h-4 w-4 text-slate-400 shrink-0" />
+              <ArrowRight className="h-4 w-4 text-slate-400 shrink-0 dark:text-slate-500" />
               <span className="text-blue-600 dark:text-blue-400">{activeJob.targetTenantDomain}</span>
             </div>
           </div>
@@ -821,7 +821,7 @@ export const LiveMonitoringCockpit: React.FC<LiveMonitoringCockpitProps> = ({
             </div>
             <button
               onClick={() => setRetryNotification(null)}
-              className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer ml-3 font-bold"
+              className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer ml-3 font-bold dark:text-slate-500"
             >
               ✕
             </button>
@@ -1104,7 +1104,7 @@ export const LiveMonitoringCockpit: React.FC<LiveMonitoringCockpitProps> = ({
             </div>
             <button
               onClick={() => setShowJobsList(false)}
-              className="text-xs text-slate-500 hover:text-slate-800 dark:hover:text-white px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded cursor-pointer"
+              className="text-xs text-slate-500 hover:text-slate-800 dark:hover:text-white px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded cursor-pointer dark:text-slate-400"
             >
               Close
             </button>
@@ -1146,8 +1146,8 @@ export const LiveMonitoringCockpit: React.FC<LiveMonitoringCockpitProps> = ({
                         >
                           ● {j.status === 'PROCESSING' ? 'In-Progress' : j.status}
                         </span>
-                        <span className="font-mono text-slate-400 text-[11px]">#{j.id.slice(0, 8)}</span>
-                        <span className="text-slate-400 text-[11px]">{new Date(j.createdAt).toLocaleTimeString()}</span>
+                        <span className="font-mono text-slate-400 text-[11px] dark:text-slate-500">#{j.id.slice(0, 8)}</span>
+                        <span className="text-slate-400 text-[11px] dark:text-slate-500">{new Date(j.createdAt).toLocaleTimeString()}</span>
                       </div>
                       <div className="font-semibold text-slate-800 dark:text-slate-200 text-sm">
                         {j.sourceTenantDomain} → {j.targetTenantDomain}
@@ -1200,25 +1200,25 @@ export const LiveMonitoringCockpit: React.FC<LiveMonitoringCockpitProps> = ({
                     <div className="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/90 p-4 space-y-3 text-xs">
                       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                         <div className="p-2 rounded bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60">
-                          <span className="text-[10px] text-slate-500 block">Progressed Data</span>
+                          <span className="text-[10px] text-slate-500 block dark:text-slate-400">Progressed Data</span>
                           <span className="font-mono font-bold text-slate-800 dark:text-slate-100">
                             {m.progressedDataGB} GB / {m.estDataGB} GB
                           </span>
                         </div>
                         <div className="p-2 rounded bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60">
-                          <span className="text-[10px] text-slate-500 block">Items Migrated</span>
+                          <span className="text-[10px] text-slate-500 block dark:text-slate-400">Items Migrated</span>
                           <span className="font-mono font-bold text-slate-800 dark:text-slate-100">
                             {m.migratedItems.toLocaleString()} / {m.totalItems.toLocaleString()}
                           </span>
                         </div>
                         <div className="p-2 rounded bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60">
-                          <span className="text-[10px] text-slate-500 block">Mailbox Sync</span>
+                          <span className="text-[10px] text-slate-500 block dark:text-slate-400">Mailbox Sync</span>
                           <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400">
                             {m.avgMailbox}%
                           </span>
                         </div>
                         <div className="p-2 rounded bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60">
-                          <span className="text-[10px] text-slate-500 block">OneDrive Sync</span>
+                          <span className="text-[10px] text-slate-500 block dark:text-slate-400">OneDrive Sync</span>
                           <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">
                             {m.avgDrive}%
                           </span>
@@ -1234,7 +1234,7 @@ export const LiveMonitoringCockpit: React.FC<LiveMonitoringCockpitProps> = ({
                             {m.activeUsers.slice(0, 2).map((u) => (
                               <div key={u.id} className="p-1.5 rounded bg-blue-500/5 text-[11px] font-mono flex justify-between">
                                 <span className="text-blue-600 dark:text-blue-400 truncate">{u.targetUPN}</span>
-                                <span className="text-slate-500 truncate ml-2">{u.activeStep || 'Transferring...'}</span>
+                                <span className="text-slate-500 truncate ml-2 dark:text-slate-400">{u.activeStep || 'Transferring...'}</span>
                               </div>
                             ))}
                           </div>
@@ -1371,13 +1371,13 @@ export const LiveMonitoringCockpit: React.FC<LiveMonitoringCockpitProps> = ({
               </div>
               <div className="grid grid-cols-2 gap-2 text-xs pt-2">
                 <div>
-                  <span className="text-slate-500 text-[11px] block">Mailboxes Complete</span>
+                  <span className="text-slate-500 text-[11px] block dark:text-slate-400">Mailboxes Complete</span>
                   <span className="font-bold text-slate-800 dark:text-slate-200 font-mono">
                     {completedMailboxes} of {totalUsers}
                   </span>
                 </div>
                 <div>
-                  <span className="text-slate-500 text-[11px] block">Estimated Mail Volume</span>
+                  <span className="text-slate-500 text-[11px] block dark:text-slate-400">Estimated Mail Volume</span>
                   <span className="font-bold text-slate-800 dark:text-slate-200 font-mono">
                     {((Number(progressedDataGB) * 0.4)).toFixed(1)} GB
                   </span>
@@ -1404,13 +1404,13 @@ export const LiveMonitoringCockpit: React.FC<LiveMonitoringCockpitProps> = ({
               </div>
               <div className="grid grid-cols-2 gap-2 text-xs pt-2">
                 <div>
-                  <span className="text-slate-500 text-[11px] block">Drives Complete</span>
+                  <span className="text-slate-500 text-[11px] block dark:text-slate-400">Drives Complete</span>
                   <span className="font-bold text-slate-800 dark:text-slate-200 font-mono">
                     {completedDrives} of {totalUsers}
                   </span>
                 </div>
                 <div>
-                  <span className="text-slate-500 text-[11px] block">Estimated Drive Volume</span>
+                  <span className="text-slate-500 text-[11px] block dark:text-slate-400">Estimated Drive Volume</span>
                   <span className="font-bold text-slate-800 dark:text-slate-200 font-mono">
                     {((Number(progressedDataGB) * 0.6)).toFixed(1)} GB
                   </span>
@@ -1457,10 +1457,10 @@ export const LiveMonitoringCockpit: React.FC<LiveMonitoringCockpitProps> = ({
           </div>
 
           {ongoingActiveUsers.length === 0 ? (
-            <div className="py-12 text-center text-xs text-slate-500">
-              <Activity className="h-8 w-8 text-slate-400 mx-auto mb-2 opacity-50" />
+            <div className="py-12 text-center text-xs text-slate-500 dark:text-slate-400">
+              <Activity className="h-8 w-8 text-slate-400 mx-auto mb-2 opacity-50 dark:text-slate-500" />
               <p className="font-medium text-slate-700 dark:text-slate-300">No active ongoing user streams right now.</p>
-              <p className="text-slate-400 mt-1">
+              <p className="text-slate-400 mt-1 dark:text-slate-500">
                 {completedCount === totalUsers && totalUsers > 0
                   ? 'All user migrations in this job have completed successfully.'
                   : isPaused
@@ -1484,7 +1484,7 @@ export const LiveMonitoringCockpit: React.FC<LiveMonitoringCockpitProps> = ({
                           <div className="font-bold text-slate-900 dark:text-white font-mono text-xs">
                             {u.targetUPN}
                           </div>
-                          <div className="text-[10px] text-slate-500 font-mono">
+                          <div className="text-[10px] text-slate-500 font-mono dark:text-slate-400">
                             Source: {u.sourceUPN}
                           </div>
                         </div>
@@ -1507,8 +1507,8 @@ export const LiveMonitoringCockpit: React.FC<LiveMonitoringCockpitProps> = ({
                       <div className="bg-blue-600 h-2 rounded-full transition-all" style={{ width: `${combined}%` }} />
                     </div>
 
-                    <div className="p-2.5 rounded bg-slate-900 text-emerald-400 font-mono text-[11px] flex items-center space-x-2">
-                      <span className="text-slate-500">$</span>
+                    <div className="p-2.5 rounded bg-slate-900 text-emerald-400 font-mono text-[11px] flex items-center space-x-2 dark:bg-slate-100">
+                      <span className="text-slate-500 dark:text-slate-400">$</span>
                       <span className="truncate">{u.activeStep || 'Migrating items and folder structures...'}</span>
                     </div>
                   </div>
@@ -1643,7 +1643,7 @@ export const LiveMonitoringCockpit: React.FC<LiveMonitoringCockpitProps> = ({
                   <input 
                     type="checkbox"
                     title="Select all failed items"
-                    className="rounded border-slate-600 bg-slate-50 dark:bg-slate-900 text-blue-500 focus:ring-blue-500 cursor-pointer"
+                    className="rounded border-slate-600 bg-slate-50 dark:bg-slate-900 text-blue-500 focus:ring-blue-500 cursor-pointer dark:border-slate-300"
                     onChange={(e) => {
                       const failedUsers = filteredUsers.filter(u => u.status === 'FAILED');
                       if (e.target.checked) {
@@ -1717,7 +1717,7 @@ export const LiveMonitoringCockpit: React.FC<LiveMonitoringCockpitProps> = ({
                             type="checkbox"
                             checked={selectedFailedUsers.has(user.id)}
                             onChange={() => handleToggleFailedRow(user.id, user.status)}
-                            className="rounded border-slate-600 bg-slate-50 dark:bg-slate-900 text-blue-500 focus:ring-blue-500 cursor-pointer"
+                            className="rounded border-slate-600 bg-slate-50 dark:bg-slate-900 text-blue-500 focus:ring-blue-500 cursor-pointer dark:border-slate-300"
                           />
                         ) : (
                           <input type="checkbox" disabled className="rounded border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 opacity-30 cursor-not-allowed" />
@@ -1730,7 +1730,7 @@ export const LiveMonitoringCockpit: React.FC<LiveMonitoringCockpitProps> = ({
                             <User className="h-3.5 w-3.5" />
                           </div>
                           <div>
-                            <div className="font-semibold text-slate-100 font-mono">
+                            <div className="font-semibold text-slate-100 font-mono dark:text-slate-800">
                               {user.targetUPN}
                             </div>
                             <div className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">
@@ -1771,10 +1771,10 @@ export const LiveMonitoringCockpit: React.FC<LiveMonitoringCockpitProps> = ({
                           <div className="flex justify-between text-[11px]">
                             <span className="text-slate-500 dark:text-slate-400 flex items-center gap-1">
                               <Mail className="h-3 w-3 text-blue-400" /> {user.mailboxProgress}%
-                              <span className="text-slate-600">|</span>
+                              <span className="text-slate-600 dark:text-slate-300">|</span>
                               <HardDrive className="h-3 w-3 text-indigo-400" /> {user.driveProgress}%
                             </span>
-                            <span className="font-mono font-bold text-slate-200">
+                            <span className="font-mono font-bold text-slate-200 dark:text-slate-700">
                               {combinedPercent}%
                             </span>
                           </div>
@@ -1844,7 +1844,7 @@ export const LiveMonitoringCockpit: React.FC<LiveMonitoringCockpitProps> = ({
                           )}
                           <button
                             onClick={() => setSelectedUserLogs(user)}
-                            className="px-2 py-1 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded text-[11px] transition-colors cursor-pointer border border-slate-200 dark:border-slate-700"
+                            className="px-2 py-1 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded text-[11px] transition-colors cursor-pointer border border-slate-200 dark:border-slate-700 dark:hover:text-slate-100"
                           >
                             Details
                           </button>
@@ -1861,8 +1861,8 @@ export const LiveMonitoringCockpit: React.FC<LiveMonitoringCockpitProps> = ({
         {/* Floating Batch Toolbar */}
         {selectedFailedUsers.size > 0 && (
           <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-20 animate-fadeIn">
-            <div className="bg-white dark:bg-slate-800 border border-slate-600 shadow-2xl rounded-full px-6 py-3 flex items-center space-x-6">
-              <div className="flex items-center space-x-2 border-r border-slate-600 pr-6">
+            <div className="bg-white dark:bg-slate-800 border border-slate-600 shadow-2xl rounded-full px-6 py-3 flex items-center space-x-6 dark:border-slate-300">
+              <div className="flex items-center space-x-2 border-r border-slate-600 pr-6 dark:border-slate-300">
                 <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-500 text-xs font-bold text-white">
                   {selectedFailedUsers.size}
                 </span>
@@ -1878,7 +1878,7 @@ export const LiveMonitoringCockpit: React.FC<LiveMonitoringCockpitProps> = ({
                 </button>
                 <button 
                   onClick={handleBulkCancel}
-                  className="flex items-center space-x-2 px-4 py-1.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-600 text-rose-400 hover:text-rose-300 rounded-full text-sm font-medium transition-colors"
+                  className="flex items-center space-x-2 px-4 py-1.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-600 text-rose-400 hover:text-rose-300 rounded-full text-sm font-medium transition-colors dark:hover:bg-slate-300"
                 >
                   <AlertOctagon className="h-4 w-4" />
                   <span>Cancel Selected</span>
@@ -1916,7 +1916,7 @@ export const LiveMonitoringCockpit: React.FC<LiveMonitoringCockpitProps> = ({
                 </div>
                 <button
                   onClick={() => setSelectedUserLogs(null)}
-                  className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white text-xs px-2.5 py-1 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer"
+                  className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white text-xs px-2.5 py-1 bg-slate-100 dark:bg-slate-800 rounded-lg cursor-pointer dark:hover:text-slate-100"
                 >
                   Close
                 </button>
@@ -1960,7 +1960,7 @@ export const LiveMonitoringCockpit: React.FC<LiveMonitoringCockpitProps> = ({
                   <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-300 block mb-1">
                     Active Real-Time Micro-Log:
                   </span>
-                  <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 font-mono text-[11px] text-emerald-400">
+                  <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 font-mono text-[11px] text-emerald-400 dark:border-slate-100">
                     {selectedUserLogs.activeStep || 'None recorded'}
                   </div>
                 </div>
