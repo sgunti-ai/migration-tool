@@ -89,7 +89,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white hover:bg-white dark:bg-slate-800 rounded-lg transition"
+            className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white hover:bg-white dark:bg-slate-800 rounded-lg transition dark:hover:bg-slate-900 dark:hover:text-slate-100"
           >
             <X className="w-4 h-4" />
           </button>
@@ -201,7 +201,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 text-xs font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white transition"
+            className="px-4 py-2 text-xs font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white transition dark:hover:text-slate-100"
           >
             Cancel
           </button>
@@ -220,7 +220,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
               </>
             ) : isExporting ? (
               <>
-                <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin dark:border-slate-900"></div>
                 <span>Exporting...</span>
               </>
             ) : (
