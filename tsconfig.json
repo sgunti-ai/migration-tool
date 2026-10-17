@@ -17,10 +17,22 @@
     "jsx": "react-jsx",
     "paths": {
       "@/*": [
-        "./*"
+        "./apps/web/src/*"
       ]
     },
     "allowImportingTsExtensions": true,
     "noEmit": true
-  }
+  },
+  "include": [
+    "apps/web/src/**/*.ts",
+    "apps/web/src/**/*.tsx",
+    "apps/api/**/*.ts",
+    "vite.config.ts",
+    "packages/contracts/src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "services/discovery"
+  ]
 }

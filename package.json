@@ -4,11 +4,17 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "tsx server.ts",
-    "build": "prisma generate && vite build && esbuild server.ts --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=dist/server.cjs",
+    "dev": "tsx apps/api/server.ts",
+    "build": "prisma generate && npm run build:web && npm run build:api",
     "start": "node dist/server.cjs",
     "clean": "rm -rf dist server.js",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "dev:api": "tsx apps/api/server.ts",
+    "dev:discovery": "npm --prefix services/discovery run dev",
+    "build:web": "vite build",
+    "build:api": "esbuild apps/api/server.ts --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=dist/server.cjs",
+    "check": "tsc --noEmit",
+    "check:discovery": "npm --prefix services/discovery run check"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",

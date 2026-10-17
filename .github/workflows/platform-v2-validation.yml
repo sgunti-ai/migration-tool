@@ -2,9 +2,9 @@ name: Platform v2 validation
 on:
   push:
     branches: [refactor/platform-v2-services, fix/localhost-development-auth, feature/extract-discovery-service]
-    paths: ['platform/**','server/discoveryGateway.ts','server.ts','src/components/discovery/DiscoveryServiceDashboard.tsx','src/services/platformV2.ts','src/App.tsx','.github/workflows/platform-v2-validation.yml']
+    paths: ['services/discovery/**','apps/api/server/discoveryGateway.ts','apps/api/server.ts','apps/web/src/components/discovery/DiscoveryServiceDashboard.tsx','apps/web/src/services/platformV2.ts','apps/web/src/App.tsx','.github/workflows/platform-v2-validation.yml']
   pull_request:
-    paths: ['platform/**','.github/workflows/platform-v2-validation.yml']
+    paths: ['services/discovery/**','.github/workflows/platform-v2-validation.yml']
 jobs:
   tests:
     runs-on: ubuntu-latest
@@ -23,7 +23,7 @@ jobs:
         ports: ['6379:6379']
     defaults:
       run:
-        working-directory: platform
+        working-directory: services/discovery
     env:
       DATABASE_URL: postgresql://migration:test-only-password@127.0.0.1:5432/migration
       REDIS_URL: redis://127.0.0.1:6379

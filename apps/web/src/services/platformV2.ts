@@ -1,11 +1,9 @@
-/** Typed client for the isolated Discovery service via the authenticated console gateway.
- * Credentials never leave the server: the console session cookie authenticates calls.
- */
-export type V2Project={id:string;name:string;sourceTenantId:string};
-export type V2Scan={id:string;status:string;progress:number;scanType:string;createdAt:string;errorMessage?:string|null};
-export type V2Inventory={count:number;items:Array<{workload:string;sourceId:string;name:string|null;isDeleted:boolean}>};
-export type V2Report={status:string;workloads:Array<{workload:string;status:string;itemsRecorded:number;errorMessage?:string|null}>;unsupportedWorkloads:Array<{workload:string;status:string}>};
-
+/** Typed client for the isolated Discovery service via the console gateway. */
+import type {DiscoveryProject,DiscoveryScan,DiscoveryInventory,DiscoveryReport} from '../../../../packages/contracts/src/discovery';
+export type V2Project=DiscoveryProject;
+export type V2Scan=DiscoveryScan;
+export type V2Inventory=DiscoveryInventory;
+export type V2Report=DiscoveryReport;
 export class PlatformV2Client{
  constructor(private readonly base='/api/discovery-service'){}
  async request<T>(path:string,options?:RequestInit):Promise<T>{
