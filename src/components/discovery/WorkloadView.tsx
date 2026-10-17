@@ -158,7 +158,7 @@ export const WorkloadView: React.FC<WorkloadViewProps> = ({
           )}
 
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-500" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
             <input
               type="text"
               value={searchTerm}
@@ -170,7 +170,7 @@ export const WorkloadView: React.FC<WorkloadViewProps> = ({
 
           <button
             onClick={fetchItems}
-            className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white hover:bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 transition"
+            className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white hover:bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 transition dark:hover:bg-slate-900 dark:hover:text-slate-100"
             title="Refresh list"
           >
             <RefreshCw className="w-4 h-4" />
@@ -195,7 +195,7 @@ export const WorkloadView: React.FC<WorkloadViewProps> = ({
             <span className="text-xs">Loading workload data...</span>
           </div>
         ) : filteredItems.length === 0 ? (
-          <div className="text-center py-20 text-slate-500 text-xs">
+          <div className="text-center py-20 text-slate-500 text-xs dark:text-slate-400">
             No items discovered for this workload.
           </div>
         ) : (
@@ -215,7 +215,7 @@ export const WorkloadView: React.FC<WorkloadViewProps> = ({
                 </thead>
                 <tbody className="divide-y divide-slate-800/60 text-slate-600 dark:text-slate-300">
                   {filteredItems.map((grp: any) => (
-                    <tr key={grp.id} className="hover:bg-white dark:bg-slate-800/40 transition">
+                    <tr key={grp.id} className="hover:bg-white dark:bg-slate-800/40 transition dark:hover:bg-slate-900">
                       <td className="px-4 py-3 font-medium text-slate-900 dark:text-white">{grp.name}</td>
                       <td className="px-4 py-3">
                         <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-blue-500/10 text-blue-300 border border-blue-500/20">
@@ -231,7 +231,7 @@ export const WorkloadView: React.FC<WorkloadViewProps> = ({
                         {grp.isSecurityEnabled ? (
                           <span className="text-emerald-400 font-medium">Security Enabled</span>
                         ) : (
-                          <span className="text-slate-500">Standard</span>
+                          <span className="text-slate-500 dark:text-slate-400">Standard</span>
                         )}
                       </td>
                     </tr>
@@ -258,7 +258,7 @@ export const WorkloadView: React.FC<WorkloadViewProps> = ({
                     const usedGB = (od.storageUsedBytes / (1024 * 1024 * 1024)).toFixed(1);
                     const quotaGB = Math.round(od.storageQuotaBytes / (1024 * 1024 * 1024));
                     return (
-                      <tr key={od.id} className="hover:bg-white dark:bg-slate-800/40 transition">
+                      <tr key={od.id} className="hover:bg-white dark:bg-slate-800/40 transition dark:hover:bg-slate-900">
                         <td className="px-4 py-3 font-medium text-slate-900 dark:text-white">{od.userPrincipalName}</td>
                         <td className="px-4 py-3 font-mono text-blue-400 truncate max-w-xs" title={od.siteUrl}>
                           {od.siteUrl}
@@ -295,7 +295,7 @@ export const WorkloadView: React.FC<WorkloadViewProps> = ({
                   {filteredItems.map((mbx: any) => {
                     const sizeGB = (mbx.totalItemSizeMB / 1024).toFixed(2);
                     return (
-                      <tr key={mbx.id} className="hover:bg-white dark:bg-slate-800/40 transition">
+                      <tr key={mbx.id} className="hover:bg-white dark:bg-slate-800/40 transition dark:hover:bg-slate-900">
                         <td className="px-4 py-3 font-medium text-slate-900 dark:text-white">{mbx.userPrincipalName}</td>
                         <td className="px-4 py-3">
                           <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-blue-500/10 text-blue-300 border border-blue-500/20">
@@ -344,7 +344,7 @@ export const WorkloadView: React.FC<WorkloadViewProps> = ({
                   {filteredItems.map((sp: any) => {
                     const sizeGB = (sp.storageUsedMB / 1024).toFixed(1);
                     return (
-                      <tr key={sp.id} className="hover:bg-white dark:bg-slate-800/40 transition">
+                      <tr key={sp.id} className="hover:bg-white dark:bg-slate-800/40 transition dark:hover:bg-slate-900">
                         <td className="px-4 py-3 font-medium text-slate-900 dark:text-white">{sp.siteTitle}</td>
                         <td className="px-4 py-3 font-mono text-blue-400 truncate max-w-xs" title={sp.siteUrl}>
                           {sp.siteUrl}
@@ -375,7 +375,7 @@ export const WorkloadView: React.FC<WorkloadViewProps> = ({
                 </thead>
                 <tbody className="divide-y divide-slate-800/60 text-slate-600 dark:text-slate-300">
                   {filteredItems.map((tm: any) => (
-                    <tr key={tm.id} className="hover:bg-white dark:bg-slate-800/40 transition">
+                    <tr key={tm.id} className="hover:bg-white dark:bg-slate-800/40 transition dark:hover:bg-slate-900">
                       <td className="px-4 py-3">
                         <div className="font-semibold text-slate-900 dark:text-white">{tm.teamName}</div>
                         <div className="text-[11px] text-slate-500 dark:text-slate-400 truncate max-w-xs">{tm.description}</div>
@@ -413,7 +413,7 @@ export const WorkloadView: React.FC<WorkloadViewProps> = ({
                 </thead>
                 <tbody className="divide-y divide-slate-800/60 text-slate-600 dark:text-slate-300">
                   {filteredItems.map((dl: any) => (
-                    <tr key={dl.id} className="hover:bg-white dark:bg-slate-800/40 transition">
+                    <tr key={dl.id} className="hover:bg-white dark:bg-slate-800/40 transition dark:hover:bg-slate-900">
                       <td className="px-4 py-3 font-medium text-slate-900 dark:text-white">{dl.displayName}</td>
                       <td className="px-4 py-3 font-mono text-rose-400">{dl.primarySmtpAddress}</td>
                       <td className="px-4 py-3 font-mono font-semibold text-slate-900 dark:text-white">{dl.memberCount}</td>
@@ -422,7 +422,7 @@ export const WorkloadView: React.FC<WorkloadViewProps> = ({
                         {dl.moderationEnabled ? (
                           <span className="text-amber-400 font-medium">Moderated</span>
                         ) : (
-                          <span className="text-slate-500">Unrestricted</span>
+                          <span className="text-slate-500 dark:text-slate-400">Unrestricted</span>
                         )}
                       </td>
                     </tr>
