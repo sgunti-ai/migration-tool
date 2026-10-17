@@ -1,20 +1,20 @@
 # Dedicated Discovery service
 
-The repository now contains **two separate runtime applications**:
+The repository has a monorepo layout with a console API and frontend, plus a separate Discovery runtime:
 
 - The migration console (root `npm run dev`, port 3000) owns user sessions and UI.
-- The Discovery service (`platform/`, port 3100) owns live Microsoft Graph collection, projects, scan jobs, reports, credentials, and inventory. It uses its **own PostgreSQL database** and **its own Redis**. Its Prisma schema and migrations are under `platform/prisma`.
+- The Discovery service (`services/discovery/`, port 3100) owns live Microsoft Graph collection, projects, scan jobs, reports, credentials, and inventory. It uses its **own PostgreSQL database** and **its own Redis**. Its Prisma schema and migrations are under `platform/prisma`.
 
 The console forwards authenticated requests through `/api/discovery-service/projects/...`. Browsers never receive service credentials or directly access the service's internal network.
 
 ## Local deployment
 
-From `platform/`:
+From `services/discovery/`:
 
 1. Copy `discovery.env.example` to `discovery.env`.
 2. Set real `OIDC_ISSUER`, `OIDC_AUDIENCE`, `OIDC_JWKS_URL`, and `CREDENTIAL_ENCRYPTION_KEY`. The encryption key must be exactly 64 hex characters.
 3. Generate a new random gateway secret of at least 32 characters; set `DISCOVERY_GATEWAY_SECRET` to this same value in both the Discovery service environment and the root console environment.
-4. Create `platform/.env` containing `DISCOVERY_DB_PASSWORD=<strong-local-password>` for Compose variable interpolation. Use an alphanumeric password or URL-encode special characters in the connection URL.
+4. Create `services/discovery/.env` containing `DISCOVERY_DB_PASSWORD=<strong-local-password>` for Compose variable interpolation. Use an alphanumeric password or URL-encode special characters in the connection URL.
 5. Run `docker compose --env-file .env up --build -d`. Wait for the `migrate` container to exit successfully.
 6. Check `http://127.0.0.1:3100/health/live` and `http://127.0.0.1:3100/health/ready`.
 7. In the **root console** `.env`, configure:
