@@ -32,7 +32,7 @@ import {
   Unlock,
   Key
 } from 'lucide-react';
-import { WorkstreamAssessmentData } from '../../../server/tenantAssessment';
+import type { WorkstreamAssessmentData } from '../../../../../packages/contracts/src/tenantAssessment';
 
 interface TenantAssessmentViewProps {
   onNavigateToWorkloadTab?: (tab: string) => void;
