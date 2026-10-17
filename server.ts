@@ -1,4 +1,5 @@
 import { startLiveDiscovery } from './server/liveDiscovery.js';
+import { buildLiveInventoryReport } from './server/liveInventoryReport.js';
 import { authRoutes, requireAuth, requireSameOrigin } from './server/auth.js';
 import { GoogleGenAI } from '@google/genai';
 import express from 'express';
@@ -1433,6 +1434,14 @@ async function startServer() {
     const scan=await prisma.scopedDiscoveryScan.findFirst({where:{id:req.params.scanId,projectId:req.params.projectId}});
     if(!scan)return res.sendStatus(404);
     res.json({...scan,itemCount:await prisma.scopedDiscoveryItem.count({where:{scanId:scan.id,projectId:scan.projectId,tenantId:scan.tenantId}})});
+  });
+  app.get('/api/scoped-discovery/:projectId/scans/:scanId/report',requireRole(['GLOBAL_ADMIN']),async(req,res)=>{
+    try {
+      const report=await buildLiveInventoryReport(req.params.projectId,req.params.scanId);
+      if(!report)return res.sendStatus(404);
+      res.setHeader('Cache-Control','no-store');
+      res.json(report);
+    }catch(error){console.error('Live inventory report failed',error);res.status(500).json({error:'Unable to generate live inventory report'});}
   });
   app.get('/api/scoped-discovery/:projectId/scans/:scanId/items',requireRole(['GLOBAL_ADMIN']),async(req,res)=>{
     const scan=await prisma.scopedDiscoveryScan.findFirst({where:{id:req.params.scanId,projectId:req.params.projectId}});
