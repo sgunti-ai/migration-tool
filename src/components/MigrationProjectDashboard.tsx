@@ -816,7 +816,7 @@ export const MigrationProjectDashboard: React.FC<MigrationProjectDashboardProps>
     <div className="space-y-6 animate-fadeIn text-slate-800 dark:text-slate-100 font-sans">
       {/* Toast Alert Notification */}
       {actionNotice && (
-        <div className="fixed bottom-5 right-5 z-50 bg-slate-900 text-white px-4 py-3 rounded-lg shadow-xl border border-blue-500/40 flex items-center space-x-3 animate-fadeIn">
+        <div className="fixed bottom-5 right-5 z-50 bg-slate-900 text-white px-4 py-3 rounded-lg shadow-xl border border-blue-500/40 flex items-center space-x-3 animate-fadeIn dark:bg-slate-100">
           <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
           <span className="text-sm">{actionNotice}</span>
         </div>
@@ -867,7 +867,7 @@ export const MigrationProjectDashboard: React.FC<MigrationProjectDashboardProps>
                 id="select-migration-project"
                 value={selectedProjectId}
                 onChange={(e) => setSelectedProjectId(e.target.value)}
-                className="text-xs font-medium bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 appearance-none cursor-pointer hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="text-xs font-medium bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 rounded-lg px-3 py-2 pr-8 appearance-none cursor-pointer hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:hover:border-slate-600"
                 aria-label="Select Migration Project"
               >
                 {projects.map((proj) => (
@@ -876,7 +876,7 @@ export const MigrationProjectDashboard: React.FC<MigrationProjectDashboardProps>
                   </option>
                 ))}
               </select>
-              <ChevronDown className="w-3.5 h-3.5 text-slate-400 absolute right-2.5 top-2.5 pointer-events-none" />
+              <ChevronDown className="w-3.5 h-3.5 text-slate-400 absolute right-2.5 top-2.5 pointer-events-none dark:text-slate-500" />
             </div>
 
             <button
@@ -947,7 +947,7 @@ export const MigrationProjectDashboard: React.FC<MigrationProjectDashboardProps>
             </span>
             <span className="text-slate-300 dark:text-slate-600">•</span>
             <span className="flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5 text-slate-400" />
+              <Clock className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
               <span>Target Cutover: <strong className="text-slate-700 dark:text-slate-300">{selectedProject.targetCutoverDate}</strong></span>
             </span>
             <span className="text-slate-300 dark:text-slate-600">•</span>
@@ -1187,7 +1187,7 @@ export const MigrationProjectDashboard: React.FC<MigrationProjectDashboardProps>
           <div className="flex flex-wrap items-center gap-2 flex-1 min-w-0">
             {/* Search Input */}
             <div className="relative flex-1 min-w-[220px] max-w-sm">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5 pointer-events-none" />
+              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5 pointer-events-none dark:text-slate-500" />
               <input
                 id="search-project-jobs"
                 type="text"
@@ -1267,7 +1267,7 @@ export const MigrationProjectDashboard: React.FC<MigrationProjectDashboardProps>
         <div className="space-y-3">
           {filteredJobs.length === 0 ? (
             <div className="p-8 text-center bg-white dark:bg-slate-900/80 rounded-xl border border-slate-200 dark:border-slate-800">
-              <Database className="w-8 h-8 text-slate-400 mx-auto mb-2" />
+              <Database className="w-8 h-8 text-slate-400 mx-auto mb-2 dark:text-slate-500" />
               <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">No migration jobs matched your criteria</p>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Try clearing your filters or search keywords</p>
               <div className="mt-3 flex items-center justify-center gap-2">
@@ -1350,13 +1350,13 @@ export const MigrationProjectDashboard: React.FC<MigrationProjectDashboardProps>
 
                         <div className="flex flex-wrap items-center gap-3 mt-1.5 text-xs text-slate-500 dark:text-slate-400">
                           <span className="flex items-center gap-1 font-medium text-slate-600 dark:text-slate-300">
-                            <Layers className="w-3.5 h-3.5 text-slate-400" />
+                            <Layers className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
                             {job.wave}
                           </span>
                           <span>•</span>
                           <span>{job.workload}</span>
                           <span>•</span>
-                          <span className="font-mono text-[11px] text-slate-400">
+                          <span className="font-mono text-[11px] text-slate-400 dark:text-slate-500">
                             {job.sourceTenant} → {job.targetTenant}
                           </span>
                         </div>
@@ -1447,7 +1447,7 @@ export const MigrationProjectDashboard: React.FC<MigrationProjectDashboardProps>
                                   <span className="truncate">{stage.name}</span>
                                   {stage.status === 'COMPLETED' && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />}
                                   {stage.status === 'PROCESSING' && <Activity className="w-3.5 h-3.5 text-blue-500 animate-spin shrink-0" />}
-                                  {stage.status === 'PENDING' && <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />}
+                                  {stage.status === 'PENDING' && <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0 dark:text-slate-500" />}
                                 </div>
                                 <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-snug">
                                   {stage.detail}
@@ -1688,7 +1688,7 @@ export const MigrationProjectDashboard: React.FC<MigrationProjectDashboardProps>
               </div>
               <button
                 onClick={() => setIsNewProjectModalOpen(false)}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors dark:text-slate-500"
               >
                 <XCircle className="h-5 w-5" />
               </button>
@@ -1916,7 +1916,7 @@ export const MigrationProjectDashboard: React.FC<MigrationProjectDashboardProps>
                   onChange={(e) =>
                     setNewProjectForm({ ...newProjectForm, executeInitialDiscovery: e.target.checked })
                   }
-                  className="mt-0.5 h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                  className="mt-0.5 h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer dark:border-slate-600"
                 />
                 <label htmlFor="chk-execute-initial-discovery" className="text-xs text-slate-700 dark:text-slate-300 cursor-pointer select-none">
                   <span className="font-bold text-blue-900 dark:text-blue-300 block">
