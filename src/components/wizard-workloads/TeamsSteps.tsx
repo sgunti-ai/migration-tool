@@ -102,7 +102,7 @@ export const TeamsSteps: React.FC<TeamsStepsProps> = ({
                 />
                 <div>
                   <span className="font-semibold text-slate-800 dark:text-slate-200">Standard Channels</span>
-                  <p className="text-[10px] text-slate-500">Accessible to all team members; General channel structure preserved.</p>
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400">Accessible to all team members; General channel structure preserved.</p>
                 </div>
               </label>
 
@@ -115,7 +115,7 @@ export const TeamsSteps: React.FC<TeamsStepsProps> = ({
                 />
                 <div>
                   <span className="font-semibold text-slate-800 dark:text-slate-200">Private Channels & Dedicated Sites</span>
-                  <p className="text-[10px] text-slate-500">Recreates dedicated private channel rosters and underlying separate site collections.</p>
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400">Recreates dedicated private channel rosters and underlying separate site collections.</p>
                 </div>
               </label>
             </div>
@@ -160,7 +160,7 @@ export const TeamsSteps: React.FC<TeamsStepsProps> = ({
                 >
                   <div>
                     <span className="font-semibold text-slate-800 dark:text-slate-200">{opt.title}</span>
-                    <p className="text-[10px] text-slate-500">{opt.desc}</p>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400">{opt.desc}</p>
                   </div>
                   <input
                     type="radio"
@@ -186,7 +186,7 @@ export const TeamsSteps: React.FC<TeamsStepsProps> = ({
                 />
                 <div>
                   <span className="font-semibold text-slate-800 dark:text-slate-200">1:1 Direct User Chats</span>
-                  <p className="text-[10px] text-slate-500">Migrates direct messaging history between migrated users.</p>
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400">Migrates direct messaging history between migrated users.</p>
                 </div>
               </label>
 
@@ -199,7 +199,7 @@ export const TeamsSteps: React.FC<TeamsStepsProps> = ({
                 />
                 <div>
                   <span className="font-semibold text-slate-800 dark:text-slate-200">Group Chats (Non-Team)</span>
-                  <p className="text-[10px] text-slate-500">Ad-hoc multi-party group chat conversation threads.</p>
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400">Ad-hoc multi-party group chat conversation threads.</p>
                 </div>
               </label>
             </div>
@@ -244,7 +244,7 @@ export const TeamsSteps: React.FC<TeamsStepsProps> = ({
                 >
                   <div>
                     <span className="font-semibold text-slate-800 dark:text-slate-200">{opt.title}</span>
-                    <p className="text-[10px] text-slate-500">{opt.desc}</p>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400">{opt.desc}</p>
                   </div>
                   <input
                     type="radio"
@@ -265,7 +265,7 @@ export const TeamsSteps: React.FC<TeamsStepsProps> = ({
                 <CheckCircle2 className="h-4 w-4 text-indigo-600 mt-0.5 shrink-0" />
                 <div>
                   <span className="font-semibold text-slate-900 dark:text-white">Auto-Linked SharePoint Site Collections</span>
-                  <p className="text-[10px] text-slate-500 mt-0.5">Files in each channel are matched to their corresponding target SharePoint folder.</p>
+                  <p className="text-[10px] text-slate-500 mt-0.5 dark:text-slate-400">Files in each channel are matched to their corresponding target SharePoint folder.</p>
                 </div>
               </div>
 
@@ -273,7 +273,7 @@ export const TeamsSteps: React.FC<TeamsStepsProps> = ({
                 <CheckCircle2 className="h-4 w-4 text-indigo-600 mt-0.5 shrink-0" />
                 <div>
                   <span className="font-semibold text-slate-900 dark:text-white">Inline File Attachment Re-linking</span>
-                  <p className="text-[10px] text-slate-500 mt-0.5">Links in chat messages pointing to uploaded channel files are rewritten to target URLs.</p>
+                  <p className="text-[10px] text-slate-500 mt-0.5 dark:text-slate-400">Links in chat messages pointing to uploaded channel files are rewritten to target URLs.</p>
                 </div>
               </div>
             </div>
@@ -311,7 +311,7 @@ export const TeamsSteps: React.FC<TeamsStepsProps> = ({
               />
               <div>
                 <span className="font-semibold text-slate-800 dark:text-slate-200">Replicate Microsoft Planner Plans & Tasks</span>
-                <p className="text-[10px] text-slate-500">Migrates buckets, task titles, checklists, notes, assignments, and completion states.</p>
+                <p className="text-[10px] text-slate-500 dark:text-slate-400">Migrates buckets, task titles, checklists, notes, assignments, and completion states.</p>
               </div>
             </label>
           </div>
@@ -327,7 +327,7 @@ export const TeamsSteps: React.FC<TeamsStepsProps> = ({
               />
               <div>
                 <span className="font-semibold text-slate-800 dark:text-slate-200">Auto-Recreate Configured Channel Tabs</span>
-                <p className="text-[10px] text-slate-500">Re-registers document tabs, website tabs, and SharePoint list tabs in corresponding target channels.</p>
+                <p className="text-[10px] text-slate-500 dark:text-slate-400">Re-registers document tabs, website tabs, and SharePoint list tabs in corresponding target channels.</p>
               </div>
             </label>
           </div>
@@ -393,7 +393,7 @@ export const TeamsSteps: React.FC<TeamsStepsProps> = ({
               />
               <div>
                 <span className="font-semibold text-slate-800 dark:text-slate-200">Archive Source Team upon Cutover</span>
-                <p className="text-[10px] text-slate-500">Locks source team into read-only mode to prevent diverging chat threads after cutover.</p>
+                <p className="text-[10px] text-slate-500 dark:text-slate-400">Locks source team into read-only mode to prevent diverging chat threads after cutover.</p>
               </div>
             </label>
           </div>
@@ -401,7 +401,7 @@ export const TeamsSteps: React.FC<TeamsStepsProps> = ({
           <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-3">
             <h4 className="font-semibold text-slate-900 dark:text-white">Cutover Maintenance Window</h4>
             <div>
-              <label className="block text-[11px] text-slate-500 mb-1">Scheduled Start Time</label>
+              <label className="block text-[11px] text-slate-500 mb-1 dark:text-slate-400">Scheduled Start Time</label>
               <input
                 type="datetime-local"
                 value={formData.scheduledWindowStartTime}
