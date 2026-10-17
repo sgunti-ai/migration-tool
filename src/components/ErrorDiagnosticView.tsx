@@ -314,7 +314,7 @@ export const ErrorDiagnosticView: React.FC<ErrorDiagnosticViewProps> = ({
             <div className="text-xl font-bold font-mono text-rose-600 dark:text-rose-400 mt-0.5">
               {categoryCounts.LICENSING || 0}
             </div>
-            <div className="text-[10px] text-slate-500 mt-0.5">Graph 403 Forbidden pool limits</div>
+            <div className="text-[10px] text-slate-500 mt-0.5 dark:text-slate-400">Graph 403 Forbidden pool limits</div>
           </div>
 
           <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800">
@@ -322,7 +322,7 @@ export const ErrorDiagnosticView: React.FC<ErrorDiagnosticViewProps> = ({
             <div className="text-xl font-bold font-mono text-amber-600 dark:text-amber-400 mt-0.5">
               {categoryCounts.THROTTLING || 0}
             </div>
-            <div className="text-[10px] text-slate-500 mt-0.5">Sliding window throughput backoff</div>
+            <div className="text-[10px] text-slate-500 mt-0.5 dark:text-slate-400">Sliding window throughput backoff</div>
           </div>
 
           <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800">
@@ -330,7 +330,7 @@ export const ErrorDiagnosticView: React.FC<ErrorDiagnosticViewProps> = ({
             <div className="text-xl font-bold font-mono text-indigo-600 dark:text-indigo-400 mt-0.5">
               {categoryCounts.NAMESPACE || 0}
             </div>
-            <div className="text-[10px] text-slate-500 mt-0.5">SPO &gt;400 chars path length</div>
+            <div className="text-[10px] text-slate-500 mt-0.5 dark:text-slate-400">SPO &gt;400 chars path length</div>
           </div>
 
           <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800">
@@ -338,7 +338,7 @@ export const ErrorDiagnosticView: React.FC<ErrorDiagnosticViewProps> = ({
             <div className="text-xl font-bold font-mono text-emerald-600 dark:text-emerald-400 mt-0.5">
               100%
             </div>
-            <div className="text-[10px] text-slate-500 mt-0.5">Zero data loss on resumable retry</div>
+            <div className="text-[10px] text-slate-500 mt-0.5 dark:text-slate-400">Zero data loss on resumable retry</div>
           </div>
         </div>
 
@@ -424,7 +424,7 @@ export const ErrorDiagnosticView: React.FC<ErrorDiagnosticViewProps> = ({
 
           {/* Search Input */}
           <div className="relative w-full md:w-64">
-            <Search className="h-3.5 w-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="h-3.5 w-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 dark:text-slate-500" />
             <input
               type="text"
               placeholder="Search code, UPN, message..."
@@ -522,7 +522,7 @@ export const ErrorDiagnosticView: React.FC<ErrorDiagnosticViewProps> = ({
                       )}
 
                       {/* Retry attempt badge */}
-                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 border border-slate-200 dark:border-slate-700">
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 border border-slate-200 dark:border-slate-700 dark:text-slate-400">
                         Retry Attempt #{u.retryCount || 1}
                       </span>
                     </div>
@@ -535,7 +535,7 @@ export const ErrorDiagnosticView: React.FC<ErrorDiagnosticViewProps> = ({
 
                     <div className="flex items-center space-x-2 text-xs font-mono text-slate-600 dark:text-slate-400">
                       <span>{u.sourceUPN}</span>
-                      <ArrowRight className="h-3.5 w-3.5 text-slate-400" />
+                      <ArrowRight className="h-3.5 w-3.5 text-slate-400 dark:text-slate-500" />
                       <span className="text-blue-600 dark:text-blue-400 font-semibold">{u.targetUPN}</span>
                     </div>
                   </div>
@@ -643,7 +643,7 @@ export const ErrorDiagnosticView: React.FC<ErrorDiagnosticViewProps> = ({
                             </div>
                           </div>
                         ) : (
-                          <p className="text-slate-500">
+                          <p className="text-slate-500 dark:text-slate-400">
                             Checkpoint will resume from the current direct stream chunk.
                           </p>
                         )}
@@ -685,7 +685,7 @@ export const ErrorDiagnosticView: React.FC<ErrorDiagnosticViewProps> = ({
                                 {isDone ? (
                                   <CheckSquare className="h-4 w-4 text-emerald-500" />
                                 ) : (
-                                  <Square className="h-4 w-4 text-slate-400" />
+                                  <Square className="h-4 w-4 text-slate-400 dark:text-slate-500" />
                                 )}
                               </button>
 
@@ -734,14 +734,14 @@ export const ErrorDiagnosticView: React.FC<ErrorDiagnosticViewProps> = ({
                               </>
                             ) : (
                               <>
-                                <Copy className="h-3 w-3 text-slate-400" />
+                                <Copy className="h-3 w-3 text-slate-400 dark:text-slate-500" />
                                 <span>Copy Script</span>
                               </>
                             )}
                           </button>
                         </div>
 
-                        <div className="relative rounded-xl overflow-hidden border border-slate-800 bg-slate-950 p-4 font-mono text-[11px] text-emerald-400 leading-relaxed shadow-inner">
+                        <div className="relative rounded-xl overflow-hidden border border-slate-800 bg-slate-950 p-4 font-mono text-[11px] text-emerald-400 leading-relaxed shadow-inner dark:border-slate-100">
                           <pre className="overflow-x-auto whitespace-pre-wrap">{diag.powershellCmdlet}</pre>
                         </div>
                       </div>
@@ -767,7 +767,7 @@ export const ErrorDiagnosticView: React.FC<ErrorDiagnosticViewProps> = ({
 
                         <button
                           onClick={() => setShowRawPayloadId(showRaw ? null : u.id)}
-                          className="text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 cursor-pointer"
+                          className="text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 cursor-pointer dark:text-slate-400"
                         >
                           {showRaw ? 'Hide Raw Details' : 'Inspect Raw Error JSON'}
                         </button>
@@ -798,8 +798,8 @@ export const ErrorDiagnosticView: React.FC<ErrorDiagnosticViewProps> = ({
 
                     {/* Raw Error JSON Drawer */}
                     {showRaw && (
-                      <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 text-[11px] font-mono text-slate-300 space-y-2">
-                        <div className="text-slate-500 font-bold uppercase tracking-wider text-[10px]">
+                      <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 text-[11px] font-mono text-slate-300 space-y-2 dark:text-slate-600 dark:border-slate-100">
+                        <div className="text-slate-500 font-bold uppercase tracking-wider text-[10px] dark:text-slate-400">
                           Raw Backend Payload & State Object
                         </div>
                         <pre className="overflow-x-auto whitespace-pre-wrap text-emerald-400">
