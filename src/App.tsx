@@ -1,3 +1,4 @@
+import {useTheme} from './theme';
 import { SignInPage } from './components/SignInPage';
 /**
  * @license
@@ -38,21 +39,8 @@ export default function App() {
   const [sessionLoading, setSessionLoading] = useState(true);
   useEffect(() => { fetch('/api/session').then(r => r.ok ? r.json() : null).then(setSession).catch(() => setSession(null)).finally(() => setSessionLoading(false)); }, []);
 
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
-    const saved = localStorage.getItem('theme');
-    if (saved) return saved === 'dark';
-    return true; // Default to dark mode
-  });
-
-  useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    }
-  }, [isDarkMode]);
+  const {theme,toggleTheme}=useTheme();
+  const isDarkMode=theme==='dark';
 
   const [activeTab, setActiveTab] = useState<PrimaryTab>('home');
   const [migrateSubTab, setMigrateSubTab] = useState<MigrateSubTab>('ad_express');
@@ -330,7 +318,7 @@ export default function App() {
         <header className="flex items-center justify-end px-6 py-3 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800/80 transition-colors">
           <div className="flex items-center space-x-4"><span className="text-sm text-slate-500">{session.email}</span><button className="text-sm underline" onClick={async () => { await fetch('/api/logout',{method:'POST'}); location.reload(); }}>Sign out</button>
             <button
-              onClick={() => setIsDarkMode(!isDarkMode)}
+              onClick={toggleTheme}
               className="p-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
               title="Toggle Theme"
               aria-label="Toggle Theme"
