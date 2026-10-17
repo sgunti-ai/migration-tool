@@ -215,7 +215,7 @@ export const TenantAssessmentView: React.FC<TenantAssessmentViewProps> = ({
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
                 <span>Initial Discovery Phase Complete</span>
               </span>
-              <span className="text-xs text-slate-400">
+              <span className="text-xs text-slate-400 dark:text-slate-500">
                 Source: <strong className="text-white font-mono">{sourceTenant.domain}</strong> ➔ Target: <strong className="text-blue-300 font-mono">{targetTenant.domain}</strong>
               </span>
             </div>
@@ -224,7 +224,7 @@ export const TenantAssessmentView: React.FC<TenantAssessmentViewProps> = ({
               <span>Microsoft Tenant-to-Tenant Migration Inventory Assessment</span>
             </h2>
 
-            <p className="text-xs text-slate-300 max-w-2xl leading-relaxed">
+            <p className="text-xs text-slate-300 max-w-2xl leading-relaxed dark:text-slate-600">
               Complete pre-migration examination across all 8 strategic workstreams and examination points. Assesses identity directory patterns, mailbox quotas, storage hierarchy, teams collaboration, coexistence, 1,462 registered applications, regulatory compliance, and data cleanliness.
             </p>
           </div>
@@ -274,12 +274,12 @@ export const TenantAssessmentView: React.FC<TenantAssessmentViewProps> = ({
               onClick={handleCopyMarkdownSummary}
               className="px-3.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white border border-white/20 font-medium flex items-center gap-1.5 transition"
             >
-              {copiedSummary ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5 text-slate-300" />}
+              {copiedSummary ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600" />}
               <span>{copiedSummary ? 'Copied to Clipboard!' : 'Copy Summary Markdown'}</span>
             </button>
           </div>
 
-          <div className="flex items-center space-x-2 text-[11px] text-slate-400">
+          <div className="flex items-center space-x-2 text-[11px] text-slate-400 dark:text-slate-500">
             <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
             <span>Targeting exactly <strong>1,462 Registered Apps</strong> • <strong>{summary.totalIdentities.toLocaleString()} Users</strong></span>
           </div>
@@ -306,8 +306,8 @@ export const TenantAssessmentView: React.FC<TenantAssessmentViewProps> = ({
             >
               <Icon className={`w-4 h-4 mx-auto mb-1 ${stat.color}`} />
               <div className="text-sm font-bold text-slate-900 dark:text-white font-mono">{stat.value}</div>
-              <div className="text-[10px] text-slate-500 font-medium">{stat.label}</div>
-              <div className="text-[9px] text-slate-400 truncate">{stat.sub}</div>
+              <div className="text-[10px] text-slate-500 font-medium dark:text-slate-400">{stat.label}</div>
+              <div className="text-[9px] text-slate-400 truncate dark:text-slate-500">{stat.sub}</div>
             </div>
           );
         })}
@@ -362,7 +362,7 @@ export const TenantAssessmentView: React.FC<TenantAssessmentViewProps> = ({
                 </div>
                 <div>
                   <h3 className="text-base font-bold text-slate-900 dark:text-white">1. Identity & Directory</h3>
-                  <p className="text-xs text-slate-500">Users, security groups, contacts, UPN/SMTP patterns, licenses, dormant & duplicate identities</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Users, security groups, contacts, UPN/SMTP patterns, licenses, dormant & duplicate identities</p>
                 </div>
               </div>
               <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 font-mono">
@@ -397,10 +397,10 @@ export const TenantAssessmentView: React.FC<TenantAssessmentViewProps> = ({
                   {workstreams.identityAndDirectory.examinationPoints.upnAndSmtpPatterns.recognizedUpnPatterns.map((pat, idx) => (
                     <div key={idx} className="p-1.5 rounded bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[11px]">
                       <span className="font-mono font-semibold text-blue-600 dark:text-blue-400 block">{pat.pattern}</span>
-                      <span className="text-slate-500">e.g. {pat.sample} ({pat.count} users / {pat.percentage}%)</span>
+                      <span className="text-slate-500 dark:text-slate-400">e.g. {pat.sample} ({pat.count} users / {pat.percentage}%)</span>
                     </div>
                   ))}
-                  <div className="text-[11px] text-slate-500 pt-1">
+                  <div className="text-[11px] text-slate-500 pt-1 dark:text-slate-400">
                     Secondary Domains: {workstreams.identityAndDirectory.examinationPoints.upnAndSmtpPatterns.secondaryDomains.join(', ')}
                   </div>
                 </div>
@@ -432,7 +432,7 @@ export const TenantAssessmentView: React.FC<TenantAssessmentViewProps> = ({
                   <div key={idx} className="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
                     <span className="font-bold text-slate-800 dark:text-slate-200 block truncate">{lic.friendlyName}</span>
                     <span className="font-mono text-xs text-blue-600 dark:text-blue-400 font-semibold">{lic.totalAssigned} / {lic.poolAvailable}</span>
-                    <span className="text-[10px] text-slate-500 block">{lic.costStatus}</span>
+                    <span className="text-[10px] text-slate-500 block dark:text-slate-400">{lic.costStatus}</span>
                   </div>
                 ))}
               </div>
@@ -450,7 +450,7 @@ export const TenantAssessmentView: React.FC<TenantAssessmentViewProps> = ({
                 </div>
                 <div>
                   <h3 className="text-base font-bold text-slate-900 dark:text-white">2. Exchange & Mail</h3>
-                  <p className="text-xs text-slate-500">Mailbox distribution, archive footprint, shared/room resources, accepted domains, transport rules, retention & holds</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Mailbox distribution, archive footprint, shared/room resources, accepted domains, transport rules, retention & holds</p>
                 </div>
               </div>
               <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 font-mono">
@@ -517,7 +517,7 @@ export const TenantAssessmentView: React.FC<TenantAssessmentViewProps> = ({
                 </div>
                 <div>
                   <h3 className="text-base font-bold text-slate-900 dark:text-white">3. OneDrive & SharePoint</h3>
-                  <p className="text-xs text-slate-500">Storage consumption, permission inheritance, long URL paths (&gt;260 / &gt;400 chars), unsupported characters</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Storage consumption, permission inheritance, long URL paths (&gt;260 / &gt;400 chars), unsupported characters</p>
                 </div>
               </div>
               <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-500/10 text-amber-600 border border-amber-500/20 font-mono">
@@ -542,7 +542,7 @@ export const TenantAssessmentView: React.FC<TenantAssessmentViewProps> = ({
                   <div className="flex justify-between text-amber-600 font-semibold"><span>Paths Exceeding 260 Chars:</span> <strong className="font-mono">{workstreams.oneDriveAndSharePoint.examinationPoints.pathsWithExcessiveLength.pathsExceeding260Chars}</strong></div>
                   <div className="flex justify-between text-rose-600 font-bold"><span>Paths Exceeding 400 Chars:</span> <strong className="font-mono">{workstreams.oneDriveAndSharePoint.examinationPoints.pathsWithExcessiveLength.pathsExceeding400Chars}</strong></div>
                   <div className="flex justify-between text-rose-500"><span>Illegal / Unsupported Chars:</span> <strong className="font-mono">{workstreams.oneDriveAndSharePoint.examinationPoints.pathsWithUnsupportedCharacters.pathsWithIllegalCharsCount}</strong></div>
-                  <p className="text-[11px] text-slate-500 pt-1">
+                  <p className="text-[11px] text-slate-500 pt-1 dark:text-slate-400">
                     Characters flagged: {workstreams.oneDriveAndSharePoint.examinationPoints.pathsWithUnsupportedCharacters.unsupportedCharsFound.join(' ')}
                   </p>
                 </div>
@@ -571,7 +571,7 @@ export const TenantAssessmentView: React.FC<TenantAssessmentViewProps> = ({
                 </div>
                 <div>
                   <h3 className="text-base font-bold text-slate-900 dark:text-white">4. Teams & Collaboration</h3>
-                  <p className="text-xs text-slate-500">Private/shared channels, custom tabs, 3rd-party apps, messaging and guest access policies</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Private/shared channels, custom tabs, 3rd-party apps, messaging and guest access policies</p>
                 </div>
               </div>
               <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 font-mono">
@@ -630,7 +630,7 @@ export const TenantAssessmentView: React.FC<TenantAssessmentViewProps> = ({
                 </div>
                 <div>
                   <h3 className="text-base font-bold text-slate-900 dark:text-white">5. Google Workspace (Coexistence & Dual-Source)</h3>
-                  <p className="text-xs text-slate-500">Gmail volume, My Drive & Shared Drives, Google Classroom structures/rosters/assignments, Google Groups, Vault holds</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Gmail volume, My Drive & Shared Drives, Google Classroom structures/rosters/assignments, Google Groups, Vault holds</p>
                 </div>
               </div>
               <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 font-mono">
@@ -696,7 +696,7 @@ export const TenantAssessmentView: React.FC<TenantAssessmentViewProps> = ({
                       Target: Exactly 1,462 Registered Apps
                     </span>
                   </div>
-                  <p className="text-xs text-slate-500">Ownership classification, authentication protocols (Entra Native vs External/Federated IdP), consent & credential risk</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Ownership classification, authentication protocols (Entra Native vs External/Federated IdP), consent & credential risk</p>
                 </div>
               </div>
               <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-500/10 text-amber-600 border border-amber-500/20 font-mono">
@@ -710,7 +710,7 @@ export const TenantAssessmentView: React.FC<TenantAssessmentViewProps> = ({
               <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/60 space-y-3">
                 <h4 className="text-xs font-bold text-slate-900 dark:text-white flex items-center justify-between">
                   <span>Classified by Owner</span>
-                  <span className="font-mono text-slate-500">1,462 Total</span>
+                  <span className="font-mono text-slate-500 dark:text-slate-400">1,462 Total</span>
                 </h4>
                 <div className="space-y-2">
                   {workstreams.applicationsAndSSO.examinationPoints.classificationByOwner.breakdown.map((row, idx) => (
@@ -719,7 +719,7 @@ export const TenantAssessmentView: React.FC<TenantAssessmentViewProps> = ({
                         <span className="font-semibold text-slate-800 dark:text-slate-200">{row.ownerGroup}</span>
                         <span className="font-mono font-bold text-blue-600 dark:text-blue-400">{row.count} ({row.percentage}%)</span>
                       </div>
-                      <p className="text-[11px] text-slate-500">{row.description}</p>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400">{row.description}</p>
                     </div>
                   ))}
                 </div>
@@ -729,7 +729,7 @@ export const TenantAssessmentView: React.FC<TenantAssessmentViewProps> = ({
               <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/60 space-y-3">
                 <h4 className="text-xs font-bold text-slate-900 dark:text-white flex items-center justify-between">
                   <span>Classified by Authentication Method</span>
-                  <span className="font-mono text-slate-500">Native vs External</span>
+                  <span className="font-mono text-slate-500 dark:text-slate-400">Native vs External</span>
                 </h4>
 
                 <div className="grid grid-cols-2 gap-3 text-xs">
@@ -775,7 +775,7 @@ export const TenantAssessmentView: React.FC<TenantAssessmentViewProps> = ({
               <h5 className="text-xs font-bold text-slate-900 dark:text-white">Sample Mission-Critical Registered Applications</h5>
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-slate-50 dark:bg-slate-800 text-slate-500 font-semibold border-b border-slate-200 dark:border-slate-700">
+                  <thead className="bg-slate-50 dark:bg-slate-800 text-slate-500 font-semibold border-b border-slate-200 dark:border-slate-700 dark:text-slate-400">
                     <tr>
                       <th className="p-2">App Name</th>
                       <th className="p-2">Owner Classification</th>
@@ -791,7 +791,7 @@ export const TenantAssessmentView: React.FC<TenantAssessmentViewProps> = ({
                         <td className="p-2">{app.ownerCategory}</td>
                         <td className="p-2 font-mono text-[11px] text-blue-600 dark:text-blue-400">{app.authMethod}</td>
                         <td className="p-2">{app.audience}</td>
-                        <td className="p-2 text-slate-500 text-[11px]">{app.lastActivity}</td>
+                        <td className="p-2 text-slate-500 text-[11px] dark:text-slate-400">{app.lastActivity}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -811,7 +811,7 @@ export const TenantAssessmentView: React.FC<TenantAssessmentViewProps> = ({
                 </div>
                 <div>
                   <h3 className="text-base font-bold text-slate-900 dark:text-white">7. Security & Compliance</h3>
-                  <p className="text-xs text-slate-500">Conditional Access, MFA policies, Microsoft Purview labels, DLP rules, retention, safeguarding, Multi-Geo data residency</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Conditional Access, MFA policies, Microsoft Purview labels, DLP rules, retention, safeguarding, Multi-Geo data residency</p>
                 </div>
               </div>
               <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 font-mono">
@@ -836,7 +836,7 @@ export const TenantAssessmentView: React.FC<TenantAssessmentViewProps> = ({
                   <div className="flex justify-between"><span>Sensitivity Labels:</span> <strong className="font-mono">{workstreams.securityAndCompliance.examinationPoints.purviewConfiguration.sensitivityLabelsPublished} Published</strong></div>
                   <div className="flex justify-between"><span>Auto-Labeling Rules:</span> <strong className="font-mono">{workstreams.securityAndCompliance.examinationPoints.purviewConfiguration.autoLabelingPoliciesActive}</strong></div>
                   <div className="flex justify-between"><span>Active DLP Policies:</span> <strong className="font-mono">{workstreams.securityAndCompliance.examinationPoints.dlpConfiguration.activeDlpPoliciesCount}</strong></div>
-                  <div className="text-[11px] text-slate-500 pt-1">
+                  <div className="text-[11px] text-slate-500 pt-1 dark:text-slate-400">
                     Locations: {workstreams.securityAndCompliance.examinationPoints.dlpConfiguration.enforcedLocations.join(', ')}
                   </div>
                 </div>
@@ -864,7 +864,7 @@ export const TenantAssessmentView: React.FC<TenantAssessmentViewProps> = ({
                 </div>
                 <div>
                   <h3 className="text-base font-bold text-slate-900 dark:text-white">8. Data Quality & Pre-Migration Remediation</h3>
-                  <p className="text-xs text-slate-500">Mailboxes &gt; 50 GB, stale accounts, duplicate unversioned files, orphaned content, dormant Teams and SharePoint sites</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Mailboxes &gt; 50 GB, stale accounts, duplicate unversioned files, orphaned content, dormant Teams and SharePoint sites</p>
                 </div>
               </div>
               <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-500/10 text-amber-600 border border-amber-500/20 font-mono">
@@ -881,7 +881,7 @@ export const TenantAssessmentView: React.FC<TenantAssessmentViewProps> = ({
                 <div className="space-y-1.5 text-xs text-slate-600 dark:text-slate-300">
                   <div className="flex justify-between"><span>Heavy Mailbox Count:</span> <strong className="font-mono">{workstreams.dataQuality.examinationPoints.mailboxesExceeding50GB.count}</strong></div>
                   <div className="flex justify-between"><span>Total Volume:</span> <strong className="font-mono text-blue-500">{workstreams.dataQuality.examinationPoints.mailboxesExceeding50GB.totalVolumeGB} GB</strong></div>
-                  <p className="text-[11px] text-slate-500 pt-1 leading-relaxed">
+                  <p className="text-[11px] text-slate-500 pt-1 leading-relaxed dark:text-slate-400">
                     {workstreams.dataQuality.examinationPoints.mailboxesExceeding50GB.remediation}
                   </p>
                 </div>
@@ -903,7 +903,7 @@ export const TenantAssessmentView: React.FC<TenantAssessmentViewProps> = ({
               <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/60 space-y-2">
                 <h4 className="text-xs font-bold text-slate-900 dark:text-white flex items-center justify-between">
                   <span>Dormant Collaboration Units</span>
-                  <span className="font-mono text-slate-500">&gt; 120-180 Days</span>
+                  <span className="font-mono text-slate-500 dark:text-slate-400">&gt; 120-180 Days</span>
                 </h4>
                 <div className="space-y-1.5 text-xs text-slate-600 dark:text-slate-300">
                   <div className="flex justify-between"><span>Dormant Teams:</span> <strong className="font-mono text-amber-500">{workstreams.dataQuality.examinationPoints.dormantTeams.dormantTeamsCount}</strong></div>
