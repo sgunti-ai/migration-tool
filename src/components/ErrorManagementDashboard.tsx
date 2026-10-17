@@ -263,7 +263,7 @@ export const ErrorManagementDashboard: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 pb-12 animate-fadeIn relative text-slate-200">
+    <div className="space-y-6 pb-12 animate-fadeIn relative text-slate-200 dark:text-slate-700">
       
       {/* Toast Container */}
       <div className="fixed top-4 right-4 z-50 space-y-2 pointer-events-none w-80">
@@ -307,7 +307,7 @@ export const ErrorManagementDashboard: React.FC = () => {
             <RefreshCw className="w-4 h-4" />
             Bulk Retry ({state.selectedIds.size})
           </button>
-          <button className="px-4 py-2 text-sm font-medium bg-white dark:bg-slate-800 hover:bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-lg transition-colors flex items-center gap-2 border border-slate-200 dark:border-slate-700">
+          <button className="px-4 py-2 text-sm font-medium bg-white dark:bg-slate-800 hover:bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-lg transition-colors flex items-center gap-2 border border-slate-200 dark:border-slate-700 dark:hover:bg-slate-800">
             <Download className="w-4 h-4" /> Export Logs
           </button>
         </div>
@@ -399,13 +399,13 @@ export const ErrorManagementDashboard: React.FC = () => {
         {/* Controls */}
         <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center gap-4 bg-slate-50 dark:bg-slate-900/80">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 dark:text-slate-400" />
             <input
               type="text"
               placeholder="Search errors by item path, message or ID..."
               value={state.searchQuery}
               onChange={e => dispatch({ type: 'SET_SEARCH', payload: e.target.value })}
-              className="w-full bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-lg pl-10 pr-4 py-2 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              className="w-full bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-lg pl-10 pr-4 py-2 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:text-slate-700"
             />
           </div>
           <div className="flex items-center gap-3">
@@ -435,7 +435,7 @@ export const ErrorManagementDashboard: React.FC = () => {
         </div>
 
         {/* List Header */}
-        <div className="grid grid-cols-12 gap-4 p-4 border-b border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-500 dark:text-slate-400 bg-slate-900">
+        <div className="grid grid-cols-12 gap-4 p-4 border-b border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-500 dark:text-slate-400 bg-slate-900 dark:bg-slate-100">
           <div className="col-span-1 flex items-center">
             <input
               type="checkbox"
@@ -455,7 +455,7 @@ export const ErrorManagementDashboard: React.FC = () => {
         {/* List Body */}
         <div className="divide-y divide-slate-800/60 max-h-[600px] overflow-y-auto">
           {filteredErrors.length === 0 ? (
-            <div className="p-8 text-center text-slate-500 text-sm">
+            <div className="p-8 text-center text-slate-500 text-sm dark:text-slate-400">
               No errors found matching the current filters.
             </div>
           ) : (
@@ -485,11 +485,11 @@ export const ErrorManagementDashboard: React.FC = () => {
                     </div>
                     <div className="col-span-2">
                       <div className="text-sm font-mono text-slate-600 dark:text-slate-300">{err.id}</div>
-                      <div className="text-[10px] text-slate-500 mt-0.5">{new Date(err.timestamp).toLocaleTimeString()}</div>
+                      <div className="text-[10px] text-slate-500 mt-0.5 dark:text-slate-400">{new Date(err.timestamp).toLocaleTimeString()}</div>
                     </div>
                     <div className="col-span-4 pr-4">
-                      <div className="text-sm text-slate-200 truncate" title={err.item}>{err.item}</div>
-                      <div className="text-xs text-slate-500 truncate mt-0.5" title={err.message}>{err.message}</div>
+                      <div className="text-sm text-slate-200 truncate dark:text-slate-700" title={err.item}>{err.item}</div>
+                      <div className="text-xs text-slate-500 truncate mt-0.5 dark:text-slate-400" title={err.message}>{err.message}</div>
                     </div>
                     <div className="col-span-2">
                       <div className="flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-300">
@@ -510,7 +510,7 @@ export const ErrorManagementDashboard: React.FC = () => {
                       {err.status === 'SKIPPED' && <Badge colorClass="bg-slate-500/10 text-slate-500 dark:text-slate-400 border-slate-500/20">Skipped</Badge>}
                       {err.status === 'RETRYING' && <Badge colorClass="bg-blue-500/10 text-blue-400 border-blue-500/20 flex gap-1 items-center"><RefreshCw className="w-3 h-3 animate-spin"/> Retrying</Badge>}
                       
-                      {isExpanded ? <ChevronUp className="w-4 h-4 text-slate-500" /> : <ChevronDown className="w-4 h-4 text-slate-500" />}
+                      {isExpanded ? <ChevronUp className="w-4 h-4 text-slate-500 dark:text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-500 dark:text-slate-400" />}
                     </div>
                   </div>
 
@@ -604,13 +604,13 @@ export const ErrorManagementDashboard: React.FC = () => {
                                   
                                   <button 
                                     onClick={() => handleAction(err.id, 'SKIP', 'Skip Item')}
-                                    className="px-3 py-2 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded text-xs font-medium flex items-center gap-1.5 transition-colors border border-slate-200 dark:border-slate-700"
+                                    className="px-3 py-2 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded text-xs font-medium flex items-center gap-1.5 transition-colors border border-slate-200 dark:border-slate-700 dark:hover:bg-slate-800"
                                   >
                                     <SkipForward className="w-3.5 h-3.5" /> Skip
                                   </button>
                                 </>
                               ) : (
-                                <span className="text-sm text-slate-500 italic">No further actions required. Item is {err.status.toLowerCase()}.</span>
+                                <span className="text-sm text-slate-500 italic dark:text-slate-400">No further actions required. Item is {err.status.toLowerCase()}.</span>
                               )}
                             </div>
                           </div>
