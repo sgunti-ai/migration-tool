@@ -64,7 +64,7 @@ export const ActiveDirectorySteps: React.FC<ActiveDirectoryStepsProps> = ({
                   <input type="checkbox" defaultChecked className="rounded text-purple-600 mt-0.5" />
                   <div>
                     <span className="font-semibold text-slate-800 dark:text-slate-200">{cls.label}</span>
-                    <p className="text-[10px] text-slate-500">{cls.desc}</p>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400">{cls.desc}</p>
                   </div>
                 </label>
               ))}
@@ -113,7 +113,7 @@ export const ActiveDirectorySteps: React.FC<ActiveDirectoryStepsProps> = ({
             <h4 className="font-semibold text-slate-900 dark:text-white">UPN Suffix Transformation</h4>
             <div className="space-y-2">
               <div>
-                <label className="block text-[10px] text-slate-400">Source UPN Domain Suffix</label>
+                <label className="block text-[10px] text-slate-400 dark:text-slate-500">Source UPN Domain Suffix</label>
                 <input
                   type="text"
                   value={formData.domainTransformSource || '@contoso.onmicrosoft.com'}
@@ -122,7 +122,7 @@ export const ActiveDirectorySteps: React.FC<ActiveDirectoryStepsProps> = ({
                 />
               </div>
               <div>
-                <label className="block text-[10px] text-slate-400">Target UPN Domain Suffix</label>
+                <label className="block text-[10px] text-slate-400 dark:text-slate-500">Target UPN Domain Suffix</label>
                 <input
                   type="text"
                   value={formData.domainTransformTarget || '@fabrikam.com'}
@@ -143,7 +143,7 @@ export const ActiveDirectorySteps: React.FC<ActiveDirectoryStepsProps> = ({
               <option value="objectGUID">mS-DS-ConsistencyGuid / objectGUID (Microsoft Default)</option>
               <option value="userPrincipalName">userPrincipalName (Cloud-only identity mapping)</option>
             </select>
-            <p className="text-[10px] text-slate-500 leading-relaxed">
+            <p className="text-[10px] text-slate-500 leading-relaxed dark:text-slate-400">
               Base64 encoded binary GUID used to uniquely correlate user objects between Active Directory and Microsoft Entra ID.
             </p>
           </div>
@@ -187,7 +187,7 @@ export const ActiveDirectorySteps: React.FC<ActiveDirectoryStepsProps> = ({
                 >
                   <div>
                     <span className="font-semibold text-slate-800 dark:text-slate-200">{opt.title}</span>
-                    <p className="text-[10px] text-slate-500">{opt.desc}</p>
+                    <p className="text-[10px] text-slate-500 dark:text-slate-400">{opt.desc}</p>
                   </div>
                   <input
                     type="radio"
@@ -208,7 +208,7 @@ export const ActiveDirectorySteps: React.FC<ActiveDirectoryStepsProps> = ({
                 <input type="checkbox" defaultChecked className="rounded text-purple-600 mt-0.5" />
                 <div>
                   <span className="font-semibold text-slate-800 dark:text-slate-200">Force Password Change on First Sign-in</span>
-                  <p className="text-[10px] text-slate-500">Enforces Entra ID credential refresh upon initial user authentication.</p>
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400">Enforces Entra ID credential refresh upon initial user authentication.</p>
                 </div>
               </label>
 
@@ -216,7 +216,7 @@ export const ActiveDirectorySteps: React.FC<ActiveDirectoryStepsProps> = ({
                 <input type="checkbox" defaultChecked className="rounded text-purple-600 mt-0.5" />
                 <div>
                   <span className="font-semibold text-slate-800 dark:text-slate-200">Trigger Combined SSPR / MFA Registration</span>
-                  <p className="text-[10px] text-slate-500">Prompts users to register Microsoft Authenticator on first target logon.</p>
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400">Prompts users to register Microsoft Authenticator on first target logon.</p>
                 </div>
               </label>
             </div>
@@ -249,7 +249,7 @@ export const ActiveDirectorySteps: React.FC<ActiveDirectoryStepsProps> = ({
               <input type="checkbox" defaultChecked className="rounded text-purple-600 mt-0.5" />
               <div>
                 <span className="font-semibold text-slate-800 dark:text-slate-200">Flatten Nested Security Groups for Cloud Compatibility</span>
-                <p className="text-[10px] text-slate-500">Resolves deep on-prem multi-level nesting into direct cloud memberships.</p>
+                <p className="text-[10px] text-slate-500 dark:text-slate-400">Resolves deep on-prem multi-level nesting into direct cloud memberships.</p>
               </div>
             </label>
 
@@ -257,7 +257,7 @@ export const ActiveDirectorySteps: React.FC<ActiveDirectoryStepsProps> = ({
               <input type="checkbox" defaultChecked className="rounded text-purple-600 mt-0.5" />
               <div>
                 <span className="font-semibold text-slate-800 dark:text-slate-200">Replicate Group Ownership & ManagedBy Attributes</span>
-                <p className="text-[10px] text-slate-500">Preserves designated group owners for self-service access requests.</p>
+                <p className="text-[10px] text-slate-500 dark:text-slate-400">Preserves designated group owners for self-service access requests.</p>
               </div>
             </label>
           </div>
@@ -287,11 +287,11 @@ export const ActiveDirectorySteps: React.FC<ActiveDirectoryStepsProps> = ({
           <div className="space-y-2">
             <div className="p-3 rounded-lg border border-purple-500/20 bg-purple-50/50 dark:bg-purple-950/20">
               <span className="font-semibold text-slate-900 dark:text-white">Primary SMTP Soft-Matching</span>
-              <p className="text-[10px] text-slate-500 mt-0.5">If target object already exists with matching mail attribute, automatically correlates identities.</p>
+              <p className="text-[10px] text-slate-500 mt-0.5 dark:text-slate-400">If target object already exists with matching mail attribute, automatically correlates identities.</p>
             </div>
             <div className="p-3 rounded-lg border border-purple-500/20 bg-purple-50/50 dark:bg-purple-950/20">
               <span className="font-semibold text-slate-900 dark:text-white">Quarantine Holding Tank for Duplicate UPNs</span>
-              <p className="text-[10px] text-slate-500 mt-0.5">Conflicting accounts are placed in quarantine with an alert notification rather than overwriting target users.</p>
+              <p className="text-[10px] text-slate-500 mt-0.5 dark:text-slate-400">Conflicting accounts are placed in quarantine with an alert notification rather than overwriting target users.</p>
             </div>
           </div>
         </div>
@@ -332,7 +332,7 @@ export const ActiveDirectorySteps: React.FC<ActiveDirectoryStepsProps> = ({
           <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-3">
             <h4 className="font-semibold text-slate-900 dark:text-white">Scheduled Cutover Window</h4>
             <div>
-              <label className="block text-[11px] text-slate-500 mb-1">Scheduled Start Time</label>
+              <label className="block text-[11px] text-slate-500 mb-1 dark:text-slate-400">Scheduled Start Time</label>
               <input
                 type="datetime-local"
                 value={formData.scheduledWindowStartTime}
