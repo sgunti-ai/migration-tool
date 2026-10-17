@@ -674,14 +674,14 @@ export const CsvMappingEngine: React.FC<CsvMappingEngineProps> = ({
             <div className="p-3 bg-blue-500/10 text-blue-400 rounded-full">
               <UploadCloud className="h-8 w-8" />
             </div>
-            <div className="text-sm font-medium text-slate-200">
+            <div className="text-sm font-medium text-slate-200 dark:text-slate-700">
               {fileName ? (
                 <span className="text-blue-400 font-semibold">{fileName}</span>
               ) : (
                 <>Drag and drop your user-mapping CSV file here, or <span className="text-blue-400 underline">browse</span></>
               )}
             </div>
-            <p className="text-xs text-slate-500 max-w-sm">
+            <p className="text-xs text-slate-500 max-w-sm dark:text-slate-400">
               Expected columns: <code className="text-slate-500 dark:text-slate-400 font-mono">SourceUPN</code>, <code className="text-slate-500 dark:text-slate-400 font-mono">TargetUPN</code>, <code className="text-slate-500 dark:text-slate-400 font-mono">MigrateMailbox</code>, <code className="text-slate-500 dark:text-slate-400 font-mono">MigrateOneDrive</code>
             </p>
           </div>
@@ -806,7 +806,7 @@ export const CsvMappingEngine: React.FC<CsvMappingEngineProps> = ({
                       <button
                         type="button"
                         onClick={() => removeRow(row.id)}
-                        className="text-slate-500 hover:text-rose-400 p-1 rounded transition-colors cursor-pointer"
+                        className="text-slate-500 hover:text-rose-400 p-1 rounded transition-colors cursor-pointer dark:text-slate-400"
                       >
                         <Trash2 className="h-3.5 w-3.5" />
                       </button>
@@ -823,7 +823,7 @@ export const CsvMappingEngine: React.FC<CsvMappingEngineProps> = ({
       <div className="bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="space-y-1 text-center sm:text-left">
           <div className="flex items-center justify-center sm:justify-start gap-2">
-            <span className="text-xs font-semibold text-slate-200">
+            <span className="text-xs font-semibold text-slate-200 dark:text-slate-700">
               Pipeline Readiness Status:
             </span>
             {bothTenantsConnected ? (
