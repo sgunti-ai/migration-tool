@@ -7,6 +7,7 @@ const keys=createRemoteJWKSet(new URL(config.OIDC_JWKS_URL));
 const localSubject='local-development-admin';
 const localIssuer='migration-tool-local';
 const localKey=new TextEncoder().encode(config.CREDENTIAL_ENCRYPTION_KEY);
+const gatewayKey=process.env.DISCOVERY_GATEWAY_SECRET ? new TextEncoder().encode(process.env.DISCOVERY_GATEWAY_SECRET) : null;
 export async function localAdminLogin(username:string,password:string) {
  if(config.NODE_ENV==='production'||!config.LOCAL_ADMIN_USERNAME||!config.LOCAL_ADMIN_PASSWORD) return null;
  const a=Buffer.from(username),b=Buffer.from(config.LOCAL_ADMIN_USERNAME);
@@ -32,7 +33,20 @@ export async function requireIdentity(req:Request,res:Response,next:NextFunction
   }
   const match=/^Bearer (.+)$/i.exec(req.headers.authorization||'');
   if(!match)return res.status(401).json({error:'Bearer access token required'});
-  const isLocal=config.NODE_ENV!=='production'&&match[1].split('.')[0]!==undefined;
+  if(gatewayKey){
+   try {
+    const {payload}=await jwtVerify(match[1],gatewayKey,{issuer:'migration-console',audience:'discovery-service',algorithms:['HS256']});
+    const organizationId=String(payload.organizationId||'');
+    const subject=String(payload.sub||'');
+    if(!organizationId||!subject||payload.role!=='ADMIN')return res.status(403).json({error:'Invalid gateway scope'});
+    // Trust only a short-lived gateway signature, never client-supplied organization headers.
+    await db.organization.upsert({where:{id:organizationId},create:{id:organizationId,name:'Migration Console'},update:{}});
+    await db.membership.upsert({where:{organizationId_subject:{organizationId,subject}},create:{organizationId,subject,role:'ADMIN'},update:{role:'ADMIN'}});
+    req.principal={sub:subject,email:String(payload.email||''),organizationId,role:'ADMIN'};
+    return next();
+   }catch {/* Standard OIDC processing below. */}
+  }
+  const isLocal=config.NODE_ENV!=='production';
   let payload;
   try {({payload}=await jwtVerify(match[1],keys,{issuer:config.OIDC_ISSUER,audience:config.OIDC_AUDIENCE,algorithms:['RS256']}));}
   catch(error) {
