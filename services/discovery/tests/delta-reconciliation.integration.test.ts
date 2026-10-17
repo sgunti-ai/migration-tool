@@ -59,7 +59,7 @@ test('delta reconciliation persists updates and tombstones; a failed page never 
   assert.equal(recovered.mode,'INITIAL_FULL');
   assert.equal(requested.length,2);
   assert.equal(requested[0],b);
-  assert.match(requested[1],/users\\/delta/);
+  assert.ok(requested[1].includes('/users/delta'));
   assert.equal((await db.currentInventoryItem.findFirstOrThrow({where:{projectId:project.id,sourceId:'u3'}})).isDeleted,true);
   assert.equal((await db.discoveryCursor.findUniqueOrThrow({where:{projectId_sourceTenantId_workload:{projectId:project.id,sourceTenantId:project.sourceTenantId,workload:'Users'}}})).deltaLink,a);
 
