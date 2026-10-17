@@ -1,14 +1,24 @@
 import type {Request,Response,NextFunction} from 'express';
 import {SignJWT} from 'jose';
 
-const servicePath=/^\/(?:projects(?:\/[a-zA-Z0-9_-]+(?:\/(?:credentials|scans(?:\/[a-zA-Z0-9_-]+(?:\/(?:items|report|provenance))?)?|inventory\/current))?)?)?\/?$/;
+const servicePath=(path:string)=>{
+ const parts=path.split('/').filter(Boolean);
+ if(parts[0]!=='projects')return false;
+ if(parts.length===1)return true;
+ if(!/^[a-zA-Z0-9_-]+$/.test(parts[1]))return false;
+ if(parts.length===2)return true;
+ if(parts.length===3)return parts[2]==='scans'||parts[2]==='credentials';
+ if(parts.length===4)return parts[2]==='inventory'&&parts[3]==='current'
+  ||parts[2]==='scans'&&/^[a-zA-Z0-9_-]+$/.test(parts[3]);
+ return parts.length===5&&parts[2]==='scans'&&/^[a-zA-Z0-9_-]+$/.test(parts[3])&&['items','report','provenance'].includes(parts[4]);
+};
 
 /** Server-side authenticated gateway; browser never receives discovery credentials. */
 export async function discoveryServiceGateway(req:Request,res:Response,_next:NextFunction){
  const endpoint=process.env.DISCOVERY_SERVICE_URL;
  const secret=process.env.DISCOVERY_GATEWAY_SECRET;
  if(!endpoint||!secret||secret.length<32)return res.status(503).json({error:'Discovery service is not configured'});
- if(!['GET','POST','PUT'].includes(req.method)||!servicePath.test(req.path))return res.sendStatus(404);
+ if(!['GET','POST','PUT'].includes(req.method)||!servicePath(req.path))return res.sendStatus(404);
  try {
   const base=new URL(endpoint);
   if(base.username||base.password||base.search||base.hash||!['http:','https:'].includes(base.protocol))throw Error('Invalid discovery upstream');
