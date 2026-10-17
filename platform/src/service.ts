@@ -4,14 +4,16 @@ import {adapters,workloads,type Workload} from './adapters.js';
 import {GraphClient,TokenProvider} from './graph.js';
 import {executeDeltaScan} from './deltaDiscovery.js';
 import { getProjectCredential } from './credentials.js';
-import {acquireLease,renewLease,assertLease,finalizeLease,type Lease} from './leases.js';
+import {acquireLease,renewLease,assertLease,finalizeLease} from './leases.js';
+import {inventoryTypesFor,isDeltaWorkload,normalizeWorkloads} from './discoveryWorkloads.js';
 export async function startScan(organizationId:string,projectId:string,requested:Workload[]){
  const project=await db.project.findFirst({where:{id:projectId,organizationId}});
  if(!project)throw new Error('Project not found');
  if(!requested.length||requested.some(w=>!workloads.includes(w)))throw new Error('Unsupported workload');
  const existing=await db.scan.findFirst({where:{projectId,organizationId,status:{in:['QUEUED','RUNNING','RETRYING']}}});
  if(existing)throw new Error('Project already has an active scan');
- const delta=requested.filter(w=>w==='Users'||w==='Groups');
+ requested=normalizeWorkloads(requested);
+ const delta=requested.filter(isDeltaWorkload);
  const cursors=await db.discoveryCursor.findMany({where:{organizationId,projectId,sourceTenantId:project.sourceTenantId,workload:{in:delta}}});
  const existingDelta=delta.filter(w=>cursors.some(c=>c.workload===w && !!c.deltaLink)).length;
  const scanType=delta.length===0?'FULL':existingDelta===0?'INITIAL_FULL':existingDelta===delta.length?'INCREMENTAL':'MIXED';
@@ -40,14 +42,15 @@ export async function executeScan(scanId:string) {
   for(let index=0;index<selected.length;index++){
    await guard();
    const adapter=adapters[selected[index]];
-   if(adapter.workload==='Users'||adapter.workload==='Groups') {
+   if(isDeltaWorkload(adapter.workload)) {
     await executeDeltaScan({scanId,organizationId:scan.organizationId,projectId:scan.projectId,sourceTenantId:scan.sourceTenantId},adapter.workload,graph,lease);
    } else {
-    await db.discoveryScanWorkload.upsert({where:{scanId_workload:{scanId,workload:adapter.workload}},create:{scanId,organizationId:scan.organizationId,projectId:scan.projectId,sourceTenantId:scan.sourceTenantId,workload:adapter.workload,status:'RUNNING',startedAt:new Date()},update:{status:'RUNNING',startedAt:new Date()}});
+    await db.discoveryScanWorkload.upsert({where:{scanId_workload:{scanId,workload:adapter.workload}},create:{scanId,organizationId:scan.organizationId,projectId:scan.projectId,sourceTenantId:scan.sourceTenantId,workload:adapter.workload,status:'RUNNING',startedAt:new Date()},update:{status:'RUNNING',startedAt:new Date(),completedAt:null,errorMessage:null,itemsSeen:0,itemsDeleted:0,pagesRead:0}});
     await db.$transaction(async tx=>{
      await assertLease(tx,lease);
-     await tx.inventoryItem.deleteMany({where:{scanId,workload:{in:adapter.workload==='Teams'?['Teams','TeamsChannel']:[adapter.workload]}}});
+     await tx.inventoryItem.deleteMany({where:{scanId,workload:{in:inventoryTypesFor(adapter.workload)}}});
     });
+    let itemsSeen=0;
     for await(const item of adapter.discover(graph)){
      if(lost)throw new Error('SCAN_LEASE_LOST');
      await db.$transaction(async tx=>{
@@ -55,6 +58,7 @@ export async function executeScan(scanId:string) {
       await tx.inventoryItem.upsert({where:{scanId_workload_sourceId:{scanId,workload:item.workload,sourceId:item.sourceId}},create:{scanId,organizationId:scan.organizationId,projectId:scan.projectId,sourceTenantId:scan.sourceTenantId,workload:item.workload,sourceId:item.sourceId,name:item.name,metadata:item.metadata as any},update:{name:item.name,metadata:item.metadata as any}});
       // Stage observations until the workload has completed successfully.
      });
+     itemsSeen++;
     }
     await guard();
     await db.$transaction(async tx=>{
@@ -67,9 +71,9 @@ export async function executeScan(scanId:string) {
        update:{name:item.name,metadata:item.metadata as any,lastScanId:scanId,isDeleted:false,observedAt:new Date()}
       });
      }
-     const workloadTypes=adapter.workload==='Teams'?['Teams','TeamsChannel']:[adapter.workload];
+     const workloadTypes=inventoryTypesFor(adapter.workload);
      await tx.currentInventoryItem.updateMany({where:{organizationId:scan.organizationId,projectId:scan.projectId,sourceTenantId:scan.sourceTenantId,workload:{in:workloadTypes},lastScanId:{not:scanId},isDeleted:false},data:{isDeleted:true,lastScanId:scanId,observedAt:new Date()}});
-     await tx.discoveryScanWorkload.update({where:{scanId_workload:{scanId,workload:adapter.workload}},data:{status:'COMPLETED',completedAt:new Date()}});
+     await tx.discoveryScanWorkload.update({where:{scanId_workload:{scanId,workload:adapter.workload}},data:{status:'COMPLETED',itemsSeen,completedAt:new Date()}});
     },{timeout:120000});
    }
    await guard();
@@ -79,6 +83,12 @@ export async function executeScan(scanId:string) {
   const updated=await finalizeLease(lease,'COMPLETED');
   if(!updated.count)throw new Error('SCAN_LEASE_LOST');
  }catch(error){
+  if(!lost){
+   await db.discoveryScanWorkload.updateMany({
+    where:{scanId,status:'RUNNING'},
+    data:{status:'FAILED',completedAt:new Date(),errorMessage:error instanceof Error?error.message:'Unknown discovery failure'}
+   });
+  }
   if(!lost)await finalizeLease(lease,'FAILED',error instanceof Error?error.message:'Unknown discovery failure');
   throw error;
  }finally{
