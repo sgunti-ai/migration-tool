@@ -8,7 +8,9 @@
     "check": "tsc --noEmit",
     "test": "node --import tsx --test tests/*.test.ts",
     "db:generate": "prisma generate",
-    "db:migrate": "prisma migrate deploy"
+    "db:migrate": "prisma migrate deploy",
+    "start": "node --import tsx src/api.ts",
+    "worker:start": "node --import tsx src/worker.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",
