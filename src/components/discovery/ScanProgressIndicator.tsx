@@ -190,7 +190,7 @@ export const ScanProgressIndicator: React.FC<ScanProgressIndicatorProps> = ({
             <button
               onClick={handleRestartScan}
               disabled={isRetryingManual}
-              className="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white border border-slate-700 rounded-lg text-xs font-medium transition flex items-center space-x-1 disabled:opacity-50"
+              className="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white border border-slate-700 rounded-lg text-xs font-medium transition flex items-center space-x-1 disabled:opacity-50 dark:bg-slate-100 dark:text-slate-700 dark:border-slate-200 dark:hover:bg-slate-200"
               title="Restart discovery scan from 0%"
             >
               <RotateCw className="w-3.5 h-3.5" />
@@ -231,12 +231,12 @@ export const ScanProgressIndicator: React.FC<ScanProgressIndicatorProps> = ({
                 Source: contoso.onmicrosoft.com
               </span>
             </div>
-            <p className="text-xs text-slate-300 mt-0.5 font-mono">{currentStage}</p>
+            <p className="text-xs text-slate-300 mt-0.5 font-mono dark:text-slate-600">{currentStage}</p>
           </div>
         </div>
 
         <div className="flex items-center space-x-3 text-xs font-mono shrink-0">
-          <span className="text-slate-400">
+          <span className="text-slate-400 dark:text-slate-500">
             Elapsed: <strong className="text-white">{formatElapsed(elapsedSeconds)}</strong>
           </span>
           <span
@@ -263,7 +263,7 @@ export const ScanProgressIndicator: React.FC<ScanProgressIndicatorProps> = ({
           {onRefresh && (
             <button
               onClick={onRefresh}
-              className="p-1.5 text-slate-400 hover:text-white rounded-lg bg-slate-800 hover:bg-slate-700 transition"
+              className="p-1.5 text-slate-400 hover:text-white rounded-lg bg-slate-800 hover:bg-slate-700 transition dark:bg-slate-100 dark:text-slate-500 dark:hover:bg-slate-200"
               title="Refresh status"
             >
               <RefreshCw className="w-3.5 h-3.5" />
@@ -317,12 +317,12 @@ export const ScanProgressIndicator: React.FC<ScanProgressIndicatorProps> = ({
         })}
       </div>
 
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between text-[11px] text-slate-400 pt-1 border-t border-slate-800/80 gap-2">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between text-[11px] text-slate-400 pt-1 border-t border-slate-800/80 gap-2 dark:text-slate-500">
         <span className="flex items-center space-x-1.5">
           <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
           <span>Graph API v1.0 • Exchange Online • SharePoint PnP Pipeline</span>
         </span>
-        <span className="font-mono text-slate-400">
+        <span className="font-mono text-slate-400 dark:text-slate-500">
           Auto-Retry Protection: Enabled (3 Retries with Checkpoint Resumption)
         </span>
       </div>
